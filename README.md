@@ -87,22 +87,3 @@ npm run dev
 
 ---
 
-## 📌 Roadmap
-
-- [x] Backend API with user registration
-- [ ] PG listing management
-- [ ] Filter & search system
-- [ ] Booking flow
-- [ ] Ratings & reviews
-
----
-
-## 🙋‍♂️ Author
-
-Made with 💚 by [Sai Bharadwaja](https://github.com/SaiBharadwaja570)
-
----
-
-## 📄 License
-
-MIT License
