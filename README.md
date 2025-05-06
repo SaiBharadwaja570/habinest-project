@@ -1,9 +1,108 @@
-# How to setup?
+# 🏡 Habinest – A Personalized PG Discovery Platform
 
-Go into this folder and then use ```npm i``` (The package.json contains all the info on the project required dependencies will be installed)
+Habinest is a full-stack web application built to help students and professionals discover paying guest (PG) accommodations tailored to their preferences. It offers a seamless experience for users to find, filter, and connect with PGs that suit their lifestyle and budget.
 
-> 📌 **Note**:  
-> 1. We will be using index.js to run the server/backend. 
-> 2. We will store the express code in app.
-> 3. Confirm whether you can see .env file or not
-> 4. I have already set the default prettier setting so it does not disturb while forking and we will have uniform style
+---
+
+## ✨ Features
+
+- 🔍 **Personalized PG Discovery** – Search PGs based on preferences like location, budget, gender, food options, etc.
+- 🔐 **Authentication** – Secure user authentication via Firebase.
+- 📦 **Admin Panel** – Admins can manage PG listings using AdminBro.
+- 🚴‍♂️ **Rider PWA** – A React-based Progressive Web App for delivery/rider staff.
+- 💬 **Contact & Inquiry System** – Let users easily reach out for bookings or inquiries.
+
+---
+
+## 🧱 Tech Stack
+
+### 🔹 Frontend
+- React.js
+- TailwindCSS / Material UI
+- React Router
+
+### 🔹 Backend
+- Node.js
+- Express.js
+
+### 🔹 Database & Auth
+- MongoDB
+- Firebase Authentication
+
+### 🔹 Admin Panel
+- AdminBro
+
+---
+
+## 🗂️ Project Structure (Backend)
+
+```
+backend/
+├── src/
+│   ├── controllers/
+│   ├── db/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   └── utils/
+├── app.js
+├── index.js
+├── .env
+├── .gitignore
+└── package.json
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repo
+
+```bash
+git clone git@github.com:SaiBharadwaja570/habinest-project.git
+cd habinest
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment
+
+Create a `.env` file and add the following:
+
+```env
+PORT=3000
+MONGO_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>
+CORS_ORIGIN=*
+```
+
+### 4. Start the backend
+
+```bash
+npm run dev
+```
+
+---
+
+## 📌 Roadmap
+
+- [x] Backend API with user registration
+- [ ] PG listing management
+- [ ] Filter & search system
+- [ ] Booking flow
+- [ ] Ratings & reviews
+
+---
+
+## 🙋‍♂️ Author
+
+Made with 💚 by [Sai Bharadwaja](https://github.com/SaiBharadwaja570)
+
+---
+
+## 📄 License
+
+MIT License
