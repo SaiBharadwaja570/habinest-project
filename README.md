@@ -7,9 +7,8 @@ Habinest is a full-stack web application built to help students and professional
 ## ✨ Features
 
 - 🔍 **Personalized PG Discovery** – Search PGs based on preferences like location, budget, gender, food options, etc.
-- 🔐 **Authentication** – Secure user authentication via Firebase.
+- 🔐 **Authentication** – Secure user authentication.
 - 📦 **Admin Panel** – Admins can manage PG listings using AdminBro.
-- 🚴‍♂️ **Rider PWA** – A React-based Progressive Web App for delivery/rider staff.
 - 💬 **Contact & Inquiry System** – Let users easily reach out for bookings or inquiries.
 
 ---
