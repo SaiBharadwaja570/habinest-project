@@ -1,3 +1,5 @@
+// Creating a class function to handle api errors throughout the backend
+
 class ApiError extends Error{
     constructor(
         statusCode,

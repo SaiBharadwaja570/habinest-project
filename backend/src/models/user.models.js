@@ -1,4 +1,7 @@
+// A model containing the required schema for the user 
+
 import mongoose, { Schema } from "mongoose";
+import bcrpt from 'bcrypt'
 
 const userSchema = new Schema({
     name: {
@@ -19,5 +22,11 @@ const userSchema = new Schema({
         required: true
     }
 })
+
+// methods 
+
+User.methods.isPasswordCorrect = async function(password){
+    return await bcrpt.compare(password, this.password);
+}
 
 export const User = mongoose.model('User', userSchema);

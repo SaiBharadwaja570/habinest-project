@@ -2,7 +2,10 @@ import { User } from "../models/user.models.js";
 import bcrypt from 'bcrypt'
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
+
+// A controller containing the functionalities required for a user model
 
 // Register
 
@@ -27,7 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
             password: hashed
         })
 
-        return res.status(201).json({ message: "User created", data: newUser });
+        return res.status(201).json(new ApiResponse(201, { data: newUser }, "User created succesfully!!"));
         
     
     } catch (error) {
@@ -37,7 +40,33 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 
+// Login
+
+const loginUser = asyncHandler(async (req, res) => {
+    try {
+        
+        const { email, password } = req.body;
+
+        if( !email || !password ) throw new ApiError(400, "Please enter all the fields");
+
+        const user = await User.findOne({ email });
+
+        if(!user) throw new ApiError(500, "User not found!");
+
+        const isPasswordCorrect = user.isPasswordCorrect(password);
+
+        if( !isPasswordCorrect ) throw new ApiError( 401 , "Please enter all the fields");
+
+        return res.status(200).json( 200, {}, "User logged in successfully!!" )
+
+
+    } catch (error) {
+        throw new ApiError(500, "Internal server Error: " + error)
+    }
+})
+
 
 export {
-    registerUser
+    registerUser,
+    loginUser
 }
