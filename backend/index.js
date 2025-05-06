@@ -1,15 +1,15 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import connectDB from './src/db';
+import app from "./app";
+import dotenv from 'dotenv'
+import connectDB from "./src/db";
 
-const app = express();
-
-dotenv.config();
-app.use(cors());
+dotenv.config({
+    path: './env'
+});
 
 connectDB()
-.then(() => app.listen(8000, () => console.log("Server is running")))
-.catch((e) => console.log("Error: " + e))
-
-
+.then(() => {
+    app.listen(process.env.PORT || 3000,
+        () => { console.log(`Listening at port: ${process.env.PORT}`) }
+    )
+}) 
+.catch((error) => console.log("Error: ", error))
