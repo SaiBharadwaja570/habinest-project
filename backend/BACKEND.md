@@ -64,6 +64,35 @@ node index.js
 
 ---
 
+## 📦 Models
+
+### 🧑‍💼 User Model (`user.models.js`)
+
+Defines the schema and logic for storing and validating user data using Mongoose.
+
+#### Fields
+
+| Field     | Type    | Required | Unique | Description              |
+|-----------|---------|----------|--------|--------------------------|
+| `name`    | String  | ✅        | ✅     | Username of the user     |
+| `phone`   | Number  | ✅        | ✅      | Contact phone number     |
+| `email`   | String  | ✅        | ✅     | Email address            |
+| `password`| String  | ✅        | ✅     | Hashed user password     |
+
+#### Methods
+
+- **`isPasswordCorrect(password)`**
+  - Compares the input password with the stored hash using `bcrypt.compare`.
+  - Returns a boolean indicating if the password is correct.
+
+#### Example Usage
+
+```js
+const isValid = await user.isPasswordCorrect("userInputPassword");
+
+
+---
+
 ## 🧩 Features
 
 - ✅ User Registration with hashed password using `bcrypt`
