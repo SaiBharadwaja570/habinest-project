@@ -6,9 +6,9 @@ const router = express.Router();
 // Note :- All the functionalities will be brought from user controller
 
 // register
-router.route('/register').post(registerUser)
+router.post('/register',registerUser)
 
 // login
-router.route('/login').post(loginUser)
+router.post('/login',loginUser)
 
 export default router
