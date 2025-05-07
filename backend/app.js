@@ -13,7 +13,7 @@ app.use(cors({
 
 import userRouter from './src/routes/user.routes.js'
 
-app.use('/api/user/', userRouter)
+app.use('/api/user', userRouter)
 
 
 
