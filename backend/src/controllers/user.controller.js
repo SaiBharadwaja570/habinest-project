@@ -50,16 +50,12 @@ const loginUser = asyncHandler(async (req, res) => {
         if( !email || !password ) throw new ApiError(400, "Please enter all the fields");
 
         const user = await User.findOne({ email });
-
         if(!user) throw new ApiError(500, "User not found!");
 
         const isPasswordCorrect = user.isPasswordCorrect(password);
-        
-
         if( !isPasswordCorrect ) throw new ApiError( 401 , "Please enter all the fields");
-
         
-        // return res.status(200).json( 200, {}, "User logged in successfully!!" )
+        return res.status(200).json( new ApiResponse( 200, {}, "User logged in successfully!!" ) )
 
 
     } catch (error) {
