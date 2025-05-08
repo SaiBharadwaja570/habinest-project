@@ -24,7 +24,12 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    }
+    },
+    preferences: Object,
+    bookmarks: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'PG' 
+    }]
 })
 
 // Method to compare passwords
@@ -41,7 +46,7 @@ userSchema.methods.generateAccessToken = async function(){
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn: ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY || '1h' // Default to 1 hour if not defined
         }
     )
 }
@@ -53,7 +58,7 @@ userSchema.methods.generateRefreshToken = async function(){
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn: REFRESH_TOKEN_EXPIRY
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY || '7d' // Default to 7 days if not defined
         }
     )
 }
