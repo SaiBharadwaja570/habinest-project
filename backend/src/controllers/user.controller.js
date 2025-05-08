@@ -58,17 +58,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
         if( !isPasswordCorrect ) throw new ApiError( 401 , "Please enter all the fields");
 
-        let payload={
-            id:user._id,
-            name:user.name
-        }
-        const secretToken=process.env.SECRET_TOKEN;
-        jwt.sign(payload, secretToken, (err, token)=>{
-            if(err) throw new ApiError(500, err.message);
-            return res.status(200).json(new ApiResponse(200, token, "User logged in successfully!!"));
-        })
         
-
         // return res.status(200).json( 200, {}, "User logged in successfully!!" )
 
 
