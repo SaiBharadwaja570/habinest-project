@@ -7,7 +7,7 @@ import userDB from "../db/userDB.js";
 
 const connection = userDB();
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -72,6 +72,6 @@ userSchema.methods.generateRefreshToken = async function(){
     )
 }
 
-const User = connection.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

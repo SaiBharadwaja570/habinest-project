@@ -1,25 +1,11 @@
 import mongoose from "mongoose";
-
-const listingsDB =  () => {
+import ApiError from '../utils/ApiError.js';
+import dotenv from 'dotenv';
+dotenv.config();
+const listingsDB = async () => {
     try {
-        const connection =  mongoose.connect(process.env.MONGO_URL);
-
-        connection.on("connected", () => {
-            console.log("listingsDB connected");
-        });
-        
-        connection.on("error", (error) => {
-            console.error("Connection error:", error);
-            throw new ApiError(500, "listingsDB Connection Error", error);
-        });
-        
-        connection.on("disconnected", () => {
-            console.log("listingsDB disconnected");
-        });
-        
-        console.log("Connected to listingsDB");
-        return connection;
-    
+        const listingConnection=mongoose.createConnection(process.env.LISTING_MONGO_URL).asPromise();
+        return listingConnection;
     } catch (error) {
         throw new ApiError(500, "listingsDB Connect Failed!!!", error);
     }
