@@ -1,9 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import userRouter from './src/routes/user.routes.js' // importing routes from user.routes.js
-import pgRouter from './src/routes/listings.routes.js'
+import listingsRouter from './src/routes/listings.routes.js'
 import cookieParser from 'cookie-parser'
-
 
 const app = express()
 
@@ -27,6 +26,6 @@ app.use(cookieParser())
 
 
 app.use('/api/user', userRouter)
-app.use('/api/pg', pgRouter) 
+app.use('/api/pg', listingsRouter) 
 
 export default app;

@@ -18,15 +18,21 @@ const listingsSchema = new mongoose.Schema({
     required: true
   },
   
-  sharingType: String,
+  sharingType: {
+    type: String,
+    required: true
+  },
   
-  photo: String,
+  photo: {
+    type: String,
+    required: true
+  },
   
-  location: {
-    type: { type: String, default: 'Point' },
-    coordinates: [Number] // [lng, lat]
-  }
-  
+  // location: {
+  //   type: { type: String, default: 'Point' },
+  //   coordinates: [Number] // [lng, lat]
+  // }
+
 });
 
 pgSchema.index({ location: '2dsphere' });
