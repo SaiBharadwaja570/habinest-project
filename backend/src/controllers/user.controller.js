@@ -1,4 +1,4 @@
-import { getUserModel as User } from "../models/user.models.js";
+import { getUserModel } from "../models/user.models.js";
 import bcrypt from 'bcrypt'
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
@@ -6,9 +6,12 @@ import ApiResponse from "../utils/ApiResponse.js";
 
 // A controller containing the functionalities required for a user model
 
+const User = getUserModel();
+
 const generateAccessAndRefreshToken = async (userId) => {
     
     try {
+        
         const user = await User.findById(userId)
         const accessToken =  user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
@@ -68,8 +71,8 @@ const loginUser = asyncHandler(async (req, res) => {
         const user = await User.findOne({ email });
         if(!user) throw new ApiError(500, "User not found!");
 
-        const isPassCorrect = user.isPasswordCorrect(password);
-        if( !isPassCorrect ) throw new ApiError( 401 , "Please enter all the fields");
+        const isPassCorrect = await user.isPasswordCorrect(password);
+        if( !isPassCorrect ) throw new ApiError( 401 , "Password is incorrect");
 
         const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
         
@@ -89,7 +92,6 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Internal server Error: " + error)
     }
 })
-
 
 export {
     registerUser,
