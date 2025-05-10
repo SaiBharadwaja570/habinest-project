@@ -39,11 +39,6 @@ export default function RegisterPage() {
             className="w-full p-3 rounded-md text-black"
           />
           <input
-            type="tel"
-            placeholder="Phone"
-            className="w-full p-3 rounded-md text-black"
-          />
-          <input
             type="password"
             placeholder="Password"
             className="w-full p-3 rounded-md text-black"
