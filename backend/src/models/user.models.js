@@ -5,6 +5,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import userDB from "../db/userDB.js";
 
+const connection = userDB();
+
 const userSchema = new Schema({
     name: {
         type: String,
@@ -70,4 +72,6 @@ userSchema.methods.generateRefreshToken = async function(){
     )
 }
 
-export const getUserModel = () => userDB.model('User', userSchema, 'data');
+const User = connection.model('User', userSchema);
+
+export default User;

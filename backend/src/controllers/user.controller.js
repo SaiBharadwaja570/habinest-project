@@ -1,12 +1,10 @@
-import { getUserModel } from "../models/user.models.js";
+import User from "../models/user.models.js";
 import bcrypt from 'bcrypt'
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
 // A controller containing the functionalities required for a user model
-
-const User = getUserModel();
 
 const generateAccessAndRefreshToken = async (userId) => {
     
