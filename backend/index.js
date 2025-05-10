@@ -13,6 +13,7 @@ app.on('error', (error) => {
 const startServer = async () => {
 
     try {
+
         await userDB().then(res=>{console.log("Connected user")}).catch(err=>{console.log(err)})
 
         await listingsDB().then(res=>{console.log("Connected listing")}).catch(err=>{console.log(err)})
@@ -21,9 +22,10 @@ const startServer = async () => {
             console.log(`Server listening on port: ${process.env.PORT}`)
         })
 
-
     } catch (error) {
+
         throw new ApiError(500, "Server Error: ", error);
+
     }
 }
 

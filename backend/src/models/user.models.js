@@ -4,6 +4,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import userDB from "../db/userDB.js";
+import listingsDB from "../db/listingsDB.js";
 
 const connection = userDB();
 
@@ -72,6 +73,6 @@ userSchema.methods.generateRefreshToken = async function(){
     )
 }
 
-const User = mongoose.model('User', userSchema);
+const User = userDB.model('User', userSchema);
 
 export default User;
