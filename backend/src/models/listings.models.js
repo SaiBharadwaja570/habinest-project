@@ -13,7 +13,7 @@ const listingsSchema = new mongoose.Schema({
     required: true
   },
 
-  price: {
+  priceRange: {
     type: Number,
     required: true
   },

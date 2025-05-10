@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getPGs, createPG } from "../controllers/listings.controller";
-import uploadImage from "../utils/cloudinary";
-import upload from "../middlewares/multer.middleware";
+import { getPGs, createPG } from "../controllers/listings.controller.js";
+import uploadImage from "../utils/cloudinary.js";
+import upload from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
