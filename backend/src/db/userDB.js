@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
 import ApiError from '../utils/ApiError.js';
+import dotenv from 'dotenv';
 
 const userDB =  () => {
     try {
-        const connect = mongoose.createConnection(process.env.MONGO_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+        console.log(process.env.MONGO_URL);
+        const connect = mongoose.connect(process.env.MONGO_URL);
 
         connect.on('connected', () => {  
             console.log('userDB connected'); 

@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 
 const listingsDB =  () => {
     try {
-        const connection =  mongoose.createConnection(process.env.MONGO_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        const connection =  mongoose.connect(process.env.MONGO_URL);
 
         connection.on("connected", () => {
             console.log("listingsDB connected");
