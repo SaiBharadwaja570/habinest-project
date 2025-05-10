@@ -1,13 +1,27 @@
 import mongoose from 'mongoose';
 import ApiError from '../utils/ApiError.js';
 
-const userDB =  async () => {
+const userDB =  () => {
     try {
-        mongoose.createConnection(`${process.env.MONGO_URI}/userDB`, {
+        const connect = mongoose.createConnection(`${process.env.MONGO_URI}/userDB`, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
+
+        connect.on('connected', () => {  
+            console.log('userDB connected'); 
+        }
+        );
+        connect.on('error', (error) => {  
+            console.error('Connection error:', error); 
+            throw new ApiError(500, 'userDB Connection Error', error);
+        });
+        connect.on('disconnected', () => {  
+            console.log('userDB disconnected'); 
+        }
+        );
         console.log('Connected to userDB'); 
+        return connect;
     } catch (error) {
         throw new ApiError(500, 'userDB Connect Failed!!!', error)
     }
