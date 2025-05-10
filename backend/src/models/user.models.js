@@ -3,6 +3,7 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import userDB from "../db/userDB.js";
 
 const userSchema = new Schema({
     name: {
@@ -25,10 +26,16 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    type: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
+        required: true
+    },
     preferences: Object,
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'PG' 
+        ref: 'Listingts'
     }]
 })
 
@@ -46,7 +53,7 @@ userSchema.methods.generateAccessToken = async function(){
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY || '1h' // Default to 1 hour if not defined
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY || '1d' // Default to 1 hour if not defined
         }
     )
 }
@@ -63,4 +70,4 @@ userSchema.methods.generateRefreshToken = async function(){
     )
 }
 
-export const User = mongoose.model('User', userSchema);
+export const User = userDB.model('User', userSchema, 'data');

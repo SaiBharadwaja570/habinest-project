@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import listingsDB from '../db/listingsDB.js';
 
-const pgSchema = new mongoose.Schema({
+const listingsSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -24,4 +25,4 @@ const pgSchema = new mongoose.Schema({
 
 pgSchema.index({ location: '2dsphere' });
 
-export default mongoose.model('PG', pgSchema);
+export const Listings = listingsDB.model('Listings', listingsSchema, 'data');

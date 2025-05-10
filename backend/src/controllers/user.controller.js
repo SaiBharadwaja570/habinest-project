@@ -25,7 +25,6 @@ const generateAccessAndRefreshToken = async (userId) => {
 }
 
 // Register
-
 const registerUser = asyncHandler(async (req, res) => {
     try {
         const { name, phone, email, password } = req.body;
@@ -54,7 +53,6 @@ const registerUser = asyncHandler(async (req, res) => {
     } catch (error) {
         throw new ApiError(500, "Internal server error! User not created!")
     }
-
 })
 
 

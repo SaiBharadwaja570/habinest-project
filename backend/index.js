@@ -1,13 +1,12 @@
 import app from "./app.js";
 import dotenv from 'dotenv'
-import connectDB from "./src/db/connect.js";
+import userDB from "./src/db/userDB.js";
+import listingsDB from "./src/db/listingsDB.js";
 
 dotenv.config();
 
-connectDB()
-.then(() => {
-    app.listen(process.env.PORT || 3000,
-        () => { console.log(`Listening at port: ${process.env.PORT}`) }
-    )
-}) 
-.catch((error) => console.log("Error: ", error))
+app.on('error', (error) => {
+    console.error("Error:", error);
+    throw error;
+})
+
