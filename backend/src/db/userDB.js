@@ -1,25 +1,11 @@
 import mongoose from 'mongoose';
 import ApiError from '../utils/ApiError.js';
 import dotenv from 'dotenv';
-
+dotenv.config();
 const userDB =  () => {
     try {
-        console.log(process.env.MONGO_URL);
-        const connect = mongoose.connect(process.env.MONGO_URL);
-
-        connect.on('connected', () => {  
-            console.log('userDB connected'); 
-        }
-        );
-        connect.on('error', (error) => {  
-            console.error('Connection error:', error); 
-            throw new ApiError(500, 'userDB Connection Error', error);
-        });
-        connect.on('disconnected', () => {  
-            console.log('userDB disconnected'); 
-        }
-        );
-        return connect;
+        const userConnection=mongoose.createConnection(process.env.USER_MONGO_URL).asPromise();
+        return userConnection;
     } catch (error) {
         throw new ApiError(500, 'userDB Connect Failed!!!', error)
     }

@@ -17,7 +17,7 @@ app.use(cors({
 // To solve url issues:
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
 
-//public assets -- to sore in my server
+//public assets -- to store in my server
 app.use(express.static("public"))
 
 // to perform crud option on users cookies
