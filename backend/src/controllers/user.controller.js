@@ -122,7 +122,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json( new ApiResponse(200, {}, "User logged out successfully!") )
 })
 
-
 const updatePassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword} = req.body;
 
@@ -185,5 +184,6 @@ export {
     logoutUser,
     updatePassword,
     getCurrentUser,
-    updateAccountInfo
+    updateAccountInfo,
+    refresAccessToken
 }

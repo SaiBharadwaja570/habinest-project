@@ -28,14 +28,20 @@ const listingsSchema = new mongoose.Schema({
     required: true
   },
   
-  // location: {
-  //   type: { type: String, default: 'Point' },
-  //   coordinates: [Number] // [lng, lat]
-  // }
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number], // longitudes and latitudes
+      required: true
+    }
+  }
 
 });
-
-
 
 listingsSchema.index({ location: '2dsphere' });
 

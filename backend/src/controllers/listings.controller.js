@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import uploadImageOnCloudinary  from "../utils/cloudinary.js";
+import axios from 'axios';
 
 
 const getPGs = asyncHandler(async (req, res) => {

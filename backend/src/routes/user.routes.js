@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser, logoutUser, registerUser, getCurrentUser, updateAccountInfo, updatePassword } from '../controllers/user.controller.js';
+import { loginUser, logoutUser, registerUser, getCurrentUser, updateAccountInfo, updatePassword, refresAccessToken } from '../controllers/user.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
@@ -23,5 +23,8 @@ router.patch('/updatePassword', verifyJWT, updateAccountInfo);
 
 // get user
 router.get('/', verifyJWT ,getCurrentUser)
+
+// refresh-token
+router.post('/refresh-token', refresAccessToken)
 
 export default router
