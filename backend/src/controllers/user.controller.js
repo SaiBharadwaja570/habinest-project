@@ -25,6 +25,12 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
+const refresAccessToken = asyncHandler(async (req, res) =>{
+    const incomingToken = req.cookie.refreshToken || req.cookie.refreshToken;
+
+
+})
+
 // Register
 const registerUser = asyncHandler(async (req, res) => {
     try {
@@ -83,7 +89,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json( new ApiResponse( 200, {}, "User logged in successfully!!" ) )
+        .json( new ApiResponse( 200, {user: user, accessToken, refreshToken}, "User logged in successfully!!" ) )
 
     } catch (error) {
         throw new ApiError(500, "Internal server Error: " + error)
