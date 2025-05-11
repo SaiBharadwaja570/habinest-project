@@ -1,5 +1,6 @@
 import express from 'express';
-import { loginUser, registerUser } from '../controllers/user.controller.js';
+import { loginUser, logoutUser, registerUser } from '../controllers/user.controller.js';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
@@ -10,5 +11,8 @@ router.post('/register',registerUser)
 
 // login
 router.post('/login',loginUser)
+
+// logout
+router.post('/logout', verifyJWT, logoutUser)
 
 export default router
