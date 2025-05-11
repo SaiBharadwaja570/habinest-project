@@ -9,6 +9,7 @@ import ProfilePage from "../pages/ProfilePage";
 import PGListPage from "../pages/PGListPage";
 import FilterListingPage from "../pages/FilterListingPage";
 import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
+import Map from "../components/Map";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/pg-list" element={<PGListPage />} />
         <Route path="/filter" element={<FilterListingPage />} />
         <Route path="/bookmarks" element={<BookmarkedPGsPage />} />
+        <Route path="/map" element={<Map />} />
       </Routes>
   );
 }
