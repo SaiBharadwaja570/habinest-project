@@ -8,23 +8,42 @@ This is a **Node.js + Express** backend application for handling user registrati
 
 ```
 backend/
+├── public/                          # Static assets (e.g., images)
 ├── src/
-│   ├── controllers/        # Handles request logic
-│   │   └── user.controller.js
-│   ├── db/                 # Database connection
-│   │   └── connect.js
-│   ├── middlewares/        # Custom middlewares (future use)
-│   ├── models/             # Mongoose schemas
-│   │   └── user.models.js
-│   ├── routes/             # Express routes
-│   │   └── user.routes.js
-│   └── utils/              # Utility helpers
+│   ├── controllers/                 # Handles request logic
+│   │   ├── user.controller.js
+│   │   └── listings.controller.js
+│
+│   ├── db/                          # Database connection
+│   │   ├── connect.js
+│   │   ├── userDB.js
+│   │   └── listingsDB.js
+│
+│   ├── middlewares/                # Custom middlewares
+│   │   ├── auth.middleware.js      # JWT auth middleware
+│   │   └── multer.middleware.js    # Image/file handling
+│
+│   ├── models/                     # Mongoose schemas
+│   │   ├── user.models.js
+│   │   └── listings.models.js
+│
+│   ├── routes/                     # Express routes
+│   │   ├── user.routes.js
+│   │   └── listings.routes.js
+│
+│   └── utils/                      # Utility helpers
 │       ├── ApiError.js
-│       └── asyncHandler.js
+│       ├── ApiResponse.js
+│       ├── asyncHandler.js
+│       └── cloudinary.js          # Cloudinary config for image uploads
+│
 ├── .gitignore
-├── app.js                  # Sets up middleware & routes
-├── index.js                # App entry point – connects DB & starts server
+├── .prettierrc
+├── .prettierignore
+├── app.js                          # Sets up middlewares & routes
+├── index.js                        # App entry point – connects DB & starts server
 ├── package.json
+
 ```
 
 ---
@@ -78,6 +97,10 @@ Defines the schema and logic for storing and validating user data using Mongoose
 | `phone`   | Number  | ✅        | ✅      | Contact phone number     |
 | `email`   | String  | ✅        | ✅     | Email address            |
 | `password`| String  | ✅        | ✅     | Hashed user password     |
+| `type`| String  | ✅        | ❌    | Type of the user     |
+| `preferences`| Object  |  ❌     | ❌    | Type of the user     |
+| `bookmarks`| Object  |  ❌     | ❌    | Type of the user     |
+
 
 #### Methods
 
@@ -85,13 +108,14 @@ Defines the schema and logic for storing and validating user data using Mongoose
   - Compares the input password with the stored hash using `bcrypt.compare`.
   - Returns a boolean indicating if the password is correct.
 
-#### Example Usage
+- **`generateAccessToken()`**
+  - Used to generate access token for the user using `jwt.sign`.
+  - Returns a access token.
 
-```js
-const isValid = await user.isPasswordCorrect("userInputPassword");
+- **`generateRefreshToken()`**
+  - Used to generate refresh token for the user using `jwt.sign`.
+  - Returns refresh token.
 
-
----
 
 ## 🧩 Features
 
@@ -108,6 +132,42 @@ const isValid = await user.isPasswordCorrect("userInputPassword");
 | Method | Endpoint         | Description         |
 |--------|------------------|---------------------|
 | POST   | `/api/users/register` | Register a new user |
+| POST   | `/api/users/login` | Login a  user |
+| POST   | `/api/users/logout` | Logout a  user |
+| PATCH   | `/api/users/updateInfo` | Update a  user information |
+| PATCH   | `/api/users/updatePassword` | Update a user password |
+
+---
+
+### 🏠 Listing Model (`listings.models.js`)
+
+| Field     | Type    | Required | Unique | Description              |
+|-----------|---------|----------|--------|--------------------------|
+| `name`    | String  | ✅        | ✅     | Name of the PG     |
+| `address`   | String  | ✅        | ✅      | Address of the PG      |
+| `priceRange`   | Number  | ✅        | ✅     | Starting price of the PG           |
+| `sharingType`| String  | ✅        | ✅     | Sharing types present in PG   |
+| `photo`| String  | ✅        | ✅      | URL of the PG pic     |
+| `location`|   |  ✅       | ✅      | Type of the user     |
+
+## 🧩 Features
+
+- ✅ Admin can Register new PGs
+- ✅ MongoDB integration with Mongoose
+- ✅ Custom API error handling
+- ✅ Async error wrapper
+- ✅ Organized codebase with separation of concerns
+
+---
+
+## 🛣️ API Endpoints
+
+| Method | Endpoint         | Description         |
+|--------|------------------|---------------------|
+| POST   | `/api/pg/register` | Register a new PG |
+| POST   | `/api/pg/get` | Get all the PGs |
+| POST   | `/api/pg/updateInfo` | Update a PG information|
+
 
 ---
 
@@ -119,13 +179,15 @@ const isValid = await user.isPasswordCorrect("userInputPassword");
 - Mongoose
 - Bcrypt
 - dotenv
+- jsonwebtoken
+- nodemon
 
 ---
 
 ## 📌 TODO
 
-- [ ] Add login functionality
-- [ ] JWT authentication
+- [ ] Add update functionalities in PGs and Users
+- [ ] Update location section of Listings
 - [ ] Input validation using Zod or Joi
 - [ ] Add Swagger documentation
 

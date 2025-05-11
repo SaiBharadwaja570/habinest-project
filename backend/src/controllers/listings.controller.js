@@ -13,9 +13,7 @@ const getPGs = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, pgs, "pgs fetched successfully!!"));
 });
 
-const getPGById = asyncHandler(async (req, res) => {
-    
-});
+
 
 const createPG = asyncHandler(async (req, res) => {
     const { name, address, priceRange, sharingType } = req.body;
@@ -54,6 +52,8 @@ const createPG = asyncHandler(async (req, res) => {
     ) )
 
 });
+
+
 
 export {
     getPGs,
