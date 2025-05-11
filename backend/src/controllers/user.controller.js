@@ -78,7 +78,6 @@ const loginUser = asyncHandler(async (req, res) => {
             httpOnly: true,
             secure: true 
        }
-
         
         return res
         .status(200)
@@ -90,6 +89,12 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Internal server Error: " + error)
     }
 })
+
+const logoutUser = asyncHandler(async (req, res) => {
+    
+})
+
+
 
 export {
     registerUser,

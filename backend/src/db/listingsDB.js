@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const listingsDB = async () => {
     try {
-        const listingConnection=mongoose.createConnection(process.env.LISTING_MONGO_URL).asPromise();
+        const listingConnection= await mongoose.createConnection(process.env.LISTING_MONGO_URL).asPromise();
         return listingConnection;
     } catch (error) {
         throw new ApiError(500, "listingsDB Connect Failed!!!", error);

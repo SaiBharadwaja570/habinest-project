@@ -7,7 +7,9 @@ const router = Router();
 
 router.post('/', 
     // to handle multiple files we use fields 
-    upload.array('photo', 1),
+    upload.fields([
+        { name: 'photo', maxCount: 1 }
+      ]),
     createPG
 );
 

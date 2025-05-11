@@ -9,7 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadImage = async (imagePath) => {
+const uploadImageOnCloudinary = async (imagePath) => {
 
     // Use the uploaded file's name as the asset's public ID and 
     // allow overwriting the asset with new versions
@@ -34,4 +34,4 @@ const uploadImage = async (imagePath) => {
     }
 };
 
-export default uploadImage;
+export default uploadImageOnCloudinary;

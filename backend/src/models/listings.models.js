@@ -35,6 +35,10 @@ const listingsSchema = new mongoose.Schema({
 
 });
 
-pgSchema.index({ location: '2dsphere' });
 
-export const Listings = listingsDB.model('Listings', listingsSchema, 'data');
+
+listingsSchema.index({ location: '2dsphere' });
+
+const db = await listingsDB();
+
+export const Listings = db.model('Listings', listingsSchema, 'data');
