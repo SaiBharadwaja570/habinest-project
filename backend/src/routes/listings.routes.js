@@ -13,4 +13,6 @@ router.post('/',
     createPG
 );
 
+router.get('/', getPGs)
+
 export default router;

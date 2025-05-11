@@ -6,10 +6,11 @@ import uploadImageOnCloudinary  from "../utils/cloudinary.js";
 
 
 const getPGs = asyncHandler(async (req, res) => {
-    const { name, address, priceRange, sharingType } = req.body;
-
-
-
+    const pgs = await List.find();
+    if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
+    return res
+    .status(200)
+    .json(new ApiResponse(200, pgs, "pgs fetched successfully!!"));
 });
 
 const getPGById = asyncHandler(async (req, res) => {
