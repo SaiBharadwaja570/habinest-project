@@ -178,6 +178,9 @@ const updateAccountInfo = asyncHandler(async (req, res) => {
 })
 
 
+const filterOutPgs = asyncHandler()
+
+
 export {
     registerUser,
     loginUser,

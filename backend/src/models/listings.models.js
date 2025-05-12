@@ -40,7 +40,6 @@ const listingsSchema = new mongoose.Schema({
       required: true
     }
   }
-
 });
 
 listingsSchema.index({ location: '2dsphere' });
