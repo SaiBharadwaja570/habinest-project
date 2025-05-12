@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Listingts'
     }]
-})
+}, { timestamps: true })
 
 // to hash updated password
 userSchema.pre("save", async function (next) {

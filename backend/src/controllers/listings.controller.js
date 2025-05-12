@@ -6,9 +6,33 @@ import uploadImageOnCloudinary  from "../utils/cloudinary.js";
 import getCoordinatesFromAddress from "../utils/geocode.js";
 
 const getPGs = asyncHandler(async (req, res) => {
-    const pgs = await List.find();
-    if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
-    return res
+
+  const { name, address, minPrice, sharingType} = req.query;
+
+  const filter = {};
+
+  if(name){
+    // $regex --- regular expression used by mongo to match with the fields
+    // $options: "i" --- ignore case
+    filter.name = { $regex: name, $options: "i" }; 
+  }
+
+  if(address){
+    filter.address = { $regex: address, $options: "i" }; 
+  }
+
+  if(minPrice){
+    filter.price = { $gte: parseInt(minPrice) }
+  }
+
+  if(sharingType){
+    filter.sharingType = { $regex: sharingType, $options: "i" }
+  }
+
+  const pgs = await List.find(filter);
+  if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
+  
+  return res
     .status(200)
     .json(new ApiResponse(200, pgs, "pgs fetched successfully!!"));
 });
