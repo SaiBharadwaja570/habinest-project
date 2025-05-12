@@ -5,7 +5,6 @@ import ApiResponse from "../utils/ApiResponse.js";
 import uploadImageOnCloudinary  from "../utils/cloudinary.js";
 import getCoordinatesFromAddress from "../utils/geocode.js";
 
-
 const getPGs = asyncHandler(async (req, res) => {
     const pgs = await List.find();
     if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
@@ -49,6 +48,7 @@ const createPG = asyncHandler(async (req, res) => {
   
     return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
   });
+
   
 
 export {

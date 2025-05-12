@@ -18,7 +18,7 @@ const startServer = async () => {
 
         await listingsDB().then(res=>{console.log("Connected listing")}).catch(err=>{console.log(err)})
 
-        app.listen(process.env.PORT || 3000, () =>{
+        app.listen(process.env.PORT || 8000, () =>{
             console.log(`Server listening on port: ${process.env.PORT}`)
         })
 
