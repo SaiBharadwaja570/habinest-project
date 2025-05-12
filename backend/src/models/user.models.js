@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema({
         default: 'user',
         required: true
     },
-    preferences: Object,
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Listingts'
