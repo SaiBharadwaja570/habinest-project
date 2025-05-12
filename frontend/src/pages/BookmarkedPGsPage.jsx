@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileDropdown from "../components/ProfileDropdown"; // Make sure to import your ProfileDropdown component
+import ProfileDropdown from "../components/ProfileDropdown"; 
 
 export default function BookmarkedPGsPage() {
   return (
@@ -18,7 +18,7 @@ export default function BookmarkedPGsPage() {
           <a href="#">About</a>
           <a href="#">Policies</a>
           
-          {/* Replace the profile logo with ProfileDropdown */}
+          
           <ProfileDropdown profileImage="/profile.png" />
         </nav>
       </header>
