@@ -19,7 +19,7 @@ router.post('/logout', verifyJWT, logoutUser)
 router.patch('/updateAccountInfo', verifyJWT, updateAccountInfo);
 
 // update account info
-router.patch('/updatePassword', verifyJWT, updateAccountInfo);
+router.patch('/updatePassword', verifyJWT, updatePassword);
 
 // get user
 router.get('/', verifyJWT ,getCurrentUser)
