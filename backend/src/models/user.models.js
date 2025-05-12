@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import userDB from "../db/userDB.js";
 
-
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -33,7 +32,6 @@ const userSchema = new mongoose.Schema({
         default: 'user',
         required: true
     },
-    refreshToken,
     preferences: Object,
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
