@@ -7,7 +7,7 @@ import getCoordinatesFromAddress from "../utils/geocode.js";
 
 const getPGs = asyncHandler(async (req, res) => {
 
-  const { name, address, minPrice, sharingType} = req.query;
+  const { name, address, minPrice, sharingType, gender} = req.query;
 
   const filter = {};
 
@@ -22,7 +22,12 @@ const getPGs = asyncHandler(async (req, res) => {
   }
 
   if(minPrice){
+    // $gte --- greater than equals to
     filter.price = { $gte: parseInt(minPrice) }
+  }
+
+  if(gender){
+    filter.gender = { $regex: gender, $options: "i" }
   }
 
   if(sharingType){

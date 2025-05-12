@@ -27,6 +27,12 @@ const listingsSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
+  gender: {
+    type: String,
+    enum: ['Gents', 'Women', 'Coliving'],
+    required: true
+  },
   
   location: {
     type: {
