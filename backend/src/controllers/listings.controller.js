@@ -4,6 +4,7 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import uploadImageOnCloudinary  from "../utils/cloudinary.js";
 import getCoordinatesFromAddress from "../utils/geocode.js";
+import fs from 'fs'
 
 const getPGs = asyncHandler(async (req, res) => {
 
@@ -78,9 +79,25 @@ const createPG = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
   });
 
+  const uploadImage= async (req,res)=>{
+    try {
+      const localPath=req.file?.path;
+      if(!localPath)
+      {
+        throw new ApiError(400, "No fle uploaded");
+      }
+      const result=await uploadImageOnCloudinary(localPath)
+      fs.unlinkSync(localPath);
+      return res.status(200).json(new ApiResponse(200, result.secure_url));
+    } catch (error) {
+      throw new ApiError(500, error.message, "Internal server error");
+    }
+  }
+
   
 
 export {
     getPGs,
-    createPG
+    createPG,
+    uploadImage
 }

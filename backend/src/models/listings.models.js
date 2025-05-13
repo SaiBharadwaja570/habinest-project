@@ -38,12 +38,10 @@ const listingsSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ['Point'],
-      required: true,
       default: 'Point'
     },
     coordinates: {
       type: [Number], // longitudes and latitudes
-      required: true
     }
   }
 }, { timestamps: true });
