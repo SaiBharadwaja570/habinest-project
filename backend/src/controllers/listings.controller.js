@@ -52,12 +52,7 @@ const createPG = asyncHandler(async (req, res) => {
   
     const pgExist = await List.findOne({ name });
     if (pgExist) throw new ApiError(409, "PG with this name already exists");
-  
-    const photoLocalPath = req.files?.photo?.[0]?.path;
-    if (!photoLocalPath) throw new ApiError(400, "Photo is required");
-  
-    const photo = await uploadImageOnCloudinary(photoLocalPath);
-    if (!photo) throw new ApiError(500, "Photo not uploaded on cloudinary");
+
   
     const coordinates = await getCoordinatesFromAddress(address);
     if ( !coordinates || coordinates.length !== 2 ) {
@@ -69,7 +64,7 @@ const createPG = asyncHandler(async (req, res) => {
       address,
       priceRange,
       sharingType,
-      photo: photo.url,
+      photo: req.photo.secure_url,
       location: {
         type: 'Point',
         coordinates
@@ -79,25 +74,9 @@ const createPG = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
   });
 
-  const uploadImage= async (req,res)=>{
-    try {
-      const localPath=req.file?.path;
-      if(!localPath)
-      {
-        throw new ApiError(400, "No fle uploaded");
-      }
-      const result=await uploadImageOnCloudinary(localPath)
-      fs.unlinkSync(localPath);
-      return res.status(200).json(new ApiResponse(200, result.secure_url));
-    } catch (error) {
-      throw new ApiError(500, error.message, "Internal server error");
-    }
-  }
-
   
 
 export {
     getPGs,
-    createPG,
-    uploadImage
+    createPG
 }
