@@ -24,7 +24,5 @@ router.patch('/updatePassword', verifyJWT, updatePassword);
 // get user
 router.get('/', verifyJWT ,getCurrentUser)
 
-// refresh-token
-router.post('/refresh-token', refresAccessToken)
 
 export default router

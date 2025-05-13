@@ -28,7 +28,9 @@ const generateAccessAndRefreshToken = async (userId) => {
 const refresAccessToken = asyncHandler(async (req, res) =>{
     const incomingToken = req.cookie.refreshToken || req.cookie.refreshToken;
 
-
+    if( !incomingToken ) return res.status(401, "Unauthorized user! No refresh token found")
+    
+        
 })
 
 // Register

@@ -32,11 +32,15 @@ const userSchema = new mongoose.Schema({
         default: 'user',
         required: true
     },
+    refrshToken: [String],
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Listingts'
     }]
-}, { timestamps: true })
+}, { 
+    timestamps: true 
+})
+
 
 // to hash updated password
 userSchema.pre("save", async function (next) {

@@ -1,5 +1,4 @@
 import ApiError from "./ApiError.js";
-import { asyncHandler } from "./asyncHandler.js";
 import axios from "axios";
 
 const getCoordinatesFromAddress = async (address) =>{
@@ -27,9 +26,6 @@ const getCoordinatesFromAddress = async (address) =>{
     } catch (error) {
         throw new ApiError(401, "Geocode error: "+ error)
     }
-
 }
-
-
 
 export default getCoordinatesFromAddress;
