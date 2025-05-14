@@ -23,31 +23,23 @@ const CreatePG = () => {
     const [state, dispatch]=useReducer(reducer, {name:"", address:"", price:"", sharing:"", photo:null, gender:""});
     const handleSubmit= async ()=>{
         try {
-            let imgUrl="";
-            if(state.photo)
-            {
-                const formData=new FormData();
-                formData.append("photo", state.photo);
-                const uploadRes= await axios.post("http://localhost:8000/api/pg/", formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
-                })
-                imgUrl=uploadRes.data.url;
-            }
-            const apiObj={
-                name:state.name,
-                address:state.address,
-                priceRange:state.price,
-                sharingType:state.sharing,
-                photo:imgUrl,
-                gender:state.gender,
-            }
-            await axios({
-                method: 'POST',
-                url: 'http://localhost:8000/api/pg/',
-                data: apiObj
+            const formData = new FormData();
+            formData.append("name", state.name);
+            formData.append("address", state.address);
+            formData.append("priceRange", state.price);
+            formData.append("sharingType", state.sharing);
+            formData.append("gender", state.gender);
+            formData.append("photo", state.photo);
+            const res=await axios({
+                method:"POST",
+                url:"http://localhost:8000/api/pg/",
+                data:formData,
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
             }).then(()=>{
                 alert("PG made")
-            })
+            });
         } catch (error) {
             console.error("Upload or submission failed", error)
         }
