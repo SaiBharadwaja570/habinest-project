@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react'
 import axios from 'axios'
+
 const CreatePG = () => {
 
     function reducer(state, action){
@@ -43,7 +44,6 @@ const CreatePG = () => {
         } catch (error) {
             console.error("Upload or submission failed", error)
         }
-        
     }
     return (
         <div>
