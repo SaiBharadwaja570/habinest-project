@@ -147,10 +147,9 @@ export default function OwnerPgForm() {
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded-lg mt-1"
             >
-              <option value="Public">Public</option>
-              <option value="Private">Private</option>
-              <option value="Girls Only">Girls Only</option>
-              <option value="Boys Only">Boys Only</option>
+              <option value="Public">Gents</option>
+              <option value="Private">Women</option>
+              <option value="Girls Only">Coliving</option>
             </select>
           </div>
 
