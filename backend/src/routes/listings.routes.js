@@ -6,8 +6,9 @@ const router = Router();
 
 router.post(
   '/',
-  upload.single('photo'),      
-  uploadImageOnCloudinary,     
+  upload.fields([
+    { name: 'photo', maxCount: 1 }
+  ]), 
   createPG                     
 );
 

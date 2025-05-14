@@ -22,6 +22,9 @@ async function geocodeAddress(address) {
     }
 }
 
-console.log(geocodeAddress("12/45, JP Nagar, Bangalore"))
+// geocodeAddress("12/45, JP Nagar, Bangalore")
+//     .then(coords => console.log(coords))
+//     .catch(err => console.error(err));
+
 
 export default geocodeAddress

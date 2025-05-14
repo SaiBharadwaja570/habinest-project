@@ -6,7 +6,7 @@ console.log("In multer")
 const storage = multer.diskStorage({
   
   destination: function (req, file, cb) {
-    cb(null, 'temp/'); // Ensure this folder exists or create it
+    cb(null, './public/temp/'); // Ensure this folder exists or create it
   },
     filename: function (req, file, cb) {
       cb(null, file.originalname)

@@ -7,25 +7,26 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadImageOnCloudinary =async (req,res,next) => {
-
-    try {
-      console.log(req.file)
-      const localPath=req.file?.path;
-      if (!localPath) {
-        return res.status(400).json({success:false, message:`No file uploaded ${localPath}`});
+const uploadImageOnCloudinary =async (localFilePath) => {
+  try {
+    if(!localFilePath) return null;
+    const response = await cloudinary.uploader.upload(
+      localFilePath,
+      { resource_type: "auto" }
+    )
+    fs.unlinkSync(localFilePath);
+    return response;
+  } catch (error) {
+    console.error("Cloudinary upload failed:", error);
+    if (localFilePath) {
+      try {
+        fs.unlinkSync(localFilePath);
+        console.log("Successfully deleted local file after Cloudinary failure:", localFilePath);
+      } catch (unlinkError) {
+        console.error("Error deleting local file after Cloudinary failure:", unlinkError);
       }
-      const result= await cloudinary.uploader.upload(localPath,{
-        resource_type:"auto"
-      })
-      req.photo=result;
-      fs.unlinkSync(localPath);
-      console.log(req.photo)
-      next();
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({success:false, message:`Failed to upload image to cloudinary: ${error.message}`});
     }
-};
+  }
+}
 
 export default uploadImageOnCloudinary;

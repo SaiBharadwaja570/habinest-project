@@ -28,7 +28,7 @@ const CreatePG = () => {
             {
                 const formData=new FormData();
                 formData.append("photo", state.photo);
-                const uploadRes= await axios.post("http://localhost:8000/api/pg/upload", formData, {
+                const uploadRes= await axios.post("http://localhost:8000/api/pg/", formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 })
                 imgUrl=uploadRes.data.url;
@@ -45,7 +45,7 @@ const CreatePG = () => {
                 method: 'POST',
                 url: 'http://localhost:8000/api/pg/',
                 data: apiObj
-            }).then((res)=>{
+            }).then(()=>{
                 alert("PG made")
             })
         } catch (error) {
