@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from 'axios'
 export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
     navigate("/register"); // Navigate to the register page
   };
+
+  const [email, setEmail]= useState('')
+  const [password, setPassword]=useState('')
+
+  const handleLogin= async ()=>{
+      const apiObj={
+        email,
+        password
+      }
+      axios({
+        method: 'POST',
+        url: 'http://localhost:8000/api/user/login',
+        data: apiObj
+      }).then(()=>{
+        alert("User logged in succesfully")
+        navigate('/')
+      })
+    }
 
   return (
     <div className="font-sans">
@@ -34,15 +52,17 @@ export default function LoginPage() {
             type="email"
             placeholder="Email"
             className="w-full p-3 rounded-md text-black"
+            onChange={(e)=>{setEmail(e.target.value)}}
           />
           <input
             type="password"
             placeholder="Password"
             className="w-full p-3 rounded-md text-black"
+            onChange={(e)=>{setPassword(e.target.value)}}
           />
         </div>
         <div className="flex justify-center gap-4 mt-8">
-          <button className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold">
+          <button className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold" onClick={handleLogin}>
             Login as User
           </button>
           <button className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold">
