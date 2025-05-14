@@ -1,32 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import axios from "axios";
 import { Select, SelectItem } from "../components/ui/select";
 
 export default function OwnerPgForm() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    price: "",
+  function reducer(state, action) {
+    switch (action.type) {
+      case "name":
+        return { ...state, name: action.payload }
+      case "address":
+        return { ...state, address: action.payload }
+      case "price":
+        return { ...state, price: action.payload }
+      case "sharing":
+        return { ...state, sharing: action.payload }
+      case "photo":
+        return { ...state, photo: action.payload }
+      case "gender":
+        return { ...state, gender: action.payload }
+      default:
+        return state
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, {
+    name: "",
     address: "",
-    sharingType: "Public",
-    pgPicture: null,
+    price: "",
+    sharing: "",
+    photo: null,
+    gender: ""
   });
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "pgPicture") {
-      setFormData({ ...formData, pgPicture: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
+  const handleSubmit= async ()=>{
+    try {
+        const formData = new FormData();
+        formData.append("name", state.name);
+        formData.append("address", state.address);
+        formData.append("priceRange", state.price);
+        formData.append("sharingType", state.sharing);
+        formData.append("gender", state.gender);
+        formData.append("photo", state.photo);
+        const res=await axios({
+            method:"POST",
+            url:"http://localhost:8000/api/pg/",
+            data:formData,
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(()=>{
+            alert("PG made")
+        });
+    } catch (error) {
+        console.error("Upload or submission failed", error)
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted", formData);
-  };
+}
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -85,18 +115,14 @@ export default function OwnerPgForm() {
       <main className="max-w-2xl mx-auto py-10 px-4">
         <h2 className="text-center text-2xl font-bold text-[#504B3A] mb-6">Owner Pg Form</h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 bg-white p-6 rounded-2xl shadow-md"
-        >
+        <form className="space-y-6 bg-white p-6 rounded-2xl shadow-md">
           <div>
             <Label htmlFor="fullName">Full Name</Label>
             <Input
               id="fullName"
               name="fullName"
               placeholder="Enter your full name"
-              value={formData.fullName}
-              onChange={handleChange}
+              onChange={(e) => dispatch({ type: "name", payload: e.target.value })}
               className="mt-1"
             />
           </div>
@@ -108,7 +134,7 @@ export default function OwnerPgForm() {
               name="pgPicture"
               type="file"
               accept="image/*"
-              onChange={handleChange}
+              onChange={(e) => dispatch({ type: "photo", payload: e.target.files[0] })}
               className="mt-1"
             />
           </div>
@@ -120,8 +146,7 @@ export default function OwnerPgForm() {
               name="price"
               type="number"
               placeholder="138"
-              value={formData.price}
-              onChange={handleChange}
+              onChange={(e) => dispatch({ type: "price", payload: e.target.value })}
               className="mt-1"
             />
           </div>
@@ -132,8 +157,7 @@ export default function OwnerPgForm() {
               id="address"
               name="address"
               placeholder="Enter address"
-              value={formData.address}
-              onChange={handleChange}
+              onChange={(e) => dispatch({ type: "address", payload: e.target.value })}
               className="mt-1"
             />
           </div>
@@ -143,8 +167,7 @@ export default function OwnerPgForm() {
             <select
               id="sharingType"
               name="sharingType"
-              value={formData.sharingType}
-              onChange={handleChange}
+              onChange={(e) => dispatch({ type: "sharing", payload: e.target.value })}
               className="w-full border border-gray-300 p-2 rounded-lg mt-1"
             >
               <option value="Public">Public</option>
@@ -154,8 +177,18 @@ export default function OwnerPgForm() {
             </select>
           </div>
 
+          <div>
+            <Label htmlFor="gender">Sharing Type</Label>
+            <select id="gender" name="gender" onChange={(e) => dispatch({ type: "gender", payload: e.target.value })} className="w-full border border-gray-300 p-2 rounded-lg mt-1">
+              <option value="">Select Gender Type</option>
+              <option value="Gents">Gents</option>
+              <option value="Women">Women</option>
+              <option value="Coliving">Coliving</option>
+            </select>
+          </div>
+
           <div className="pt-4">
-            <Button type="submit" className="bg-[#69995D] w-full hover:bg-[#5c864e]">
+            <Button className="bg-[#69995D] w-full hover:bg-[#5c864e]" onClick={handleSubmit}>
               Submit
             </Button>
           </div>
