@@ -3,6 +3,8 @@ import cors from 'cors'
 import userRouter from './src/routes/user.routes.js' // importing routes from user.routes.js
 import listingsRouter from './src/routes/listings.routes.js'
 import cookieParser from 'cookie-parser'
+import bookmarkRoutes from './routes/bookmarkRoutes.js';
+
 
 const app = express()
 
@@ -24,8 +26,13 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 
-
+// for-user
 app.use('/api/user', userRouter)
+
+// for-pg
 app.use('/api/pg', listingsRouter) 
+
+//for-bookmarks
+app.use('/api/bookmarks', bookmarkRoutes);
 
 export default app;

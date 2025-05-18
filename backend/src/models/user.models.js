@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     refrshToken: [String],
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Listingts'
+        ref: 'Listings'
     }]
 }, { 
     timestamps: true 
