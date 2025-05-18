@@ -60,7 +60,8 @@ const registerUser = asyncHandler(async (req, res) => {
         return res.status(201).json(new ApiResponse(201, { data: newUser }, "User created succesfully!!"));
     
     } catch (error) {
-        throw new ApiError(500, "Internal server error! User not created!")
+        console.log(error)
+        throw new ApiError(500, "Internal server error! User not created!", error)
     }
 })
 
