@@ -25,13 +25,42 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
-const refresAccessToken = asyncHandler(async (req, res) =>{
-    const incomingToken = req.cookie.refreshToken || req.cookie.refreshToken;
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingToken = req.cookies.refreshToken || req.cookies.refreshToken;
 
-    if( !incomingToken ) return res.status(401, "Unauthorized user! No refresh token found")
-    
-        
-})
+    if (!incomingToken) {
+        throw new ApiError(401, "Unauthorized user! No refresh token found");
+    }
+
+    try {
+        const user = await User.findOne({ refreshToken: incomingToken });
+
+        if (!user) {
+            throw new ApiError(403, "Invalid refresh token");
+        }
+
+        const isTokenValid = user.isRefreshTokenValid(incomingToken);
+
+        if (!isTokenValid) {
+            throw new ApiError(403, "Refresh token is invalid or expired");
+        }
+
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        };
+
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(new ApiResponse(200, { accessToken, refreshToken }, "Access token refreshed successfully"));
+    } catch (error) {
+        throw new ApiError(500, "Internal server error: " + error.message);
+    }
+});
 
 // Register
 const registerUser = asyncHandler(async (req, res) => {
@@ -181,9 +210,6 @@ const updateAccountInfo = asyncHandler(async (req, res) => {
 })
 
 
-const filterOutPgs = asyncHandler()
-
-
 export {
     registerUser,
     loginUser,
@@ -191,5 +217,5 @@ export {
     updatePassword,
     getCurrentUser,
     updateAccountInfo,
-    refresAccessToken
+    refreshAccessToken
 }
