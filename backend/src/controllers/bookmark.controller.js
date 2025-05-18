@@ -1,5 +1,5 @@
-import User from '../models/User.js';
-import { Listings } from '../models/Listings.js';
+import User from '../models/user.models.js';
+import { Listings } from '../models/listings.models.js';
 
 export const addBookmark = async (req, res) => {
   const { listingId } = req.body;

@@ -1,7 +1,6 @@
 import express from 'express';
-import { addBookmark, removeBookmark, getBookmarks } from '../controllers/bookmarkController.js';
+import { addBookmark, removeBookmark, getBookmarks } from '../controllers/bookmark.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
-
 
 const router = express.Router();
 
