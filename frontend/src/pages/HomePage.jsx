@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import axios from 'axios';
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,40 +12,48 @@ import {
 } from "lucide-react";
 import ProfileDropdown from "../components/ProfileDropdown";
 
-const Navbar = () => {
+const Navbar = ({user}) => {
   const navigate = useNavigate();
-
+  console.log(user)
   return (
     <nav className="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-50">
-      {/* Left: Logo */}
-      <div className="flex items-center gap-2">
-        <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-10 w-10" />
-        <span className="font-semibold text-lg text-[#504B3A]">Habinest</span>
-      </div>
+    {/* Left: Logo */}
+    <div className="flex items-center gap-2">
+      <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-10 w-10" />
+      <span className="font-semibold text-lg text-[#504B3A]">Habinest</span>
+    </div>
 
-      {/* Center: Navigation links */}
-      <div className="space-x-4 text-sm text-teal-700 font-medium hidden md:flex">
-        <a href="#" onClick={()=>navigate('/filter')}>Find PGs</a>
-        <a href="#" onClick={()=>navigate('/bookmarks')}>BookMarks</a>
-        <a href="#">Write a Review</a>
-      </div>
+    {/* Center: Navigation links */}
+    <div className="space-x-4 text-sm text-teal-700 font-medium hidden md:flex">
+      <a href="#" onClick={() => navigate('/filter')}>Find PGs</a>
+      <a href="#" onClick={() => navigate('/bookmarks')}>BookMarks</a>
+      <a href="#">Write a Review</a>
+    </div>
 
-      {/* Right: Auth Buttons */}
-      <div className="flex items-center gap-2">
-        <Button
-          className="bg-[#69995D] text-white text-sm px-4 py-1 hover:bg-[#587f4e]"
-          onClick={() => navigate("/login")}
-        >
-          Login
-        </Button>
-        <Button
-          className="bg-[#69995D] text-white text-sm px-4 py-1 hover:bg-[#587f4e]"
-          onClick={() => navigate("/register")}
-        >
-          Register
-        </Button>
-      </div>
-    </nav>
+    {/* Right: Auth or Profile */}
+    <div className="flex items-center gap-2">
+      {user ? (
+        <span className="text-sm font-semibold text-[#504B3A]">
+          Hi, {user.name}
+        </span>
+      ) : (
+        <>
+          <Button
+            className="bg-[#69995D] text-white text-sm px-4 py-1 hover:bg-[#587f4e]"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </Button>
+          <Button
+            className="bg-[#69995D] text-white text-sm px-4 py-1 hover:bg-[#587f4e]"
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </Button>
+        </>
+      )}
+    </div>
+  </nav>
   );
 };
 
@@ -236,10 +245,26 @@ const Footer = () => {
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null); // <--- user state
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/user/", {
+          withCredentials: true,
+        });
+        setUser(res.data.data); // Save user if authenticated
+      } catch (error) {
+        setUser(null); // In case of 401 or failure
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <div className="font-sans">
-      <Navbar />
+      <Navbar user={user}/>
       <div className="flex flex-col items-center justify-center py-12 gap-4">
 
 
