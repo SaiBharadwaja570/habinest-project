@@ -21,11 +21,12 @@ router.post('/login', loginUser);
 // logout
 router.post('/logout', verifyJWT, logoutUser);
 
-// update password
+// update account info
 router.patch('/updateAccountInfo', verifyJWT, updateAccountInfo);
 
-// update account info
+// update password
 router.patch('/updatePassword', verifyJWT, updatePassword);
+
 
 // get current user
 router.get('/', verifyJWT, getCurrentUser);
