@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import ApiError from '../utils/ApiError.js';
 import dotenv from 'dotenv';
+
 dotenv.config();
+
 const userDB = async () => {
     
     try {
