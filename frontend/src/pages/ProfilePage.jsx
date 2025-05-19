@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // ✅ import this
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Pencil, LogOut } from "lucide-react";
+import axios from 'axios'
 
 const ProfilePage = () => {
   const navigate = useNavigate(); // ✅ hook to handle navigation
-
+  const [user, setUser] = useState(null); // <--- user state
+  
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const res = await axios.get("http://localhost:8000/api/user/", {
+            withCredentials: true,
+          });
+          setUser(res.data.data); // Save user if authenticated
+        } catch (error) {
+          setUser(null); // In case of 401 or failure
+        }
+      };
+  
+      fetchUser();
+    }, []);
   return (
     <div className="min-h-screen flex flex-col bg-[#E4DFDA] text-black">
       {/* Header */}
@@ -41,18 +57,24 @@ const ProfilePage = () => {
 
             {/* Profile Details Section */}
             <div className="space-y-4">
-              {[{ label: "Name", value: "John Doe" },
-                { label: "Email", value: "johndoe@gmail.com" },
-                { label: "Mobile Phone(+1)", value: "(123) 456-7890" },
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">{item.label}:</p>
-                    <p className="text-lg font-semibold">{item.value}</p>
-                  </div>
-                  <Pencil className="text-[#504B3A] cursor-pointer" />
-                </div>
-              ))}
+              {user ? (
+                <>
+                  {[{ label: "Name", value: user.name },
+                    { label: "Email", value: user.email },
+                    { label: "Mobile Phone", value: user.phone },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500">{item.label}:</p>
+                        <p className="text-lg font-semibold">{item.value}</p>
+                      </div>
+                      <Pencil className="text-[#504B3A] cursor-pointer" />
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <p className="text-center text-gray-500">Loading user...</p>
+              )}
 
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">Change Password</p>
