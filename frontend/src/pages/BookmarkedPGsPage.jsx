@@ -7,7 +7,7 @@ export default function BookmarkedPGsPage() {
       {/* Header */}
       <header className="flex items-center justify-between p-4 border-b border-[#504B3A]/20">
         <div className="flex items-center gap-2">
-          <img src="/HabinestLogo.png" alt="Habinest" className="w-10 h-10" />
+          <img src="/HabinestLogo.jpg" alt="Habinest" className="w-10 h-10" />
           <span className="font-bold text-xl">Habinest</span>
         </div>
         <nav className="flex items-center gap-6 text-sm">
