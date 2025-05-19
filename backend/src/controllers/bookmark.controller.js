@@ -16,10 +16,6 @@ export const addBookmark = async (req, res) => {
   }
 };
 
-
-import { Listings } from '../models/listings.models.js';
-import User from '../models/user.models.js';
-
 export const removeBookmark = async (req, res) => {
   const { listingId } = req.body;
   const userId = req.user._id;
