@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileDropdown from "../components/ProfileDropdown"; // Make sure to import your ProfileDropdown component
+import ProfileDropdown from "../components/ProfileDropdown"; 
 
 export default function BookmarkedPGsPage() {
   return (
@@ -11,14 +11,16 @@ export default function BookmarkedPGsPage() {
           <span className="font-bold text-xl">Habinest</span>
         </div>
         <nav className="flex items-center gap-6 text-sm">
-          <a href="#">Terms And</a>
-          <a href="#">Conditions</a>
-          <a href="#">Community</a>
-          <a href="#">Contact</a>
-          <a href="#">About</a>
-          <a href="#">Policies</a>
+  <div className="space-x-4 text-sm text-teal-700 font-medium">
+    <a href="#">Find PGs</a>
+    <a href="#">Map View</a>
+    <a href="#">Book a Visit</a>
+    <a href="#">Saved</a>
+    <a href="#">My Dashboard</a>
+    <a href="#">Write a Review</a>
+  </div>
           
-          {/* Replace the profile logo with ProfileDropdown */}
+          
           <ProfileDropdown profileImage="/profile.png" />
         </nav>
       </header>
@@ -110,27 +112,58 @@ export default function BookmarkedPGsPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#504B3A] text-white px-6 py-10 grid grid-cols-4 gap-8">
-        <div className="space-y-4">
+{/* Footer */}
+      <footer className="border-t p-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-sm text-gray-600">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="h-6 w-6" />
+          </div>
           <div className="flex gap-2 text-xl">
-            <i className="fab fa-figma" />
-            <i className="fab fa-instagram" />
-            <i className="fab fa-youtube" />
-            <i className="fab fa-linkedin" />
+            <span>🧿</span>
+            <span>📷</span>
+            <span>📹</span>
+            <span>🔗</span>
           </div>
         </div>
 
-        {['Use cases', 'Explore', 'Resources'].map((title, i) => (
-          <div key={i}>
-            <h5 className="font-bold mb-2">{title}</h5>
-            <ul className="space-y-1 text-sm">
-              {Array(7).fill('Label').map((label, idx) => (
-                <li key={idx}>{label}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+  <div>
+    <h4 className="font-semibold mb-2">Use Cases</h4>
+    <ul className="space-y-1">
+      <li>Student housing discovery</li>
+      <li>Professional relocation</li>
+      <li>Personalized PG browsing</li>
+      <li>Booking site visits</li>
+      <li>Saving/bookmarking PGs</li>
+      <li>Mobile-responsive exploration</li>
+      <li>Feedback and ratings system</li>
+    </ul>
+  </div>
+
+  <div>
+    <h4 className="font-semibold mb-2">Explore</h4>
+    <ul className="space-y-1">
+      <li>PG Listings & Filters</li>
+      <li>Profile & Preferences</li>
+      <li>Map-based PG Search</li>
+      <li>Real-time Suggestions</li>
+      <li>Dark Mode UI</li>
+      <li>Ratings & Reviews</li>
+      <li>Similar PG Recommendations</li>
+    </ul>
+  </div>
+
+  <div>
+    <h4 className="font-semibold mb-2">Resources</h4>
+    <ul className="space-y-1">
+      <li>Blog & Guides</li>
+      <li>Best Practices for Users</li>
+      <li>Support & Contact Form</li>
+      <li>Developer API Docs</li>
+      <li>Location Data (OpenStreetMap)</li>
+      <li>Progress Trackers</li>
+      <li>Resource Library</li>
+    </ul>
+  </div>
       </footer>
     </div>
   );

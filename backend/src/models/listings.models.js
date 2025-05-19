@@ -27,21 +27,24 @@ const listingsSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
+  gender: {
+    type: String,
+    enum: ['Gents', 'Women', 'Coliving'],
+    required: true
+  },
   
   location: {
     type: {
       type: String,
       enum: ['Point'],
-      required: true,
       default: 'Point'
     },
     coordinates: {
       type: [Number], // longitudes and latitudes
-      required: true
     }
   }
-
-});
+}, { timestamps: true });
 
 listingsSchema.index({ location: '2dsphere' });
 

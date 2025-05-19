@@ -105,12 +105,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         throw new ApiError(403, "Invalid refresh token");
     }
 
-    const accessToken = user.generateAccessToken();
+    const isTokenValid = user.isRefreshTokenValid(incomingToken);
+    if (!isTokenValid) {
+        throw new ApiError(403, "Refresh token is invalid or expired");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
 
     return res
         .status(200)
         .cookie("accessToken", accessToken, cookieOptions)
-        .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
+        .cookie("refreshToken", refreshToken, cookieOptions)
+        .json(new ApiResponse(200, { accessToken, refreshToken }, "Access token refreshed"));
 });
 
 // Logout User
@@ -182,8 +188,3 @@ export {
     updateAccountInfo,
     refreshAccessToken
 };
-// Note: The code has been refactored to improve readability and maintainability.
-
-
-
-

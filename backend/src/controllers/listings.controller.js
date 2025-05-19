@@ -4,54 +4,111 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import uploadImageOnCloudinary  from "../utils/cloudinary.js";
 import getCoordinatesFromAddress from "../utils/geocode.js";
+import fs from 'fs'
 
 const getPGs = asyncHandler(async (req, res) => {
-    const pgs = await List.find();
-    if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
-    return res
+
+  const { name, address, minPrice, sharingType, gender} = req.query;
+
+  const filter = {};
+
+  if(name){
+    // $regex --- regular expression used by mongo to match with the fields
+    // $options: "i" --- ignore case
+    filter.name = { $regex: name, $options: "i" }; 
+  }
+
+  if(address){
+    filter.address = { $regex: address, $options: "i" }; 
+  }
+
+  if(minPrice){
+    // $gte --- greater than equals to
+    filter.price = { $gte: parseInt(minPrice) }
+  }
+
+  if(gender){
+    filter.gender = { $regex: gender, $options: "i" }
+  }
+
+  if(sharingType){
+    filter.sharingType = { $regex: sharingType, $options: "i" }
+  }
+
+  const pgs = await List.find(filter);
+  if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
+  
+  return res
     .status(200)
     .json(new ApiResponse(200, pgs, "pgs fetched successfully!!"));
 });
 
 const createPG = asyncHandler(async (req, res) => {
-    const { name, address, priceRange, sharingType } = req.body;
-  
-    if ([name, address, priceRange, sharingType].some((field) => field?.trim() === '')) {
-      throw new ApiError(400, 'Please fill all the fields');
-    }
-  
-    const pgExist = await List.findOne({ name });
-    if (pgExist) throw new ApiError(409, "PG with this name already exists");
-  
-    const photoLocalPath = req.files?.photo?.[0]?.path;
-    if (!photoLocalPath) throw new ApiError(400, "Photo is required");
-  
-    const photo = await uploadImageOnCloudinary(photoLocalPath);
-    if (!photo) throw new ApiError(500, "Photo not uploaded on cloudinary");
-  
-    const coordinates = await getCoordinatesFromAddress(address);
-    if ( !coordinates || coordinates.length !== 2 ) {
-      throw new ApiError(400, "Could not determine coordinates for the address.");
-    }
-  
-    const list = await List.create({
-      name,
-      address,
-      priceRange,
-      sharingType,
-      photo: photo.url,
-      location: {
-        type: 'Point',
-        coordinates
-      }
-    });
-  
-    return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
+  const { name, address, priceRange, sharingType, gender } = req.body;
+
+  // Validation: ensure fields are present
+  if (!name?.trim() || !address?.trim() || !sharingType?.trim() || !gender?.trim() || !priceRange) {
+    throw new ApiError(400, 'Please fill all the fields');
+  }
+
+  // Check if PG already exists
+  const pgExist = await List.findOne({ $or: [{ name }] });
+  if (pgExist) throw new ApiError(409, "PG with this name already exists");
+
+  // Validate file and upload to Cloudinary
+  const localImagePath = req.files?.photo?.[0]?.path;
+  if (!localImagePath) {
+    throw new ApiError(400, "Image file (photo) is required");
+  }
+
+  console.log("localImagePath:", localImagePath);
+
+  const imageUrlOnCloudinary = await uploadImageOnCloudinary(localImagePath);
+
+  // Geocode the address
+  const coordinatesResult = await getCoordinatesFromAddress(address);
+  if (!coordinatesResult?.lat || !coordinatesResult?.lon) {
+    throw new ApiError(400, "Could not determine valid coordinates for the address.");
+  }
+
+  const latitude = parseFloat(coordinatesResult.lat);
+  const longitude = parseFloat(coordinatesResult.lon);
+
+  if (isNaN(latitude) || isNaN(longitude)) {
+    throw new ApiError(400, "Invalid latitude or longitude values.");
+  }
+
+  // Create PG listing
+  const list = await List.create({
+    name,
+    address,
+    priceRange,
+    sharingType,
+    photo: imageUrlOnCloudinary.url,
+    gender,
+    location: {
+      type: 'Point',
+      coordinates: [longitude, latitude],
+    },
   });
+
+  return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
+});
+
+const getSinglePG = async (req, res)=>{
+  const id=req.params.id;
+  let pg=await List.findById(id);
+  if(!pg)
+  {
+    return res.status(500).json(new ApiError(400, "PG not found"));
+  }
+  res.status(200).json(new ApiResponse(200, pg, "pg fetched successfully"))
+}
 
   
 
 export {
     getPGs,
-    createPG
+    createPG,
+    getSinglePG
 }

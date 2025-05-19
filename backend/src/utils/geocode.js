@@ -1,35 +1,29 @@
-import ApiError from "./ApiError.js";
-import { asyncHandler } from "./asyncHandler.js";
-import axios from "axios";
+import axios from 'axios'
+async function geocodeAddress(address) {
+    const encoded = encodeURIComponent(address);
+    const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
 
-const getCoordinatesFromAddress = async (address) =>{
     try {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-        
-        const response = await axios.get(
-            url,
-            {
-                headers: {
-                    "User-Agent": "Habinest/1.0 (saibharadwaja1906@gmail.com)"
-                }
+        const response = await axios.get(url, {
+            headers: {
+                'User-Agent': 'HabinestApp/1.0 (contact: saibharadwaja1000@gmail.com)'
             }
-        )
+        });
 
         const data = response.data;
-
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             const { lat, lon } = data[0];
-            return [parseFloat(lon), parseFloat(lat)]; // GeoJSON format: [longitude, latitude]
-          } else {
-            throw new ApiError(500 ,'Coordinates not found for the given address.');
+            return { lat, lon };
+        } else {
+            throw new Error('No coordinates found for the given address.');
         }
-    
     } catch (error) {
-        throw new ApiError(401, "Geocode error: "+ error)
+        throw new Error('Geocoding failed: ' + error);
     }
-
 }
+geocodeAddress("12/45, JP Nagar, Bangalore")
+.then((res) => console.log(res))
 
 
 
-export default getCoordinatesFromAddress;
+export default geocodeAddress

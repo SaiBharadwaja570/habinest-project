@@ -1,7 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function FilterListingPage() {
+  const [listings, setListings] = useState([]);
+  const [search, setSearch] = useState("");
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(50000);
+  const [genderFilter, setGenderFilter] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const fetchListings = async () => {
+    try {
+const res = await axios.get("http://localhost:8000/api/pg", {
+  params: {
+    name: search,
+    minPrice,
+    gender: genderFilter
+  },
+});
+setListings(res.data.data); 
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchListings();
+  }, []);
+
+  const handleFilterChange = () => {
+    fetchListings();
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -16,14 +45,16 @@ export default function FilterListingPage() {
           <span className="font-bold text-xl">Habinest</span>
         </div>
         <nav className="flex items-center gap-6 text-sm">
-          <a href="#">Terms And</a>
-          <a href="#">Conditions</a>
-          <a href="#">Community</a>
-          <a href="#">Contact</a>
-          <a href="#">About</a>
-          <a href="#">Policies</a>
+          <div className="space-x-4 text-sm text-teal-700 font-medium">
+            <a href="#">Find PGs</a>
+            <a href="#">Map View</a>
+            <a href="#">Book a Visit</a>
+            <a href="#">Saved</a>
+            <a href="#">My Dashboard</a>
+            <a href="#">Write a Review</a>
+          </div>
 
-          {/* Dropdown Profile */}
+          {/* Dropdown */}
           <div className="relative">
             <button
               onClick={toggleDropdown}
@@ -52,45 +83,52 @@ export default function FilterListingPage() {
         </nav>
       </header>
 
-      {/* Main content */}
+      {/* Content */}
       <div className="flex px-4 py-6">
-        {/* Sidebar Filters */}
+        {/* Sidebar */}
         <aside className="w-1/4 pr-4 space-y-4">
           <div>
-            <h3 className="font-bold">Keywords</h3>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {['Spring', 'Smart', 'Modern'].map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-[#69995D] text-white px-2 py-1 rounded-full text-xs"
-                >
-                  {tag} ✕
-                </span>
-              ))}
-            </div>
+            <h3 className="font-bold">Search</h3>
+            <input
+              type="text"
+              placeholder="Search by name..."
+              className="w-full px-2 py-1 border rounded"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onBlur={handleFilterChange}
+            />
           </div>
 
-          {["Color", "Size"].map((filter) => (
-            <div key={filter}>
-              <h4 className="font-semibold">{filter}</h4>
-              <ul className="space-y-1 mt-2">
-                {Array(3).fill(0).map((_, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <input type="checkbox" className="mt-1" defaultChecked />
-                    <div>
-                      <span className="font-medium">Label</span>
-                      <p className="text-xs text-[#504B3A]/80">Description</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div>
+            <h4 className="font-semibold">Gender</h4>
+            <select
+              className="w-full px-2 py-1 border rounded mt-1"
+              value={genderFilter}
+              onChange={(e) => {
+                setGenderFilter(e.target.value);
+                handleFilterChange();
+              }}
+            >
+              <option value="">All</option>
+              <option value="Gents">Gents</option>
+              <option value="Women">Women</option>
+              <option value="Coliving">Coliving</option>
+            </select>
+          </div>
 
           <div>
-            <label className="block font-semibold">Label</label>
-            <input type="range" min="0" max="100" className="w-full" />
-            <div className="text-sm">$0–100</div>
+            <label className="block font-semibold">Price Range</label>
+            <input
+              type="range"
+              min="1000"
+              max="50000"
+              step="1000"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              onMouseUp={handleFilterChange}
+              className="w-full"
+            />
+            <div className="text-sm">₹{minPrice} – ₹{maxPrice}</div>
           </div>
         </aside>
 
@@ -101,34 +139,37 @@ export default function FilterListingPage() {
               type="text"
               placeholder="Search"
               className="px-4 py-2 border border-[#504B3A]/20 rounded w-1/2"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onBlur={handleFilterChange}
             />
             <div className="flex gap-2">
-              {["New", "Price ascending", "Price descending", "Rating"].map((f, idx) => (
-                <button
-                  key={f}
-                  className={`px-3 py-1 text-sm rounded border ${
-                    idx === 0
-                      ? "bg-[#504B3A] text-white"
-                      : "border-[#504B3A]/30 text-[#504B3A]"
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
+              <button
+                className="px-3 py-1 text-sm rounded border bg-[#504B3A] text-white"
+                onClick={handleFilterChange}
+              >
+                Apply Filters
+              </button>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            {Array(6).fill(0).map((_, i) => (
+            {listings.map((listing) => (
               <div
-                key={i}
+                key={listing._id}
                 className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center"
               >
-                <div className="bg-[#E4DFDA] h-32 flex items-center justify-center rounded">
-                  <span className="text-[#504B3A]/40">Image</span>
-                </div>
-                <p className="mt-2 font-medium">Text</p>
-                <p className="text-sm font-bold">$0</p>
+                <img
+                  src={listing.photo}
+                  alt={listing.name}
+                  className="w-full h-32 object-cover rounded"
+                />
+                <p className="mt-2 font-medium">{listing.name}</p>
+                <p className="text-sm">{listing.address}</p>
+                <p className="text-sm font-bold">₹{listing.priceRange}</p>
+                <p className="text-xs text-[#504B3A]/70">
+                  {listing.gender} | {listing.sharingType}
+                </p>
               </div>
             ))}
           </div>
@@ -136,26 +177,57 @@ export default function FilterListingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#504B3A] text-white px-6 py-10 grid grid-cols-4 gap-8">
-        <div className="space-y-4">
+      <footer className="border-t p-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-sm text-gray-600">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="h-6 w-6" />
+          </div>
           <div className="flex gap-2 text-xl">
-            <i className="fab fa-figma" />
-            <i className="fab fa-instagram" />
-            <i className="fab fa-youtube" />
-            <i className="fab fa-linkedin" />
+            <span>🧿</span>
+            <span>📷</span>
+            <span>📹</span>
+            <span>🔗</span>
           </div>
         </div>
 
-        {["Use cases", "Explore", "Resources"].map((title, i) => (
-          <div key={i}>
-            <h5 className="font-bold mb-2">{title}</h5>
-            <ul className="space-y-1 text-sm">
-              {Array(7).fill("Label").map((label, idx) => (
-                <li key={idx}>{label}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        <div>
+          <h4 className="font-semibold mb-2">Use Cases</h4>
+          <ul className="space-y-1">
+            <li>Student housing discovery</li>
+            <li>Professional relocation</li>
+            <li>Personalized PG browsing</li>
+            <li>Booking site visits</li>
+            <li>Saving/bookmarking PGs</li>
+            <li>Mobile-responsive exploration</li>
+            <li>Feedback and ratings system</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-2">Explore</h4>
+          <ul className="space-y-1">
+            <li>PG Listings & Filters</li>
+            <li>Profile & Preferences</li>
+            <li>Map-based PG Search</li>
+            <li>Real-time Suggestions</li>
+            <li>Dark Mode UI</li>
+            <li>Ratings & Reviews</li>
+            <li>Similar PG Recommendations</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-2">Resources</h4>
+          <ul className="space-y-1">
+            <li>Blog & Guides</li>
+            <li>Best Practices for Users</li>
+            <li>Support & Contact Form</li>
+            <li>Developer API Docs</li>
+            <li>Location Data (OpenStreetMap)</li>
+            <li>Progress Trackers</li>
+            <li>Resource Library</li>
+          </ul>
+        </div>
       </footer>
     </div>
   );
