@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="font-sans">
 {/* Navbar */}
 <nav className="flex justify-between items-center p-4 border-b bg-white shadow-sm">
-  <img src="/logo.png" alt="Habinest Logo" className="h-12 w-12" />
+  <img src="/HabinestLogo.png" alt="Habinest Logo" className="h-12 w-12" />
 
   <div className="space-x-4 text-sm text-teal-700 font-medium">
     <a href="#">Find PGs</a>
