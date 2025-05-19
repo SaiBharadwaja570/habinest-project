@@ -46,46 +46,40 @@ export default function RegisterPage() {
     <a href="#">Register</a>
   </div>
 </nav>
-
-
-      {/* Register Section */}
-      <section className="bg-green-600 text-white py-16 px-4 text-center">
-        <h1 className="text-3xl font-bold mb-8">Register</h1>
-        <div className="max-w-xl mx-auto space-y-4">
-          <input
-            type="text"
-            placeholder="Name"
-            className="w-full p-3 rounded-md text-black"
-            onChange={(e)=>{setName(e.target.value)}}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-3 rounded-md text-black"
-            onChange={(e)=>{setEmail(e.target.value)}}
-          />
-          <input
-            type="number"
-            placeholder="Phone number"
-            className="w-full p-3 rounded-md text-black"
-            onChange={(e)=>{setPhone(e.target.value)}}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 rounded-md text-black"
-            onChange={(e)=>{setPassword(e.target.value)}}
-          />
-        </div>
-        <div className="flex justify-center gap-4 mt-8">
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-md font-semibold" onClick={handleRegister}>
-            Register as User
-          </button>
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-md font-semibold">
-            Register as Owner
-          </button>
-          <button
-            onClick={handleLoginClick} // Add click handler
+        <section className="bg-green-600 text-white py-16 px-4 text-center">
+          <h1 className="text-3xl font-bold mb-8">Register</h1>
+          <div className="max-w-xl mx-auto space-y-4">
+            <input
+          type="text"
+          placeholder="Name"
+          className="w-full p-3 rounded-md text-black border border-black"
+          onChange={(e)=>{setName(e.target.value)}}
+            />
+            <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-3 rounded-md text-black border border-black"
+          onChange={(e)=>{setEmail(e.target.value)}}
+            />
+            <input
+          type="number"
+          placeholder="Phone number"
+          className="w-full p-3 rounded-md text-black border border-black"
+          onChange={(e)=>{setPhone(e.target.value)}}
+            />
+            <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-3 rounded-md text-black border border-black"
+          onChange={(e)=>{setPassword(e.target.value)}}
+            />
+          </div>
+          <div className="flex justify-center gap-4 mt-8">
+            <button className="bg-blue-600 text-white px-6 py-2 rounded-md font-semibold" onClick={handleRegister}>
+          Register
+            </button>
+            <button
+          onClick={handleLoginClick} // Add click handler
             className="bg-black text-white px-6 py-2 rounded-md font-semibold"
           >
             Login

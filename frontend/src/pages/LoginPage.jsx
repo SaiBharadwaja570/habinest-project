@@ -51,22 +51,19 @@ export default function LoginPage() {
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 rounded-md text-black"
+            className="w-full p-3 rounded-md  text-black border border-black"
             onChange={(e)=>{setEmail(e.target.value)}}
           />
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-3 rounded-md text-black"
+            className="w-full p-3 rounded-md text-black border border-black"
             onChange={(e)=>{setPassword(e.target.value)}}
           />
         </div>
         <div className="flex justify-center gap-4 mt-8">
           <button className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold" onClick={handleLogin}>
-            Login as User
-          </button>
-          <button className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold">
-            Login as Owner
+            Login 
           </button>
           <button
             onClick={handleRegisterClick} // Add click handler
