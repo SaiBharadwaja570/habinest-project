@@ -10,21 +10,10 @@ const app = express()
 
 app.use(express.json())
 
-const allowedOrigins = ['http://localhost:5173']; // add your frontend URL(s) here
-
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin like Postman or server-to-server
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // important to allow cookies/auth
-}));
-
+    origin: 'http://localhost:5173',
+    credentials: true
+}))
 
 // express.urlencoded() parses the data and makes it available in the req.body object
 app.use(express.urlencoded({extended: true, limit: "16kb"}))

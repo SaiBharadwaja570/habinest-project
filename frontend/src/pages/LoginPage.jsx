@@ -19,7 +19,8 @@ export default function LoginPage() {
       axios({
         method: 'POST',
         url: 'http://localhost:8000/api/user/login',
-        data: apiObj
+        data: apiObj,
+        withCredentials: true
       }).then(()=>{
         alert("User logged in succesfully")
         navigate('/')
