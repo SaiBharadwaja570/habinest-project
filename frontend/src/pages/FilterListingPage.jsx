@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function FilterListingPage() {
+  const navigate=useNavigate()
   const [listings, setListings] = useState([]);
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState(0);
@@ -150,6 +152,7 @@ export default function FilterListingPage() {
               <div
                 key={listing._id}
                 className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center"
+                onClick={()=>navigate(`/${listing._id}`)}
               >
                 <img
                   src={listing.photo}
