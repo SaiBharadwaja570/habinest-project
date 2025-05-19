@@ -1,12 +1,65 @@
-# React + Vite
+🏠 Habinest – A Personalized PG Discovery Platform
+Habinest is a full-stack web application that helps students and professionals discover, filter, and manage PG (Paying Guest) accommodations with real-time features like smart search, interactive maps, profile customization.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+🧩 Features
+🔐 Authentication & User Profiles
+Email/password Signup & Login (no Firebase)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Multi-step Signup with preferences
 
-## Expanding the ESLint configuration
+Edit profile: name, email, location, password
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Toggle Dark Mode
+
+🏘️ PG Discovery
+Debounced search with real-time suggestions
+
+Filters: Price, Rating, Sharing Type, Distance
+
+Sort by: Price, Rating, Recently Added
+
+PG Detail view with:
+
+Image Gallery
+
+Ratings & Reviews
+
+Map Location
+
+
+🎯 Personalization & UX
+Bookmark PGs for later
+
+Notification toasts (success, error, info)
+
+Confirmation dialogs before deletions
+
+Responsive Design (mobile + desktop)
+
+Similar PG Suggestions
+
+
+
+🧪 Tech Stack
+Frontend
+React.js with React Router
+
+Tailwind CSS for styling
+
+React-Leaflet + Leaflet.js for maps
+
+
+Maps
+OpenStreetMap for map data
+
+Nominatim API for geocoding
+
+Overpass API for advanced queries
+
+Dev Tools
+Git, GitHub
+
+Postman for API testing
+
+dotenv, cors for config and CORS handling
