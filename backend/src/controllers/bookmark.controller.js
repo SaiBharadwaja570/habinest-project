@@ -2,41 +2,49 @@ import User from '../models/user.models.js';
 import { Listings } from '../models/listings.models.js';
 
 export const addBookmark = async (req, res) => {
-  const { listingId } = req.body;
-  const userId = req.user._id; // assuming user is authenticated
+  const userId = req.user._id;
 
   try {
-    const listing = await Listings.findById(listingId);
-    if (!listing) return res.status(404).json({ message: 'Listing not found' });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { $addToSet: { bookmarks: listingId } }, // avoids duplicates
-      { new: true }
-    ).populate('bookmarks');
+    const bookmarks = await Listings.find({ _id: { $in: user.bookmarks } });
 
-    return res.status(200).json({ message: 'Bookmarked successfully', bookmarks: user.bookmarks });
+    return res.status(200).json({ bookmarks });
   } catch (err) {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+
+import { Listings } from '../models/listings.models.js';
+import User from '../models/user.models.js';
 
 export const removeBookmark = async (req, res) => {
   const { listingId } = req.body;
   const userId = req.user._id;
 
   try {
+    // Remove the bookmark ID from user's bookmarks array
     const user = await User.findByIdAndUpdate(
       userId,
       { $pull: { bookmarks: listingId } },
       { new: true }
-    ).populate('bookmarks');
+    );
 
-    return res.status(200).json({ message: 'Bookmark removed', bookmarks: user.bookmarks });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Manually fetch updated bookmarks using the other DB connection
+    const bookmarks = await Listings.find({ _id: { $in: user.bookmarks } });
+
+    return res.status(200).json({ message: 'Bookmark removed', bookmarks });
   } catch (err) {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
 
 export const getBookmarks = async (req, res) => {
   const userId = req.user._id;

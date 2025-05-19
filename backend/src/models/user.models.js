@@ -4,6 +4,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import userDB from "../db/userDB.js";
+import './listings.models.js';
 
 const userSchema = new mongoose.Schema({
     name: {
