@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import { updateAccountInfoSchema , registerUserSchema , loginSchema } from "../validators/user.validator.js";
+
 
 // Common cookie options
 const cookieOptions = {
@@ -29,39 +31,39 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, phone, email, password } = req.body;
+  const parsed = registerUserSchema.safeParse(req.body);
+  if (!parsed.success) {
+    const errorMessages = parsed.error.errors.map((err) => err.message).join(", ");
+    throw new ApiError(400, `Validation error: ${errorMessages}`);
+  }
 
-    if (!email || !password || !name || !phone) {
-        throw new ApiError(400, "All fields are required");
-    }
+  const { name, phone, email, password } = parsed.data;
 
-    const existingUser = await User.findOne({
-        $or: [{ email }, { name }]
-    });
+  const existingUser = await User.findOne({
+    $or: [{ email }, { name }]
+  });
 
-    if (existingUser) {
-        throw new ApiError(409, "User already exists");
-    }
+  if (existingUser) {
+    throw new ApiError(409, "User with this email or name already exists");
+  }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    if (!hashedPassword) {
-        throw new ApiError(500, "Error hashing password");
-    }
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await User.create({
-        name,
-        phone,
-        email,
-        password: hashedPassword
-    });
+  const newUser = await User.create({
+    name,
+    phone,
+    email,
+    password: hashedPassword
+  });
 
-    const safeUser = newUser.toObject();
-    delete safeUser.password;
+  const safeUser = newUser.toObject();
+  delete safeUser.password;
 
-    return res
-        .status(201)
-        .json(new ApiResponse(201, safeUser, "User registered successfully"));
+  return res
+    .status(201)
+    .json(new ApiResponse(201, safeUser, "User registered successfully"));
 });
+
 
 // Login User
 const loginUser = asyncHandler(async (req, res) => {
@@ -134,21 +136,28 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 // Update Password
 const updatePassword = asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
+  const parsed = loginSchema.safeParse(req.body);
+  if (!parsed.success) {
+    const errorMessages = parsed.error.errors.map((err) => err.message).join(", ");
+    throw new ApiError(400, `Validation error: ${errorMessages}`);
+  }
 
-    const user = await User.findById(req.user._id).select("+password");
-    if (!user) throw new ApiError(401, "Unauthorized");
+  const { oldPassword, newPassword } = parsed.data;
 
-    const isMatch = await user.isPasswordCorrect(oldPassword);
-    if (!isMatch) throw new ApiError(401, "Incorrect old password");
+  const user = await User.findById(req.user._id).select("+password");
+  if (!user) throw new ApiError(401, "Unauthorized");
 
-    user.password = await bcrypt.hash(newPassword, 10);
-    await user.save({ validateBeforeSave: false });
+  const isMatch = await user.isPasswordCorrect(oldPassword);
+  if (!isMatch) throw new ApiError(401, "Incorrect old password");
 
-    return res
-        .status(200)
-        .json(new ApiResponse(200, {}, "Password updated successfully"));
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password updated successfully"));
 });
+
 
 // Get Current User
 const getCurrentUser = asyncHandler(async (req, res) => {
@@ -162,10 +171,23 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 // Update Account Info
 const updateAccountInfo = asyncHandler(async (req, res) => {
-    const { name, phone, email } = req.body;
+    // Validate input
+    const parsed = updateAccountInfoSchema.safeParse(req.body);
+    if (!parsed.success) {
+        const errorMessages = parsed.error.errors.map((err) => err.message).join(", ");
+        throw new ApiError(400, `Validation error: ${errorMessages}`);
+    }
 
-    if (!name || !phone || !email) {
-        throw new ApiError(400, "All fields are required");
+    const { name, phone, email } = parsed.data;
+
+    // Check for conflicts (email or phone already taken by another user)
+    const existingUser = await User.findOne({
+        _id: { $ne: req.user._id },
+        $or: [{ email }, { phone }]
+    });
+
+    if (existingUser) {
+        throw new ApiError(409, "Email or phone already in use by another account");
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -178,6 +200,7 @@ const updateAccountInfo = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, updatedUser, "User info updated"));
 });
+
 
 export {
     registerUser,
