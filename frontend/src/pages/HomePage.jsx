@@ -18,7 +18,7 @@ const Navbar = () => {
     <nav className="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-50">
       {/* Left: Logo */}
       <div className="flex items-center gap-2">
-        <img src="/logo.png" alt="Habinest Logo" className="h-10 w-10" />
+        <img src="/HabinestLogo.png" alt="Habinest Logo" className="h-10 w-10" />
         <span className="font-semibold text-lg text-[#504B3A]">Habinest</span>
       </div>
 
