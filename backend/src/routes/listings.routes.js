@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPGs, createPG } from "../controllers/listings.controller.js";
+import { getPGs, createPG, getSinglePG } from "../controllers/listings.controller.js";
 import upload from "../middlewares/multer.middleware.js";
 import uploadImageOnCloudinary from "../utils/cloudinary.js";
 const router = Router();
@@ -13,5 +13,7 @@ router.post(
 );
 
 router.get('/', getPGs)
+
+router.get('/:id', getSinglePG)
 
 export default router;

@@ -52,7 +52,7 @@ const createPG = asyncHandler(async (req, res) => {
   }
 
   // Check if PG already exists
-  const pgExist = await List.findOne({ $or: [{ name }, { address }] });
+  const pgExist = await List.findOne({ $or: [{ name }] });
   if (pgExist) throw new ApiError(409, "PG with this name already exists");
 
   // Validate file and upload to Cloudinary
@@ -95,11 +95,20 @@ const createPG = asyncHandler(async (req, res) => {
   return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
 });
 
-
+const getSinglePG = async (req, res)=>{
+  const id=req.params.id;
+  let pg=await List.findById(id);
+  if(!pg)
+  {
+    return res.status(500).json(new ApiError(400, "PG not found"));
+  }
+  res.status(200).json(new ApiResponse(200, pg, "pg fetched successfully"))
+}
 
   
 
 export {
     getPGs,
-    createPG
+    createPG,
+    getSinglePG
 }
