@@ -36,7 +36,7 @@ const getPGs = asyncHandler(async (req, res) => {
   }
 
   const pgs = await List.find(filter);
-  if(!pgs || pgs.length == 0) throw new ApiError(401, "Pgs not found");
+  if(!pgs || pgs.length == 0) throw new ApiError(404, "Pgs not found");
   
   return res
     .status(200)
@@ -100,7 +100,7 @@ const getSinglePG = async (req, res)=>{
   let pg=await List.findById(id);
   if(!pg)
   {
-    return res.status(500).json(new ApiError(400, "PG not found"));
+    return res.status(404).json(new ApiError(404, "PG not found"));
   }
   res.status(200).json(new ApiResponse(200, pg, "pg fetched successfully"))
 }
