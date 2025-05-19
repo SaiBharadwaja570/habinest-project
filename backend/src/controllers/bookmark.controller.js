@@ -50,8 +50,15 @@ export const getBookmarks = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const user = await User.findById(userId).populate('bookmarks');
-    return res.status(200).json({ bookmarks: user.bookmarks });
+    // Get user and their bookmark IDs
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    // Fetch listing details manually using listing IDs
+    const bookmarks = await Listings.find({ _id: { $in: user.bookmarks } });
+
+    return res.status(200).json({ bookmarks });
   } catch (err) {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
