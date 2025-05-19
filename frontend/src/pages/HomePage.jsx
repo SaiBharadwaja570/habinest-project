@@ -24,7 +24,7 @@ const Navbar = () => {
 
       {/* Center: Navigation links */}
       <div className="space-x-4 text-sm text-teal-700 font-medium hidden md:flex">
-        <a href="#">Find PGs</a>
+        <a href="#" onClick={()=>navigate('/filter')}>Find PGs</a>
         <a href="#">Map View</a>
         <a href="#">Book a Visit</a>
         <a href="#">Saved</a>
