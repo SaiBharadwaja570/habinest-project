@@ -21,8 +21,6 @@ async function geocodeAddress(address) {
         throw new Error('Geocoding failed: ' + error);
     }
 }
-geocodeAddress("12/45, JP Nagar, Bangalore")
-.then((res) => console.log(res))
 
 
 

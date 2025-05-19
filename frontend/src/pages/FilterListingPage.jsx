@@ -9,28 +9,26 @@ export default function FilterListingPage() {
   const [genderFilter, setGenderFilter] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const fetchListings = async () => {
-    try {
-const res = await axios.get("http://localhost:8000/api/pg", {
-  params: {
-    name: search,
-    minPrice,
-    gender: genderFilter
-  },
-});
-setListings(res.data.data); 
-    } catch (error) {
-      console.error("Error fetching listings:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchListings();
-  }, []);
 
-  const handleFilterChange = () => {
+    const fetchListings = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/pg", {
+          params: {
+            ...(search && { name: search }),
+            ...(minPrice > 0 && { minPrice }),
+            ...(maxPrice < 50000 && { maxPrice }),
+            ...(genderFilter && { gender: genderFilter }),
+          },
+        });
+        setListings(res.data.data);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      }
+    };
+
     fetchListings();
-  };
+  }, [search, minPrice, maxPrice, genderFilter]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -95,7 +93,6 @@ setListings(res.data.data);
               className="w-full px-2 py-1 border rounded"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              onBlur={handleFilterChange}
             />
           </div>
 
@@ -104,10 +101,7 @@ setListings(res.data.data);
             <select
               className="w-full px-2 py-1 border rounded mt-1"
               value={genderFilter}
-              onChange={(e) => {
-                setGenderFilter(e.target.value);
-                handleFilterChange();
-              }}
+              onChange={(e) => setGenderFilter(e.target.value)}
             >
               <option value="">All</option>
               <option value="Gents">Gents</option>
@@ -125,7 +119,6 @@ setListings(res.data.data);
               step="1000"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              onMouseUp={handleFilterChange}
               className="w-full"
             />
             <div className="text-sm">₹{minPrice} – ₹{maxPrice}</div>
@@ -141,12 +134,11 @@ setListings(res.data.data);
               className="px-4 py-2 border border-[#504B3A]/20 rounded w-1/2"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              onBlur={handleFilterChange}
             />
             <div className="flex gap-2">
               <button
                 className="px-3 py-1 text-sm rounded border bg-[#504B3A] text-white"
-                onClick={handleFilterChange}
+                onClick={() => {}}
               >
                 Apply Filters
               </button>
