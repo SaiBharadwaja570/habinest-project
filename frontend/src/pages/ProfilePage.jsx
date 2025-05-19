@@ -15,7 +15,7 @@ const ProfilePage = () => {
 {/* Header */}
 <header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
   <div className="flex items-center gap-2">
-    <img src="/logo.png" alt="Habinest Logo" className="h-10 w-10" />
+    <img src="/HabinestLogo.png" alt="Habinest Logo" className="h-10 w-10" />
     <span className="text-2xl font-bold">Habinest</span>
   </div>
 
