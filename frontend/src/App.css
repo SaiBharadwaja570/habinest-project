@@ -41,6 +41,29 @@
   color: #888;
 }
 
-.leaflet-container{
+.pg-container {
+  display: flex;
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.pg-map-wrapper {
+  width: 400px;
+  height: 300px;
+  flex-shrink: 0;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pg-details {
+  max-width: 600px;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
