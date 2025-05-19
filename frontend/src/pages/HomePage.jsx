@@ -12,23 +12,45 @@ import {
 import ProfileDropdown from "../components/ProfileDropdown";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-50">
+      {/* Left: Logo */}
       <div className="flex items-center gap-2">
         <img src="/logo.png" alt="Habinest Logo" className="h-10 w-10" />
         <span className="font-semibold text-lg text-[#504B3A]">Habinest</span>
       </div>
-  <div className="space-x-4 text-sm text-teal-700 font-medium">
-    <a href="#">Find PGs</a>
-    <a href="#">Map View</a>
-    <a href="#">Book a Visit</a>
-    <a href="#">Saved</a>
-    <a href="#">My Dashboard</a>
-    <a href="#">Write a Review</a>
-  </div>
+
+      {/* Center: Navigation links */}
+      <div className="space-x-4 text-sm text-teal-700 font-medium hidden md:flex">
+        <a href="#">Find PGs</a>
+        <a href="#">Map View</a>
+        <a href="#">Book a Visit</a>
+        <a href="#">Saved</a>
+        <a href="#">My Dashboard</a>
+        <a href="#">Write a Review</a>
+      </div>
+
+      {/* Right: Auth Buttons */}
+      <div className="flex items-center gap-2">
+        <Button
+          className="bg-[#69995D] text-white text-sm px-4 py-1 hover:bg-[#587f4e]"
+          onClick={() => navigate("/login")}
+        >
+          Login
+        </Button>
+        <Button
+          className="bg-[#69995D] text-white text-sm px-4 py-1 hover:bg-[#587f4e]"
+          onClick={() => navigate("/register")}
+        >
+          Register
+        </Button>
+      </div>
     </nav>
   );
 };
+
 
 const InfoCard = () => {
   return (
@@ -185,18 +207,8 @@ const HomePage = () => {
     <div className="font-sans">
       <Navbar />
       <div className="flex flex-col items-center justify-center py-12 gap-4">
-        <Button
-          className="bg-[#69995D] text-white hover:bg-[#587f4e] px-6 py-2"
-          onClick={() => navigate("/login")}
-        >
-          Login
-        </Button>
-        <Button
-          className="bg-[#69995D] text-white hover:bg-[#587f4e] px-6 py-2"
-          onClick={() => navigate("/register")}
-        >
-          Register
-        </Button>
+
+
       </div>
       <InfoCard />
       <SponsoredSection />
