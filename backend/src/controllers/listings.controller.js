@@ -8,7 +8,7 @@ import fs from 'fs'
 
 const getPGs = asyncHandler(async (req, res) => {
 
-  const { name, address, minPrice, sharingType, gender} = req.query;
+  const { name, address, minPrice, maxPrice, sharingType, gender} = req.query;
 
   const filter = {};
 
@@ -22,9 +22,11 @@ const getPGs = asyncHandler(async (req, res) => {
     filter.address = { $regex: address, $options: "i" }; 
   }
 
-  if(minPrice){
-    // $gte --- greater than equals to
-    filter.price = { $gte: parseInt(minPrice) }
+  const priceFilter = {};
+  if (minPrice) priceFilter.$gte = parseInt(minPrice);
+  if (maxPrice) priceFilter.$lte = parseInt(maxPrice);
+  if (Object.keys(priceFilter).length > 0) {
+    filter.priceRange = priceFilter;
   }
 
   if(gender){
@@ -36,7 +38,7 @@ const getPGs = asyncHandler(async (req, res) => {
   }
 
   const pgs = await List.find(filter);
-  if(!pgs || pgs.length == 0) throw new ApiError(404, "Pgs not found");
+  // if(!pgs || pgs.length == 0) throw new ApiError(404, "Pgs not found");
   
   return res
     .status(200)

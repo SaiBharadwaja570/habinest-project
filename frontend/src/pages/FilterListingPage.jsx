@@ -110,7 +110,28 @@ export default function FilterListingPage() {
           </div>
 
           <div>
-            <label className="block font-semibold">Price Range</label>
+          <label className="block font-semibold">Min Price</label>
+            <input
+              type="range"
+              min="1000"
+              max={maxPrice}
+              step="1000"
+              value={minPrice}
+              onChange={(e) => setMinPrice(Number(e.target.value))}
+              className="w-full"
+            />
+
+            <label className="block font-semibold">Max Price</label>
+            <input
+              type="range"
+              min={minPrice}
+              max="50000"
+              step="1000"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              className="w-full"
+            />
+            {/* <label className="block font-semibold">Price Range</label>
             <input
               type="range"
               min="1000"
@@ -119,7 +140,7 @@ export default function FilterListingPage() {
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               className="w-full"
-            />
+            /> */}
             <div className="text-sm">₹{minPrice} – ₹{maxPrice}</div>
           </div>
         </aside>
@@ -145,25 +166,31 @@ export default function FilterListingPage() {
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            {listings.map((listing) => (
-              <div
-                key={listing._id}
-                className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center"
-                onClick={()=>navigate(`/${listing._id}`)}
-              >
-                <img
-                  src={listing.photo}
-                  alt={listing.name}
-                  className="w-full h-32 object-cover rounded"
-                />
-                <p className="mt-2 font-medium">{listing.name}</p>
-                <p className="text-sm">{listing.address}</p>
-                <p className="text-sm font-bold">₹{listing.priceRange}</p>
-                <p className="text-xs text-[#504B3A]/70">
-                  {listing.gender} | {listing.sharingType}
-                </p>
-              </div>
-            ))}
+            {listings && listings.length > 0 ? (
+              listings.map((listing) => (
+                <div
+                  key={listing._id}
+                  className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center"
+                  onClick={() => navigate(`/${listing._id}`)}
+                >
+                  <img
+                    src={listing.photo}
+                    alt={listing.name}
+                    className="w-full h-32 object-cover rounded"
+                  />
+                  <p className="mt-2 font-medium">{listing.name}</p>
+                  <p className="text-sm">{listing.address}</p>
+                  <p className="text-sm font-bold">₹{listing.priceRange}</p>
+                  <p className="text-xs text-[#504B3A]/70">
+                    {listing.gender} | {listing.sharingType}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <h2 className="col-span-3 text-center text-lg text-gray-600">
+                PG not found
+              </h2>
+            )}
           </div>
         </main>
       </div>
