@@ -1,43 +1,26 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ import this
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Pencil, LogOut } from "lucide-react";
 
 const ProfilePage = () => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+  const navigate = useNavigate(); // ✅ hook to handle navigation
 
   return (
     <div className="min-h-screen flex flex-col bg-[#E4DFDA] text-black">
       {/* Header */}
       <header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
           <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-10 w-10" />
           <span className="text-2xl font-bold">Habinest</span>
         </div>
 
         <nav className="space-x-4 text-sm text-gray-100 font-medium">
-          <a href="#" onClick={() => navigate("/")}>Home</a>
-          <a href="#" onClick={() => navigate("/filter")}>Find PGs</a>
-          <a href="#" onClick={() => navigate("/bookmarks")}>BookMarks</a>
+          <button onClick={() => navigate("/")}>Home</button>
+          <button onClick={() => navigate("/filter")}>Find PGs</button>
+          <button onClick={() => navigate("/bookmarks")}>BookMarks</button>
         </nav>
-
-        {/* Profile Dropdown */}
-        <div className="relative">
-          <button onClick={toggleDropdown} className="flex items-center gap-2">
-            <img src="/profile.png" alt="User Avatar" className="w-10 h-10 rounded-full" />
-          </button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 bg-white border border-[#504B3A]/20 rounded-lg shadow-lg w-48 py-2 z-50">
-              <a href="#" onClick={() => navigate("/profile")} className="block px-4 py-2 text-sm text-[#504B3A]">Profile</a>
-              <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">Settings</a>
-              <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">Log Out</a>
-            </div>
-          )}
-        </div>
       </header>
 
       {/* Main Content */}
@@ -58,8 +41,7 @@ const ProfilePage = () => {
 
             {/* Profile Details Section */}
             <div className="space-y-4">
-              {[
-                { label: "Name", value: "John Doe" },
+              {[{ label: "Name", value: "John Doe" },
                 { label: "Email", value: "johndoe@gmail.com" },
                 { label: "Mobile Phone(+1)", value: "(123) 456-7890" },
               ].map((item, idx) => (
@@ -78,7 +60,11 @@ const ProfilePage = () => {
               </div>
 
               <div className="pt-4">
-                <Button variant="destructive" className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  className="flex items-center gap-2"
+                  onClick={() => navigate("/logout")} // optional route
+                >
                   <LogOut className="w-4 h-4" /> Log Out
                 </Button>
               </div>
