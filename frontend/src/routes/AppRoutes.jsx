@@ -10,12 +10,14 @@ import PGListPage from "../pages/PGListPage";
 import FilterListingPage from "../pages/FilterListingPage";
 import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
 import CreatePG from "../pages/CreatePG";
+import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 
 function App() {
   return (
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/:id" element={<SinglePg />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/owner-form" element={<OwnerPgForm />} />
