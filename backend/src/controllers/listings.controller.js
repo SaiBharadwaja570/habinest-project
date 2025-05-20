@@ -1,9 +1,11 @@
 import { Listings as List } from "../models/listings.models.js";
+import User from "../models/user.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import uploadImageOnCloudinary  from "../utils/cloudinary.js";
 import getCoordinatesFromAddress from "../utils/geocode.js";
+import mongoose from "mongoose";
 import fs from 'fs'
 
 const getPGs = asyncHandler(async (req, res) => {
@@ -93,8 +95,14 @@ const createPG = asyncHandler(async (req, res) => {
       coordinates: [longitude, latitude],
     },
   });
-
-  return res.status(201).json(new ApiResponse(201, list, "PG is registered"));
+  console.log(list)
+  const ownerId = req.user._id;
+  const updatedUser = await User.findByIdAndUpdate(
+    ownerId,
+    { $push: { myPg: list._id } },
+    { new: true }
+  ).select("-password");
+  return res.status(201).json(new ApiResponse(201, { list, owner: updatedUser }, "PG is registered and linked to owner"))
 });
 
 const getSinglePG = async (req, res)=>{
@@ -107,10 +115,54 @@ const getSinglePG = async (req, res)=>{
   res.status(200).json(new ApiResponse(200, pg, "pg fetched successfully"))
 }
 
-  
+const getOwnerPGs = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select("myPg");
+  if (!user) {
+    return res.status(404).json(new ApiResponse(404, null, "User not found"));
+  }
+  const pgListings = await List.find({ _id: { $in: user.myPg } });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, pgListings, "Owner's PGs fetched successfully"));
+});
+
+const deletePg = asyncHandler(async (req, res) => {
+  const pgId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(pgId)) {
+    throw new ApiError(400, "Invalid PG ID");
+  }
+
+  const userId = req.user._id;
+
+  // Check if the PG exists and is owned by the user
+  const pg = await List.findById(pgId);
+  if (!pg) {
+    throw new ApiError(404, "PG not found");
+  }
+
+  // Check if the PG is in the user's myPg list
+  const user = await User.findById(userId);
+  if (!user.myPg.includes(pgId)) {
+    throw new ApiError(403, "You are not authorized to delete this PG");
+  }
+
+  // Delete the PG from List model
+  await List.findByIdAndDelete(pgId);
+
+  // Remove PG ID from user's myPg list
+  user.myPg = user.myPg.filter((id) => id.toString() !== pgId);
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "PG deleted successfully"));
+});
 
 export {
     getPGs,
     createPG,
-    getSinglePG
+    getSinglePG,
+    getOwnerPGs,
+    deletePg
 }

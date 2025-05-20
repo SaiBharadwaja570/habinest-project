@@ -28,7 +28,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, phone, email, password } = req.body;
+    const { name, phone, email, password, type='user' } = req.body;
 
     if (!email || !password || !name || !phone) {
         throw new ApiError(400, "All fields are required");
@@ -47,13 +47,20 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error hashing password");
     }
 
-    const newUser = await User.create({
+    const userData = {
         name,
         phone,
         email,
-        password: hashedPassword
-    });
+        password: hashedPassword,
+        type
+    };
 
+    if (type === 'owner') {
+        userData.myPg = [];
+    } else {
+        userData.bookmarks = [];
+    }
+    const newUser = await User.create(userData);
     const safeUser = newUser.toObject();
     delete safeUser.password;
 

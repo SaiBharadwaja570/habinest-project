@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'owner'],
         default: 'user',
         required: true
     },
@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Listings'
+    }],
+    myPg: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Listings' 
     }]
 }, { 
     timestamps: true 
