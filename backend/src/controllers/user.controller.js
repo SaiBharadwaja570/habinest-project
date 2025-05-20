@@ -158,16 +158,53 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 // Update Account Info
-const updateAccountInfo = asyncHandler(async (req, res) => {
-    const { name, phone, email } = req.body;
+const updateAccountName = asyncHandler(async (req, res) => {
+    const { name } = req.body;
 
-    if (!name || !phone || !email) {
+    if (!name) {
+        throw new ApiError(400, "Please enter a name");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        { name },
+        { new: true }
+    ).select("-password");
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, updatedUser, "User name updated"));
+});
+
+
+const updateAccountEmail = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        throw new ApiError(400, "Please enter a email");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        { email },
+        { new: true }
+    ).select("-password");
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, updatedUser, "User info updated"));
+});
+
+const updateAccountPhone = asyncHandler(async (req, res) => {
+    const {phone} = req.body;
+
+    if (!phone) {
         throw new ApiError(400, "All fields are required");
     }
 
     const updatedUser = await User.findByIdAndUpdate(
         req.user._id,
-        { name, phone, email },
+        { phone },
         { new: true }
     ).select("-password");
 
@@ -182,6 +219,8 @@ export {
     logoutUser,
     updatePassword,
     getCurrentUser,
-    updateAccountInfo,
-    refreshAccessToken
+    refreshAccessToken,
+    updateAccountEmail,
+    updateAccountPhone,
+    updateAccountName
 };

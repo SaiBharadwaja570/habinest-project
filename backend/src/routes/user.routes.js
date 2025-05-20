@@ -4,9 +4,11 @@ import {
   logoutUser, 
   registerUser, 
   getCurrentUser, 
-  updateAccountInfo, 
   updatePassword, 
-  refreshAccessToken 
+  refreshAccessToken, 
+  updateAccountName,
+  updateAccountEmail,
+  updateAccountPhone
 } from '../controllers/user.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 
@@ -21,10 +23,16 @@ router.post('/login', loginUser);
 // logout
 router.post('/logout', verifyJWT, logoutUser);
 
-// update password
-router.patch('/updateAccountInfo', verifyJWT, updateAccountInfo);
+// update account name
+router.patch('/updateAccountName', verifyJWT, updateAccountName);
 
-// update account info
+// update account email
+router.patch('/updateAccountEmail', verifyJWT, updateAccountEmail);
+
+// update account phone
+router.patch('/updateAccountPhone', verifyJWT, updateAccountPhone);
+
+// update password
 router.patch('/updatePassword', verifyJWT, updatePassword);
 
 // get current user

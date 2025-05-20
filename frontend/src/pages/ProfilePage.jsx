@@ -1,34 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ import this
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Pencil, LogOut } from "lucide-react";
-import axios from 'axios'
+import { Pencil, LogOut, Save } from "lucide-react";
+import axios from "axios";
 
 const ProfilePage = () => {
-  const navigate = useNavigate(); // ✅ hook to handle navigation
-  const [user, setUser] = useState(null); // <--- user state
-  
-    useEffect(() => {
-      const fetchUser = async () => {
-        try {
-          const res = await axios.get("http://localhost:8000/api/user/", {
-            withCredentials: true,
-          });
-          setUser(res.data.data); // Save user if authenticated
-        } catch (error) {
-          setUser(null); // In case of 401 or failure
-        }
-      };
-  
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [editField, setEditField] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/user/", {
+        withCredentials: true,
+      });
+      setUser(res.data.data);
+      setFormData({
+        name: res.data.data.name,
+        email: res.data.data.email,
+        phone: res.data.data.phone,
+      });
+    } catch (error) {
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleUpdate = async (field) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/api/user/updateAccount${field}`,
+        { [field.toLowerCase()]: formData[field.toLowerCase()] },
+        { withCredentials: true }
+      );
+      setEditField(null);
       fetchUser();
-    }, []);
+      alert(`${field} updated successfully!`);
+    } catch (err) {
+      alert("Update failed");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#E4DFDA] text-black">
-      {/* Header */}
       <header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
-          <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-10 w-10" />
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <img
+            src="/HabinestLogo.jpg"
+            alt="Habinest Logo"
+            className="h-10 w-10"
+          />
           <span className="text-2xl font-bold">Habinest</span>
         </div>
 
@@ -39,11 +79,9 @@ const ProfilePage = () => {
         </nav>
       </header>
 
-      {/* Main Content */}
       <main className="flex-grow p-8">
         <Card className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6">
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Profile Image Section */}
             <div className="flex flex-col items-center">
               <img
                 src="/profile.png"
@@ -55,37 +93,58 @@ const ProfilePage = () => {
               </Button>
             </div>
 
-            {/* Profile Details Section */}
             <div className="space-y-4">
               {user ? (
-                <>
-                  {[{ label: "Name", value: user.name },
-                    { label: "Email", value: user.email },
-                    { label: "Mobile Phone", value: user.phone },
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-gray-500">{item.label}:</p>
-                        <p className="text-lg font-semibold">{item.value}</p>
-                      </div>
-                      <Pencil className="text-[#504B3A] cursor-pointer" />
+                ["name", "email", "phone"].map((field) => (
+                  <div key={field} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500">
+                        {field.charAt(0).toUpperCase() + field.slice(1)}:
+                      </p>
+                      {editField === field ? (
+                        <input
+                          type="text"
+                          name={field}
+                          value={formData[field]}
+                          onChange={handleChange}
+                          className="border rounded px-2 py-1"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold">{user[field]}</p>
+                      )}
                     </div>
-                  ))}
-                </>
+                    {editField === field ? (
+                      <Save
+                        className="text-green-600 cursor-pointer"
+                        onClick={() =>
+                          handleUpdate(field === "phone" ? "Phone" : field.charAt(0).toUpperCase() + field.slice(1))
+                        }
+                      />
+                    ) : (
+                      <Pencil
+                        className="text-[#504B3A] cursor-pointer"
+                        onClick={() => setEditField(field)}
+                      />
+                    )}
+                  </div>
+                ))
               ) : (
                 <p className="text-center text-gray-500">Loading user...</p>
               )}
 
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">Change Password</p>
-                <Pencil className="text-[#504B3A] cursor-pointer" />
+                <Pencil
+                  className="text-[#504B3A] cursor-pointer"
+                  onClick={() => navigate("/update-password")}
+                />
               </div>
 
               <div className="pt-4">
                 <Button
                   variant="destructive"
                   className="flex items-center gap-2"
-                  onClick={() => navigate("/logout")} // optional route
+                  onClick={() => navigate("/logout")}
                 >
                   <LogOut className="w-4 h-4" /> Log Out
                 </Button>
@@ -95,7 +154,6 @@ const ProfilePage = () => {
         </Card>
       </main>
 
-      {/* Footer */}
       <footer className="border-t p-8 bg-white text-sm text-gray-600">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           <div>
