@@ -15,6 +15,43 @@ const ProfilePage = () => {
     phone: "",
   });
 
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+
+  const handlePasswordChange = (e) => {
+    setPasswordData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleChangePassword = async () => {
+    const { currentPassword, newPassword } = passwordData;
+
+    if (!currentPassword || !newPassword) {
+      alert("Please fill in both fields.");
+      return;
+    }
+
+    try {
+      const res = await axios.patch(
+        "http://localhost:8000/api/user/updatePassword",
+        {
+          oldPassword: currentPassword,
+          newPassword,
+        },
+        { withCredentials: true }
+      );
+      alert("Password changed successfully!");
+      setPasswordData({ currentPassword: "", newPassword: "" });
+      setEditField(null);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to change password.");
+    }
+  };
+
   const fetchUser = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/user/", {
@@ -117,7 +154,11 @@ const ProfilePage = () => {
                       <Save
                         className="text-green-600 cursor-pointer"
                         onClick={() =>
-                          handleUpdate(field === "phone" ? "Phone" : field.charAt(0).toUpperCase() + field.slice(1))
+                          handleUpdate(
+                            field === "phone"
+                              ? "Phone"
+                              : field.charAt(0).toUpperCase() + field.slice(1)
+                          )
                         }
                       />
                     ) : (
@@ -132,41 +173,48 @@ const ProfilePage = () => {
                 <p className="text-center text-gray-500">Loading user...</p>
               )}
 
-{editField === "password" ? (
-  <div className="space-y-2">
-    <div>
-      <label className="block text-sm text-gray-500">New Password</label>
-      <input
-        type="password"
-        name="newPassword"
-        className="w-full border rounded px-2 py-1"
-      />
-    </div>
-    <div>
-      <label className="block text-sm text-gray-500">Confirm Password</label>
-      <input
-        type="password"
-        name="confirmPassword"
-        className="w-full border rounded px-2 py-1"
-      />
-    </div>
-    <div className="flex gap-4 mt-2">
-      <Button variant="ghost" onClick={() => setEditField(null)}>
-        Cancel
-      </Button>
-      <Button onClick={() => navigate("/update-password")}>Submit</Button>
-    </div>
-  </div>
-) : (
-  <div className="flex items-center justify-between">
-    <p className="text-lg font-semibold">Change Password</p>
-    <Pencil
-      className="text-[#504B3A] cursor-pointer"
-      onClick={() => setEditField("password")}
-    />
-  </div>
-)}
-
+              {editField === "password" ? (
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-sm text-gray-500">
+                      Current Password
+                    </label>
+                    <input
+                      type="password"
+                      name="currentPassword"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full border rounded px-2 py-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-500">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full border rounded px-2 py-1"
+                    />
+                  </div>
+                  <div className="flex gap-4 mt-2">
+                    <Button variant="ghost" onClick={() => setEditField(null)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleChangePassword}>Submit</Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold">Change Password</p>
+                  <Pencil
+                    className="text-[#504B3A] cursor-pointer"
+                    onClick={() => setEditField("password")}
+                  />
+                </div>
+              )}
 
               <div className="pt-4">
                 <Button
