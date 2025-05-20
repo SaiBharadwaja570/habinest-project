@@ -17,7 +17,7 @@ router.post(
   createPG                     
 );
 
-router.get('/owner-pgs', verifyJWT, getOwnerPGs)
+router.get('/owner-pgs', verifyJWT, isOwner, getOwnerPGs)
 
 router.get('/', getPGs)
 

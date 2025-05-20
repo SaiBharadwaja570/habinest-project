@@ -1,96 +1,109 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { useNavigate } from "react-router-dom";
 
-const pgList = [
-  {
-    name: "Green Acres PG",
-    location: "Located in Downtown Area",
-  },
-  {
-    name: "Blue Horizon PG",
-    location: "Located near City Park",
-  },
-  {
-    name: "Sunny Side PG",
-    location: "Located by the Riverside",
-  },
-];
-
 export default function PGListPage() {
-
   const navigate = useNavigate();
-
+  const [pgList, setPgList] = useState([]);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
+  // Fetch PGs
+  useEffect(() => {
+    const fetchMyPgs = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/pg/owner-pgs", {
+          withCredentials: true,
+        });
+        setPgList(res.data.data);
+      } catch (error) {
+        console.error("Error fetching owner's PGs:", error);
+      }
+    };
+
+    fetchMyPgs();
+  }, []);
+
+  // Delete PG
+  const handleDelete = async (pgId) => {
+    if (!window.confirm("Are you sure you want to delete this PG?")) return;
+    try {
+      await axios.delete(`http://localhost:8000/api/pg/${pgId}`, {
+        withCredentials: true,
+      });
+      setPgList((prev) => prev.filter((pg) => pg._id !== pgId));
+    } catch (error) {
+      console.error("Failed to delete PG:", error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#E4DFDA] text-black">
-{/* Header */}
-<header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
-  <div className="flex items-center gap-2">
-    <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-10 w-10" />
-    <span className="text-2xl font-bold">Habinest</span>
-  </div>
+      {/* Header */}
+      <header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
+        <div className="flex items-center gap-2">
+          <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-10 w-10" />
+          <span className="text-2xl font-bold">Habinest</span>
+        </div>
 
-  <nav className="space-x-4 text-sm">
-<div className="space-x-4 text-sm text-gray-100 font-medium">
-        <a href="#" onClick={()=>navigate('/')}>Home</a>
-        <a href="#" onClick={()=>navigate('/filter')}>Find PGs</a>
-        <a href="#" onClick={()=>navigate('/bookmarks')}>BookMarks</a>
-  </div>
-  </nav>
+        <nav className="space-x-4 text-sm text-gray-100 font-medium">
+          <button onClick={() => navigate("/")}>Home</button>
+          <button onClick={() => navigate("/filter")}>Find PGs</button>
+          <button onClick={() => navigate("/bookmarks")}>Bookmarks</button>
+        </nav>
 
-  {/* Profile Dropdown */}
-  <div className="relative">
-    <button
-      onClick={toggleDropdown}
-      className="flex items-center gap-2"
-    >
-      <img
-        src="/profile.png"
-        alt="User Avatar"
-        className="w-10 h-10 rounded-full"
-      />
-    </button>
-    {isDropdownOpen && (
-      <div className="absolute right-0 mt-2 bg-white border border-[#504B3A]/20 rounded-lg shadow-lg w-48 py-2">
-        <a href="#"  onClick={()=>navigate('/profile')} className="block px-4 py-2 text-sm text-[#504B3A]">
-          Profile
-        </a>
-        <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
-          Settings
-        </a>
-        <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
-          Log Out
-        </a>
-      </div>
-    )}
-  </div>
-</header>
-
+        {/* Profile Dropdown */}
+        <div className="relative">
+          <button onClick={toggleDropdown} className="flex items-center gap-2">
+            <img src="/profile.png" alt="User Avatar" className="w-10 h-10 rounded-full" />
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 bg-white border border-[#504B3A]/20 rounded-lg shadow-lg w-48 py-2 z-10">
+              <button onClick={() => navigate("/profile")} className="block w-full text-left px-4 py-2 text-sm text-[#504B3A]">
+                Profile
+              </button>
+              <button className="block w-full text-left px-4 py-2 text-sm text-[#504B3A]">
+                Settings
+              </button>
+              <button className="block w-full text-left px-4 py-2 text-sm text-[#504B3A]">
+                Log Out
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
 
       {/* Main Content */}
       <main className="p-8 max-w-3xl mx-auto space-y-6">
-        {pgList.map((pg, index) => (
-          <Card key={index} className="rounded-xl shadow-md">
-            <CardContent className="flex justify-between items-center p-4">
-              <div>
-                <h3 className="font-semibold text-lg text-[#504B3A]">{pg.name}</h3>
-                <p className="text-sm text-gray-600">{pg.location}</p>
-              </div>
-              <Button className="bg-[#69995D] hover:bg-[#5c864e] text-white px-4 py-1 rounded-full">
-                Delete
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+        {pgList.length === 0 ? (
+          <p className="text-center text-gray-600">You have not added any PGs yet.</p>
+        ) : (
+          pgList.map((pg) => (
+            <Card key={pg._id} className="rounded-xl shadow-md">
+              <CardContent className="flex justify-between items-center p-4">
+                <div>
+                  <h3 className="font-semibold text-lg text-[#504B3A]">{pg.name}</h3>
+                  <p className="text-sm text-gray-600">{pg.address}</p>
+                </div>
+                <Button
+                  className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full"
+                  onClick={() => handleDelete(pg._id)}
+                >
+                  Delete
+                </Button>
+              </CardContent>
+            </Card>
+          ))
+        )}
+
         <div className="flex justify-center pt-4">
-          <Button className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800">
+          <Button
+            className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800"
+            onClick={() => navigate("/owner-form")}
+          >
             Add New PG
           </Button>
         </div>

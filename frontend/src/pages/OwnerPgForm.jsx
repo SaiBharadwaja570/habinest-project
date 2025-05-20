@@ -3,9 +3,11 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Select, SelectItem } from "../components/ui/select";
 
 export default function OwnerPgForm() {
+  const navigate=useNavigate()
   function reducer(state, action) {
     switch (action.type) {
       case "name":
@@ -34,27 +36,31 @@ export default function OwnerPgForm() {
     gender: ""
   });
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const handleSubmit= async ()=>{
+  const handleSubmit= async (e)=>{
+    e.preventDefault();
     try {
-        const formData = new FormData();
-        formData.append("name", state.name);
-        formData.append("address", state.address);
-        formData.append("priceRange", state.price);
-        formData.append("sharingType", state.sharing);
-        formData.append("gender", state.gender);
-        formData.append("photo", state.photo);
-        const res=await axios({
-            method:"POST",
-            url:"http://localhost:8000/api/pg/",
-            data:formData,
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }).then(()=>{
-            alert("PG made")
-        });
+      const formData = new FormData();
+      formData.append("name", state.name);
+      formData.append("address", state.address);
+      formData.append("priceRange", state.price);
+      formData.append("sharingType", state.sharing);
+      formData.append("gender", state.gender);
+      formData.append("photo", state.photo);
+  
+      const res = await axios({
+        method: "POST",
+        url: "http://localhost:8000/api/pg/",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+  
+      alert("PG made");
     } catch (error) {
-        console.error("Upload or submission failed", error)
+      console.error("Upload or submission failed", error);
+      alert("Failed to submit PG");
     }
 }
 
@@ -175,7 +181,7 @@ export default function OwnerPgForm() {
           </div>
 
           <div>
-            <Label htmlFor="gender">Sharing Type</Label>
+            <Label htmlFor="gender">Gender</Label>
             <select id="gender" name="gender" onChange={(e) => dispatch({ type: "gender", payload: e.target.value })} className="w-full border border-gray-300 p-2 rounded-lg mt-1">
               <option value="">Select Gender Type</option>
               <option value="Gents">Gents</option>

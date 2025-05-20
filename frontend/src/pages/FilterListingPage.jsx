@@ -11,6 +11,22 @@ export default function FilterListingPage() {
   const [genderFilter, setGenderFilter] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
+
+
+  const handleLogout = async () => {
+    try {
+      await axios({
+        method:"POST",
+        url:"http://localhost:8000/api/user/logout",
+        withCredentials: true
+      })
+      navigate("/"); // Navigate only after successful logout
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data?.message || error.message);
+    }
+  };
+
+
   useEffect(() => {
 
     const fetchListings = async () => {
@@ -71,7 +87,7 @@ export default function FilterListingPage() {
                 <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
                   Settings
                 </a>
-                <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
+                <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]" onClick={handleLogout}>
                   Log Out
                 </a>
               </div>
