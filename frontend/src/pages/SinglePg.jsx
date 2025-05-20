@@ -57,7 +57,7 @@ const SinglePg = () => {
     const handleUnbookmark = async () => {
         try {
             setBookmarkLoading(true)
-            await axios.post('http://localhost:8000/api/bookmark/remove', {
+            await axios.post('http://localhost:8000/api/bookmarks/remove', {
                 listingId: id
             }, {
                 withCredentials: true
