@@ -131,16 +131,7 @@ export default function FilterListingPage() {
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               className="w-full"
             />
-            {/* <label className="block font-semibold">Price Range</label>
-            <input
-              type="range"
-              min="1000"
-              max="50000"
-              step="1000"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full"
-            /> */}
+            
             <div className="text-sm">₹{minPrice} – ₹{maxPrice}</div>
           </div>
         </aside>

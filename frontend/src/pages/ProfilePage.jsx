@@ -132,13 +132,41 @@ const ProfilePage = () => {
                 <p className="text-center text-gray-500">Loading user...</p>
               )}
 
-              <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold">Change Password</p>
-                <Pencil
-                  className="text-[#504B3A] cursor-pointer"
-                  onClick={() => navigate("/update-password")}
-                />
-              </div>
+{editField === "password" ? (
+  <div className="space-y-2">
+    <div>
+      <label className="block text-sm text-gray-500">New Password</label>
+      <input
+        type="password"
+        name="newPassword"
+        className="w-full border rounded px-2 py-1"
+      />
+    </div>
+    <div>
+      <label className="block text-sm text-gray-500">Confirm Password</label>
+      <input
+        type="password"
+        name="confirmPassword"
+        className="w-full border rounded px-2 py-1"
+      />
+    </div>
+    <div className="flex gap-4 mt-2">
+      <Button variant="ghost" onClick={() => setEditField(null)}>
+        Cancel
+      </Button>
+      <Button onClick={() => navigate("/update-password")}>Submit</Button>
+    </div>
+  </div>
+) : (
+  <div className="flex items-center justify-between">
+    <p className="text-lg font-semibold">Change Password</p>
+    <Pencil
+      className="text-[#504B3A] cursor-pointer"
+      onClick={() => setEditField("password")}
+    />
+  </div>
+)}
+
 
               <div className="pt-4">
                 <Button
