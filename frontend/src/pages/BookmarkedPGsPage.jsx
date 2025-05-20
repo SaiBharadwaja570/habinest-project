@@ -67,35 +67,37 @@ export default function FilterListingPage() {
         </nav>
       </header>
 
-      {/* Content */}
-      <div className="px-4 py-6">
-        {/* Listings */}
-        {bookmarks.length === 0 ? (
-          <p className="text-center text-gray-600">No bookmarks found.</p>
-        ) : (
-          <div className="grid grid-cols-3 gap-4">
-            {bookmarks.map((listing) => (
-              <div
-                key={listing._id}
-                className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center cursor-pointer"
-                onClick={() => navigate(`/${listing._id}`)}
-              >
-                <img
-                  src={listing.photo}
-                  alt={listing.name}
-                  className="w-full h-32 object-cover rounded"
-                />
-                <p className="mt-2 font-medium">{listing.name}</p>
-                <p className="text-sm">{listing.address}</p>
-                <p className="text-sm font-bold">₹{listing.priceRange}</p>
-                <p className="text-xs text-[#504B3A]/70">
-                  {listing.gender} | {listing.sharingType}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+{/* Content */}
+<div className="px-4 py-6">
+  <h2 className="text-2xl font-bold mb-4 text-center">Bookmarks</h2>
+  {/* Listings */}
+  {bookmarks.length === 0 ? (
+    <p className="text-center text-gray-600">No bookmarks found.</p>
+  ) : (
+    <div className="grid grid-cols-3 gap-4">
+      {bookmarks.map((listing) => (
+        <div
+          key={listing._id}
+          className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center cursor-pointer"
+          onClick={() => navigate(`/${listing._id}`)}
+        >
+          <img
+            src={listing.photo}
+            alt={listing.name}
+            className="w-full h-32 object-cover rounded"
+          />
+          <p className="mt-2 font-medium">{listing.name}</p>
+          <p className="text-sm">{listing.address}</p>
+          <p className="text-sm font-bold">₹{listing.priceRange}</p>
+          <p className="text-xs text-[#504B3A]/70">
+            {listing.gender} | {listing.sharingType}
+          </p>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
       {/* Footer */}
       <footer className="border-t p-8 bg-white text-sm text-gray-600">
