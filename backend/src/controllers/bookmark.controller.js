@@ -72,3 +72,18 @@ export const getBookmarks = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+
+export const isBookmarked = async (req, res) => {
+  const userId = req.user._id;
+  const { listingId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    const isBookmarked = user.bookmarks.includes(listingId);
+    return res.status(200).json({ isBookmarked });
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 const pgList = [
   {
@@ -18,6 +19,9 @@ const pgList = [
 ];
 
 export default function PGListPage() {
+
+  const navigate = useNavigate();
+
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
