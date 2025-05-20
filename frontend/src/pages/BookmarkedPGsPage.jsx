@@ -13,7 +13,8 @@ export default function FilterListingPage() {
         const res = await axios.get("http://localhost:8000/api/bookmarks", {
           withCredentials: true,
         });
-        setBookmarks(res.data.bookmarks || []);
+        const data = res.data.bookmarks || [];
+        setBookmarks(data);
       } catch (error) {
         console.error("Error fetching bookmarks:", error);
       }
@@ -40,8 +41,6 @@ export default function FilterListingPage() {
             <a href="#" onClick={() => navigate('/filter')}>Find PGs</a>
             <a href="#" onClick={() => navigate('/bookmarks')}>BookMarks</a>
           </div>
-
-          {/* Dropdown */}
           <div className="relative">
             <button onClick={toggleDropdown} className="flex items-center gap-2">
               <img
@@ -61,78 +60,27 @@ export default function FilterListingPage() {
         </nav>
       </header>
 
-      {/* Content */}
-      <div className="px-4 py-6">
-        {bookmarks.length === 0 ? (
-          <p className="text-center text-gray-600">No bookmarks found.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {bookmarks.map((listing) => (
+      {/* Main Content */}
+      <main className="p-6">
+        <h2 className="text-2xl font-bold mb-4">Available PGs</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {bookmarks.length > 0 ? (
+            bookmarks.map((pg, index) => (
               <div
-                key={listing._id}
-                className="bg-white rounded-lg border border-[#504B3A]/20 p-4 text-center cursor-pointer"
-                onClick={() => navigate(`/${listing._id}`)}
+                key={index}
+                className="border border-[#504B3A]/20 p-4 rounded-lg shadow-md bg-white"
               >
-                <img
-                  src={listing.photo}
-                  alt={listing.name}
-                  className="w-full h-32 object-cover rounded"
-                />
-                <p className="mt-2 font-medium">{listing.name}</p>
-                <p className="text-sm">{listing.address}</p>
-                <p className="text-sm font-bold">₹{listing.priceRange}</p>
-                <p className="text-xs text-[#504B3A]/70">
-                  {listing.gender} | {listing.sharingType}
-                </p>
+                <h3 className="font-semibold text-lg">{pg.name}</h3>
+                <p className="text-sm">Location: {pg.location || "Unknown"}</p>
+                <p className="text-sm">Gender: {pg.gender || "Not specified"}</p>
+                <p className="text-sm">Price: ₹{pg.priceRange || "N/A"}</p>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <footer className="border-t p-8 bg-white text-sm text-gray-600">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
-          <div>
-            <h4 className="font-semibold mb-2">Use Cases</h4>
-            <ul className="space-y-1">
-              <li>Student housing discovery</li>
-              <li>Professional relocation</li>
-              <li>Personalized PG browsing</li>
-              <li>Booking site visits</li>
-              <li>Saving/bookmarking PGs</li>
-              <li>Mobile-responsive exploration</li>
-              <li>Feedback and ratings system</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-2">Explore</h4>
-            <ul className="space-y-1">
-              <li>PG Listings & Filters</li>
-              <li>Profile & Preferences</li>
-              <li>Map-based PG Search</li>
-              <li>Real-time Suggestions</li>
-              <li>Dark Mode UI</li>
-              <li>Ratings & Reviews</li>
-              <li>Similar PG Recommendations</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-2">Resources</h4>
-            <ul className="space-y-1">
-              <li>Blog & Guides</li>
-              <li>Best Practices for Users</li>
-              <li>Support & Contact Form</li>
-              <li>Developer API Docs</li>
-              <li>Location Data (OpenStreetMap)</li>
-              <li>Progress Trackers</li>
-              <li>Resource Library</li>
-            </ul>
-          </div>
+            ))
+          ) : (
+            <p>No PG listings found.</p>
+          )}
         </div>
-      </footer>
+      </main>
     </div>
   );
 }

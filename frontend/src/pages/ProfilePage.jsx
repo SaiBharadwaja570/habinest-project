@@ -1,109 +1,227 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Pencil, LogOut } from "lucide-react";
+import { Pencil, LogOut, Save } from "lucide-react";
+import axios from "axios";
 
 const ProfilePage = () => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [editField, setEditField] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+
+  const handlePasswordChange = (e) => {
+    setPasswordData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleChangePassword = async () => {
+    const { currentPassword, newPassword } = passwordData;
+
+    if (!currentPassword || !newPassword) {
+      alert("Please fill in both fields.");
+      return;
+    }
+
+    try {
+      const res = await axios.patch(
+        "http://localhost:8000/api/user/updatePassword",
+        {
+          oldPassword: currentPassword,
+          newPassword,
+        },
+        { withCredentials: true }
+      );
+      alert("Password changed successfully!");
+      setPasswordData({ currentPassword: "", newPassword: "" });
+      setEditField(null);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to change password.");
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/user/", {
+        withCredentials: true,
+      });
+      setUser(res.data.data);
+      setFormData({
+        name: res.data.data.name,
+        email: res.data.data.email,
+        phone: res.data.data.phone,
+      });
+    } catch (error) {
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleUpdate = async (field) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/api/user/updateAccount${field}`,
+        { [field.toLowerCase()]: formData[field.toLowerCase()] },
+        { withCredentials: true }
+      );
+      setEditField(null);
+      fetchUser();
+      alert(`${field} updated successfully!`);
+    } catch (err) {
+      alert("Update failed");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#E4DFDA] text-black">
-{/* Header */}
-<header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
-  <div className="flex items-center gap-2">
-    <img src="/logo.png" alt="Habinest Logo" className="h-10 w-10" />
-    <span className="text-2xl font-bold">Habinest</span>
-  </div>
+    <div className="min-h-screen flex flex-col bg-[#E4DFDA] text-black">
+      <header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <img
+            src="/HabinestLogo.jpg"
+            alt="Habinest Logo"
+            className="h-10 w-10"
+          />
+          <span className="text-2xl font-bold">Habinest</span>
+        </div>
 
-  <nav className="space-x-4 text-sm">
-<div className="space-x-4 text-sm text-gray-100 font-medium">
-    <a href="#">Find PGs</a>
-    <a href="#">Map View</a>
-    <a href="#">Book a Visit</a>
-    <a href="#">Saved</a>
-    <a href="#">My Dashboard</a>
-    <a href="#">Write a Review</a>
-  </div>
-  </nav>
+        <nav className="space-x-4 text-sm text-gray-100 font-medium">
+          <button onClick={() => navigate("/")}>Home</button>
+          <button onClick={() => navigate("/filter")}>Find PGs</button>
+          <button onClick={() => navigate("/bookmarks")}>BookMarks</button>
+        </nav>
+      </header>
 
-  {/* Profile Dropdown */}
-  <div className="relative">
-    <button
-      onClick={toggleDropdown}
-      className="flex items-center gap-2"
-    >
-      <img
-        src="/profile.png"
-        alt="User Avatar"
-        className="w-10 h-10 rounded-full"
-      />
-    </button>
-    {isDropdownOpen && (
-      <div className="absolute right-0 mt-2 bg-white border border-[#504B3A]/20 rounded-lg shadow-lg w-48 py-2">
-        <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
-          Profile
-        </a>
-        <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
-          Settings
-        </a>
-        <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
-          Log Out
-        </a>
-      </div>
-    )}
-  </div>
-</header>
-
-
-      {/* Main Content */}
-      <main className="p-8">
-        <Card className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6">
+      <main className="flex-grow p-8">
+        <Card className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6">
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Profile Image Section */}
             <div className="flex flex-col items-center">
               <img
                 src="/profile.png"
                 alt="Profile"
-                className="w-32 h-32 rounded-full border-4 border-[#007FFF]"
+                className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-[#007FFF]"
               />
               <Button variant="ghost" className="mt-2 text-[#007FFF]">
                 <Pencil className="mr-2 h-4 w-4" /> Edit Picture
               </Button>
             </div>
 
-            {/* Profile Details Section */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Name:</p>
-                  <p className="text-lg font-semibold">John Doe</p>
+              {user ? (
+                ["name", "email", "phone"].map((field) => (
+                  <div key={field} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500">
+                        {field.charAt(0).toUpperCase() + field.slice(1)}:
+                      </p>
+                      {editField === field ? (
+                        <input
+                          type="text"
+                          name={field}
+                          value={formData[field]}
+                          onChange={handleChange}
+                          className="border rounded px-2 py-1"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold">{user[field]}</p>
+                      )}
+                    </div>
+                    {editField === field ? (
+                      <Save
+                        className="text-green-600 cursor-pointer"
+                        onClick={() =>
+                          handleUpdate(
+                            field === "phone"
+                              ? "Phone"
+                              : field.charAt(0).toUpperCase() + field.slice(1)
+                          )
+                        }
+                      />
+                    ) : (
+                      <Pencil
+                        className="text-[#504B3A] cursor-pointer"
+                        onClick={() => setEditField(field)}
+                      />
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500">Loading user...</p>
+              )}
+
+              {editField === "password" ? (
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-sm text-gray-500">
+                      Current Password
+                    </label>
+                    <input
+                      type="password"
+                      name="currentPassword"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full border rounded px-2 py-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-500">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full border rounded px-2 py-1"
+                    />
+                  </div>
+                  <div className="flex gap-4 mt-2">
+                    <Button variant="ghost" onClick={() => setEditField(null)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleChangePassword}>Submit</Button>
+                  </div>
                 </div>
-                <Pencil className="text-[#504B3A] cursor-pointer" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Email:</p>
-                  <p className="text-lg font-semibold">johndoe@gmail.com</p>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold">Change Password</p>
+                  <Pencil
+                    className="text-[#504B3A] cursor-pointer"
+                    onClick={() => setEditField("password")}
+                  />
                 </div>
-                <Pencil className="text-[#504B3A] cursor-pointer" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Mobile Phone(+1):</p>
-                  <p className="text-lg font-semibold">(123) 456-7890</p>
-                </div>
-                <Pencil className="text-[#504B3A] cursor-pointer" />
-              </div>
-              <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold">Change Password</p>
-                <Pencil className="text-[#504B3A] cursor-pointer" />
-              </div>
+              )}
+
               <div className="pt-4">
-                <Button variant="destructive" className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  className="flex items-center gap-2"
+                  onClick={() => navigate("/logout")}
+                >
                   <LogOut className="w-4 h-4" /> Log Out
                 </Button>
               </div>
@@ -112,59 +230,47 @@ const ProfilePage = () => {
         </Card>
       </main>
 
-
-{/* Footer */}
-      <footer className="border-t p-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-sm text-gray-600">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Logo" className="h-6 w-6" />
+      <footer className="border-t p-8 bg-white text-sm text-gray-600">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+          <div>
+            <h4 className="font-semibold mb-2">Use Cases</h4>
+            <ul className="space-y-1">
+              <li>Student housing discovery</li>
+              <li>Professional relocation</li>
+              <li>Personalized PG browsing</li>
+              <li>Booking site visits</li>
+              <li>Saving/bookmarking PGs</li>
+              <li>Mobile-responsive exploration</li>
+              <li>Feedback and ratings system</li>
+            </ul>
           </div>
-          <div className="flex gap-2 text-xl">
-            <span>🧿</span>
-            <span>📷</span>
-            <span>📹</span>
-            <span>🔗</span>
+
+          <div>
+            <h4 className="font-semibold mb-2">Explore</h4>
+            <ul className="space-y-1">
+              <li>PG Listings & Filters</li>
+              <li>Profile & Preferences</li>
+              <li>Map-based PG Search</li>
+              <li>Real-time Suggestions</li>
+              <li>Dark Mode UI</li>
+              <li>Ratings & Reviews</li>
+              <li>Similar PG Recommendations</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold mb-2">Resources</h4>
+            <ul className="space-y-1">
+              <li>Blog & Guides</li>
+              <li>Best Practices for Users</li>
+              <li>Support & Contact Form</li>
+              <li>Developer API Docs</li>
+              <li>Location Data (OpenStreetMap)</li>
+              <li>Progress Trackers</li>
+              <li>Resource Library</li>
+            </ul>
           </div>
         </div>
-
-  <div>
-    <h4 className="font-semibold mb-2">Use Cases</h4>
-    <ul className="space-y-1">
-      <li>Student housing discovery</li>
-      <li>Professional relocation</li>
-      <li>Personalized PG browsing</li>
-      <li>Booking site visits</li>
-      <li>Saving/bookmarking PGs</li>
-      <li>Mobile-responsive exploration</li>
-      <li>Feedback and ratings system</li>
-    </ul>
-  </div>
-
-  <div>
-    <h4 className="font-semibold mb-2">Explore</h4>
-    <ul className="space-y-1">
-      <li>PG Listings & Filters</li>
-      <li>Profile & Preferences</li>
-      <li>Map-based PG Search</li>
-      <li>Real-time Suggestions</li>
-      <li>Dark Mode UI</li>
-      <li>Ratings & Reviews</li>
-      <li>Similar PG Recommendations</li>
-    </ul>
-  </div>
-
-  <div>
-    <h4 className="font-semibold mb-2">Resources</h4>
-    <ul className="space-y-1">
-      <li>Blog & Guides</li>
-      <li>Best Practices for Users</li>
-      <li>Support & Contact Form</li>
-      <li>Developer API Docs</li>
-      <li>Location Data (OpenStreetMap)</li>
-      <li>Progress Trackers</li>
-      <li>Resource Library</li>
-    </ul>
-  </div>
       </footer>
     </div>
   );

@@ -2,7 +2,6 @@
 
 // Multer helps your server understand and grab the file when a user uploads it
 import multer from "multer"
-console.log("In multer")
 const storage = multer.diskStorage({
   
   destination: function (req, file, cb) {
@@ -12,7 +11,6 @@ const storage = multer.diskStorage({
       cb(null, file.originalname)
     }
   })
-  console.log("Out of multer")
   const upload = multer({ 
     storage,
 })

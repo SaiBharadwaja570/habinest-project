@@ -1,0 +1,117 @@
+# Dependency directories
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables and config
+.env
+.env.*
+*.env
+config/*.json
+!config/default.json
+
+# MongoDB local data
+/data
+/db
+mongo-volume
+mongodb
+
+# Git and version control
+.git
+.gitignore
+.github
+
+# Documentation
+docs/
+*.md
+LICENSE
+
+# Development and IDE files
+.vscode
+.idea
+*.sublime-*
+.DS_Store
+*.swp
+*.swo
+
+# Testing
+/coverage
+/test
+/tests
+/spec
+__tests__
+*.test.js
+*.spec.js
+jest.config.js
+mocha.opts
+
+# Build directories
+/dist
+/build
+/out
+
+# Log files
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency caches
+.npm
+.eslintcache
+.node_repl_history
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Debugging
+.nyc_output
+.clinic
+.ndb
+
+# Docker-specific
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI files
+.travis.yml
+.gitlab-ci.yml
+.circleci
+azure-pipelines.yml
+jenkins*
+
+# Temporary directories
+tmp/
+temp/
+.tmp/
+
+# Backend specific files to ignore
+dump.rdb
+*.dump
+jmeter.log
+server.pid
+heapdump-*
+*.heapsnapshot
+*.prof
+*.cpuprofile
