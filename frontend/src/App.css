@@ -1,5 +1,49 @@
 /* SinglePg Component Styles */
 
+.book-visit-button {
+    margin-left: 10px;
+    padding: 8px 14px;
+    background-color: #007fff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.booking-form {
+    margin-top: 20px;
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.submit-booking-button {
+    padding: 10px 18px;
+    background-color: #69995d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 /* Container layout */
 .single-pg-container {
   max-width: 1200px;
