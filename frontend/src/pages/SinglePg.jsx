@@ -13,6 +13,14 @@ const SinglePg = () => {
     const [isBookmarked, setIsBookmarked] = useState(false)
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
 
+    const [showBookingForm, setShowBookingForm] = useState(false)
+    const [bookingDetails, setBookingDetails] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        date: ''
+    })
+
     useEffect(() => {
         const fetchPgData = async () => {
             try {
@@ -70,6 +78,23 @@ const SinglePg = () => {
         }
     }
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setBookingDetails(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleBookingSubmit = (e) => {
+        e.preventDefault()
+        // Replace with API call if needed
+        console.log("Booking submitted:", bookingDetails)
+        alert("Visit booked successfully!")
+        setShowBookingForm(false)
+        setBookingDetails({ name: '', email: '', phone: '', date: '' })
+    }
+
     if (isLoading) {
         return (
             <div className="loading-container">
@@ -116,7 +141,60 @@ const SinglePg = () => {
                         </>
                     )}
                 </button>
+
+                <button
+                    className="book-visit-button"
+                    onClick={() => setShowBookingForm(prev => !prev)}
+                >
+                    {showBookingForm ? 'Cancel' : 'Book a Visit'}
+                </button>
             </div>
+
+            {showBookingForm && (
+                <form className="booking-form" onSubmit={handleBookingSubmit}>
+                    <div className="form-group">
+                        <label>Name:</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={bookingDetails.name}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={bookingDetails.email}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Phone:</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            value={bookingDetails.phone}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Date of Visit:</label>
+                        <input
+                            type="date"
+                            name="date"
+                            value={bookingDetails.date}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="submit-booking-button">Submit</button>
+                </form>
+            )}
 
             <div className="pg-content">
                 <div className="pg-image-container">
