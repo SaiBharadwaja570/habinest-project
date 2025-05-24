@@ -49,7 +49,7 @@ export default function OwnerPgForm() {
   
       const res = await axios({
         method: "POST",
-        url: "http://localhost:8000/api/pg/",
+        url: `${import.meta.env.VITE_BACKEND_PG}`,
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data",

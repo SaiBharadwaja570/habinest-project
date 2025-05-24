@@ -12,7 +12,6 @@ const SinglePg = () => {
     const [error, setError] = useState(null)
     const [isBookmarked, setIsBookmarked] = useState(false)
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
-
     const [showBookingForm, setShowBookingForm] = useState(false)
     const [bookingDetails, setBookingDetails] = useState({
         name: '',
@@ -25,10 +24,10 @@ const SinglePg = () => {
         const fetchPgData = async () => {
             try {
                 setIsLoading(true)
-                const response = await axios.get(`http://localhost:8000/api/pg/${id}`)
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/${id}`)
                 setPgData(response.data.data)
 
-                const bookmarkStatus = await axios.get(`http://localhost:8000/api/bookmarks/status/${id}`, {
+                const bookmarkStatus = await axios.get(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/status/${id}`, {
                     withCredentials: true
                 })
                 setIsBookmarked(bookmarkStatus.data.isBookmarked)
@@ -46,7 +45,7 @@ const SinglePg = () => {
     const handleBookmark = async () => {
         try {
             setBookmarkLoading(true)
-            await axios.post('http://localhost:8000/api/bookmarks/add', {
+            await axios.post(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/add`, {
                 listingId: id
             }, {
                 withCredentials: true
@@ -65,7 +64,7 @@ const SinglePg = () => {
     const handleUnbookmark = async () => {
         try {
             setBookmarkLoading(true)
-            await axios.post('http://localhost:8000/api/bookmarks/remove', {
+            await axios.post(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/remove`, {
                 listingId: id
             }, {
                 withCredentials: true

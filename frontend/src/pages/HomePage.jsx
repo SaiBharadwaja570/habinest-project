@@ -250,7 +250,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/user/", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, {
           withCredentials: true,
         });
         setUser(res.data.data); // Save user if authenticated
