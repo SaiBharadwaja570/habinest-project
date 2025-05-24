@@ -4,6 +4,7 @@ import userRouter from './src/routes/user.routes.js' // importing routes from us
 import listingsRouter from './src/routes/listings.routes.js'
 import cookieParser from 'cookie-parser'
 import bookmarkRouter from './src/routes/bookmark.routes.js'
+import visitRotes from './src/routes/visit.routes.js'
 
 
 const app = express()
