@@ -1,7 +1,6 @@
-import { Listings } from "./listings.models";
+import { Listings } from "./listings.models.js";
 
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 const visitSchema = new mongoose.Schema({
   name: String,
   phone: String,

@@ -1,6 +1,6 @@
 
 import express from 'express'
-import {Visit} from '../models/visit.models.js';
+import Visit from '../models/visit.models.js';
 const router = express.Router();
 
 router.post("/book", async (req, res) => {
@@ -14,4 +14,4 @@ router.post("/book", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router

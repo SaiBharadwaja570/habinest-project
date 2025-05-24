@@ -7,8 +7,11 @@ import ApiResponse from "../utils/ApiResponse.js";
 // Common cookie options
 const cookieOptions = {
     httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // ✅ 1 day from now
-}
+    secure: true, // use HTTPS in production
+    sameSite: 'None', // helps prevent CSRF, good for most use cases
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 1 day
+};
+  
 
 // Utility function to generate tokens
 const generateAccessAndRefreshToken = async (userId) => {
