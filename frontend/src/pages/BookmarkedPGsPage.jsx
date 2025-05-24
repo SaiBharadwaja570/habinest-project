@@ -10,7 +10,7 @@ export default function FilterListingPage() {
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/bookmarks", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BOOKMARKS}`, {
           withCredentials: true,
         });
         setBookmarks(res.data.bookmarks || []);

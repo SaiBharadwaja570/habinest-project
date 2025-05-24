@@ -37,7 +37,7 @@ const ProfilePage = () => {
 
     try {
       const res = await axios.patch(
-        "http://localhost:8000/api/user/updatePassword",
+        `${import.meta.env.VITE_BACKEND_USER}/updatePassword`,
         {
           oldPassword: currentPassword,
           newPassword,
@@ -54,7 +54,7 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/user/", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, {
         withCredentials: true,
       });
       setUser(res.data.data);
@@ -82,7 +82,7 @@ const ProfilePage = () => {
   const handleUpdate = async (field) => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/user/updateAccount${field}`,
+        `${import.meta.env.VITE_BACKEND_USER}/updateAccount${field}`,
         { [field.toLowerCase()]: formData[field.toLowerCase()] },
         { withCredentials: true }
       );
