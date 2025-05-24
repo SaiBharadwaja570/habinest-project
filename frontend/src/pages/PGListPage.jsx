@@ -15,7 +15,7 @@ export default function PGListPage() {
   useEffect(() => {
     const fetchMyPgs = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/pg/owner-pgs", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/owner-pgs`, {
           withCredentials: true,
         });
         setPgList(res.data.data);
@@ -31,7 +31,7 @@ export default function PGListPage() {
   const handleDelete = async (pgId) => {
     if (!window.confirm("Are you sure you want to delete this PG?")) return;
     try {
-      await axios.delete(`http://localhost:8000/api/pg/${pgId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_PG}/${pgId}`, {
         withCredentials: true,
       });
       setPgList((prev) => prev.filter((pg) => pg._id !== pgId));

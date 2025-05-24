@@ -18,7 +18,7 @@ export default function LoginPage() {
       }
       axios({
         method: 'POST',
-        url: 'http://localhost:8000/api/user/login',
+        url: `${import.meta.env.VITE_BACKEND_USER}/login`,
         data: apiObj,
         withCredentials: true
       }).then(()=>{

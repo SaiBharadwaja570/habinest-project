@@ -22,7 +22,7 @@ export default function RegisterPage() {
     }
     axios({
       method: 'POST',
-      url: 'http://localhost:8000/api/user/register',
+      url: `${import.meta.env.VITE_BACKEND_USER}/register`,
       data: apiObj
     }).then(()=>{
       alert("User registered succesfully")

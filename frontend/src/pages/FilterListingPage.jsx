@@ -17,7 +17,7 @@ export default function FilterListingPage() {
     try {
       await axios({
         method:"POST",
-        url:"http://localhost:8000/api/user/logout",
+        url:`${import.meta.env.VITE_BACKEND_USER}/logout`,
         withCredentials: true
       })
       navigate("/"); // Navigate only after successful logout
@@ -31,7 +31,7 @@ export default function FilterListingPage() {
 
     const fetchListings = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/pg", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_PG}`, {
           params: {
             ...(search && { name: search }),
             ...(minPrice > 0 && { minPrice }),
