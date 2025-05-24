@@ -1,32 +1,12 @@
-import app from "./app.js";
-import dotenv from 'dotenv'
-import userDB from "./src/db/userDB.js";
-import listingsDB from "./src/db/listingsDB.js";
-import ApiError from "./src/utils/ApiError.js";
+import app from './app.js';
+import dotenv from 'dotenv';
+import userDB from './src/db/userDB.js';
+import listingsDB from './src/db/listingsDB.js';
+
 dotenv.config();
 
-app.on('error', (error) => {
-    console.error("Error:", error);
-    throw error;
-})
+await userDB().then(() => console.log("Connected user")).catch(console.error);
+await listingsDB().then(() => console.log("Connected listing")).catch(console.error);
 
-const startServer = async () => {
-
-    try {
-
-        await userDB().then(res=>{console.log("Connected user")}).catch(err=>{console.log(err)})
-
-        await listingsDB().then(res=>{console.log("Connected listing")}).catch(err=>{console.log(err)})
-
-        app.listen(process.env.PORT || 8000, () =>{
-            console.log(`Server listening on port: ${process.env.PORT}`)
-        })
-
-    } catch (error) {
-
-        throw new ApiError(500, "Server Error: ", error);
-
-    }
-}
-
-startServer();
+// ✅ Export the Express app (this is required by Vercel)
+export default app;
