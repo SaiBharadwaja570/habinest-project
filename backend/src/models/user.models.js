@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
         default: 'user',
         required: true
     },
-    refrshToken: [String],
+    refreshToken: [String],
     bookmarks: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Listings'
