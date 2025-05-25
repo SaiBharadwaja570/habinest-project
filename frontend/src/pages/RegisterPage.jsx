@@ -45,7 +45,7 @@ export default function RegisterPage() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_USER}/signup`,
+                `${import.meta.env.VITE_BACKEND_USER}/register`,
                 { name: name.trim(), email: email.trim(), phone: phone.trim(), password },
                 { timeout: 10000 }
             );
