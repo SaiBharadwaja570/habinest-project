@@ -1,117 +1,139 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from 'axios'; // Keep axios here as you are using it directly
 
 export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate("/register"); // Navigate to the register page
+    navigate("/register");
   };
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleLogin = async () => {
-    // Clear previous messages
-    setError('')
-    setSuccess('')
-    
-    // Input validation
+    // Clear previous messages at the start of a new login attempt
+    setError('');
+    setSuccess('');
+
+    // --- Input Validation ---
     if (!email || !password) {
-      setError('Please enter both email and password')
-      return
+      setError('Please enter both email and password.');
+      return;
     }
 
     if (!email.includes('@')) {
-      setError('Please enter a valid email address')
-      return
+      setError('Please enter a valid email address.');
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true); // Start loading state
 
     try {
       const apiObj = {
-        email: email.trim(),
+        email: email.trim(), // Trim whitespace from email
         password
-      }
+      };
 
-      console.log('Attempting login with:', { email: apiObj.email }) // Don't log password
+      console.log('Attempting login with email:', apiObj.email); // Log email for debugging, but NEVER password
 
       const response = await axios({
         method: 'POST',
+        // Ensure VITE_BACKEND_USER points to your backend's auth base URL,
+        // e.g., 'http://localhost:3000/auth' if your server mounts auth routes at '/auth'
         url: `${import.meta.env.VITE_BACKEND_USER}/login`,
         data: apiObj,
-        withCredentials: true,
-        timeout: 10000 // 10 second timeout
-      })
+        withCredentials: true, // Important for sending/receiving cookies (if your backend uses session cookies)
+        timeout: 10000 // 10 second timeout for the request
+      });
 
-      console.log('Login response:', response.data)
-      
-      setSuccess('Login successful! Redirecting...')
-      
-      // Small delay to show success message
+      console.log('Login successful response data:', response.data);
+
+      setSuccess('Login successful! Redirecting...');
+
+      // Assuming your backend returns a token or user info on successful login
+      // If your backend sets an HTTP-only cookie, you might not need to store anything here.
+      // If it returns a JWT in the body, store it:
+      if (response.data && response.data.token) {
+          localStorage.setItem('userToken', response.data.token);
+          // Potentially store user info too:
+          // localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+      }
+
+      // Small delay to show success message before navigating
       setTimeout(() => {
-        navigate('/')
-      }, 1000)
+        navigate('/'); // Navigate to dashboard or home page
+      }, 1000);
 
     } catch (err) {
-      console.error('Login error:', err)
-      
-      // Handle different types of errors
-      if (err.code === 'ECONNABORTED') {
-        setError('Request timeout. Please check your internet connection and try again.')
+      console.error('Login error caught in component:', err);
+
+      // --- Enhanced Error Handling based on Axios error structure ---
+      if (axios.isCancel(err)) {
+        setError('Login request cancelled.');
+      } else if (err.code === 'ECONNABORTED') {
+        // Specific check for request timeout (Axios's code for timeouts)
+        setError('Request timed out. Please check your internet connection and try again.');
       } else if (err.response) {
-        // Server responded with error status
-        const status = err.response.status
-        const message = err.response.data?.message || 'Login failed'
-        
-        console.log('Server error details:', {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx (i.e., a server-side error)
+        const status = err.response.status;
+        const message = err.response.data?.message || err.response.statusText || 'Login failed due to server error.'; // Fallback to statusText
+
+        console.log('Server responded with error details:', {
           status,
           message,
           data: err.response.data
-        })
+        });
 
         switch (status) {
-          case 400:
-            setError(`Invalid request: ${message}`)
-            break
-          case 401:
-            setError('Invalid email or password. Please check your credentials.')
-            break
-          case 404:
-            setError('User not found. Please check your email or register first.')
-            break
-          case 409:
-            setError(`Conflict: ${message}`)
-            break
-          case 500:
-            setError('Server error. Please try again later.')
-            break
-          default:
-            setError(`Login failed: ${message}`)
+          case 400: // Bad Request: Often due to invalid input (e.g., missing fields, wrong format)
+            setError(`Invalid request: ${message}`);
+            break;
+          case 401: // Unauthorized: Invalid credentials, missing/invalid token
+            setError('Invalid email or password. Please check your credentials.');
+            break;
+          case 403: // Forbidden: Authenticated but not authorized to perform action
+            setError('Access denied. You do not have permission to perform this action.');
+            break;
+          case 404: // Not Found: Endpoint or resource not found (e.g., user email not registered)
+            setError('User not found or login endpoint is incorrect. Please check your email or register first.');
+            break;
+          case 409: // Conflict: (e.g., user already exists if trying to register, but could apply to login state)
+            setError(`Conflict: ${message}`);
+            break;
+          case 429: // Too Many Requests: Rate limiting applied
+            setError('Too many login attempts. Please try again after some time.');
+            break;
+          case 500: // Internal Server Error: Generic server-side error
+            setError('Server error. Please try again later.');
+            break;
+          default: // Catch any other unexpected HTTP errors
+            setError(`Login failed: ${message}`);
         }
       } else if (err.request) {
-        // Network error - no response received
-        console.log('Network error:', err.request)
-        setError('Network error. Please check your internet connection and try again.')
+        // The request was made but no response was received
+        // This typically means a network issue or the backend server is down/unreachable
+        console.log('Network error (no response received):', err.request);
+        setError('Network error. Please check your internet connection and try again.');
       } else {
-        // Other error
-        console.log('Unexpected error:', err.message)
-        setError('An unexpected error occurred. Please try again.')
+        // Something else happened in setting up the request that triggered an Error
+        console.log('Unexpected error during request setup:', err.message);
+        setError('An unexpected error occurred. Please try again.');
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false); // Always stop loading, regardless of success or failure
     }
-  }
+  };
 
   const clearMessages = () => {
-    setError('')
-    setSuccess('')
-  }
+    setError('');
+    setSuccess('');
+  };
 
   return (
     <div className="font-sans">
@@ -129,13 +151,13 @@ export default function LoginPage() {
       {/* Login Section */}
       <section className="bg-blue-700 text-white py-16 px-4 text-center">
         <h1 className="text-3xl font-bold mb-8">Login</h1>
-        
+
         {/* Error Message */}
         {error && (
           <div className="max-w-xl mx-auto mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
             <div className="flex justify-between items-center">
               <span className="text-sm">{error}</span>
-              <button 
+              <button
                 onClick={clearMessages}
                 className="text-red-500 hover:text-red-700 ml-2"
               >
@@ -176,12 +198,12 @@ export default function LoginPage() {
             disabled={isLoading}
           />
         </div>
-        
+
         <div className="flex justify-center gap-4 mt-8">
-          <button 
+          <button
             className={`px-6 py-2 rounded-md font-semibold ${
-              isLoading 
-                ? 'bg-gray-500 cursor-not-allowed' 
+              isLoading
+                ? 'bg-gray-500 cursor-not-allowed'
                 : 'bg-green-600 hover:bg-green-700'
             } text-white transition-colors`}
             onClick={handleLogin}
@@ -189,7 +211,7 @@ export default function LoginPage() {
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
-          
+
           <button
             onClick={handleRegisterClick}
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
@@ -262,7 +284,7 @@ export default function LoginPage() {
             <ul className="space-y-1">
               <li>Student housing discovery</li>
               <li>Professional relocation</li>
-              <li>Personalized PG browsing</li>
+              <li>Personalized PG Browse</li>
               <li>Booking site visits</li>
               <li>Saving/bookmarking PGs</li>
               <li>Mobile-responsive exploration</li>
