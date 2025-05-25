@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import Map from '../components/Map'
-import { BookmarkPlus, BookmarkCheck, ArrowLeft } from 'lucide-react'
+import { BookmarkPlus, BookmarkCheck, ArrowLeft, Share2, Copy, X } from 'lucide-react'
 import '../App.css'
 
 const SinglePg = () => {
@@ -13,6 +13,8 @@ const SinglePg = () => {
     const [isBookmarked, setIsBookmarked] = useState(false)
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
     const [showBookingForm, setShowBookingForm] = useState(false)
+    const [showShareModal, setShowShareModal] = useState(false)
+    const [copySuccess, setCopySuccess] = useState(false)
     const [bookingDetails, setBookingDetails] = useState({
         name: '',
         email: '',
@@ -94,6 +96,36 @@ const SinglePg = () => {
         setBookingDetails({ name: '', email: '', phone: '', date: '' })
     }
 
+    const handleShare = () => {
+        setShowShareModal(true)
+        setCopySuccess(false)
+    }
+
+    const handleCopyUrl = async () => {
+        const currentUrl = window.location.href
+        try {
+            await navigator.clipboard.writeText(currentUrl)
+            setCopySuccess(true)
+            setTimeout(() => setCopySuccess(false), 2000)
+        } catch (err) {
+            console.error('Failed to copy URL:', err)
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea')
+            textArea.value = currentUrl
+            document.body.appendChild(textArea)
+            textArea.select()
+            document.execCommand('copy')
+            document.body.removeChild(textArea)
+            setCopySuccess(true)
+            setTimeout(() => setCopySuccess(false), 2000)
+        }
+    }
+
+    const closeShareModal = () => {
+        setShowShareModal(false)
+        setCopySuccess(false)
+    }
+
     if (isLoading) {
         return (
             <div className="loading-container">
@@ -123,31 +155,95 @@ const SinglePg = () => {
                     Back to Search
                 </Link>
                 <h1 className="pg-title">{pgData.name}</h1>
-                <button
-                    className={`bookmark-button ${isBookmarked ? 'bookmarked' : ''}`}
-                    onClick={isBookmarked ? handleUnbookmark : handleBookmark}
-                    disabled={bookmarkLoading}
-                >
-                    {isBookmarked ? (
-                        <>
-                            <BookmarkCheck size={20} />
-                            <span>{bookmarkLoading ? 'Removing...' : 'Bookmarked'}</span>
-                        </>
-                    ) : (
-                        <>
-                            <BookmarkPlus size={20} />
-                            <span>{bookmarkLoading ? 'Saving...' : 'Bookmark'}</span>
-                        </>
-                    )}
-                </button>
+                
+                <div className="header-actions">
+                    <button
+                        className="share-button"
+                        onClick={handleShare}
+                    >
+                        <Share2 size={20} />
+                        <span>Share</span>
+                    </button>
 
-                <button
-                    className="book-visit-button"
-                    onClick={() => setShowBookingForm(prev => !prev)}
-                >
-                    {showBookingForm ? 'Cancel' : 'Book a Visit'}
-                </button>
+                    <button
+                        className={`bookmark-button ${isBookmarked ? 'bookmarked' : ''}`}
+                        onClick={isBookmarked ? handleUnbookmark : handleBookmark}
+                        disabled={bookmarkLoading}
+                    >
+                        {isBookmarked ? (
+                            <>
+                                <BookmarkCheck size={20} />
+                                <span>{bookmarkLoading ? 'Removing...' : 'Bookmarked'}</span>
+                            </>
+                        ) : (
+                            <>
+                                <BookmarkPlus size={20} />
+                                <span>{bookmarkLoading ? 'Saving...' : 'Bookmark'}</span>
+                            </>
+                        )}
+                    </button>
+
+                    <button
+                        className="book-visit-button"
+                        onClick={() => setShowBookingForm(prev => !prev)}
+                    >
+                        {showBookingForm ? 'Cancel' : 'Book a Visit'}
+                    </button>
+                </div>
             </div>
+
+            {/* Share Modal */}
+            {showShareModal && (
+                <div className="modal-overlay" onClick={closeShareModal}>
+                    <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Share this PG</h3>
+                            <button className="close-button" onClick={closeShareModal}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                        
+                        <div className="share-content">
+                            <div className="pg-preview">
+                                <img src={pgData.photo} alt={pgData.name} className="preview-image" />
+                                <div className="preview-details">
+                                    <h4>{pgData.name}</h4>
+                                    <p>{pgData.address}</p>
+                                    <p>₹{pgData.priceRange}</p>
+                                </div>
+                            </div>
+                            
+                            <div className="url-container">
+                                <label>Share this link:</label>
+                                <div className="url-input-container">
+                                    <input
+                                        type="text"
+                                        value={window.location.href}
+                                        readOnly
+                                        className="url-input"
+                                    />
+                                    <button
+                                        className={`copy-button ${copySuccess ? 'copied' : ''}`}
+                                        onClick={handleCopyUrl}
+                                    >
+                                        <Copy size={16} />
+                                        {copySuccess ? 'Copied!' : 'Copy'}
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div className="share-template">
+                                <label>Message template:</label>
+                                <textarea
+                                    readOnly
+                                    value={`Check out this amazing PG I found!\n\n${pgData.name}\n📍 ${pgData.address}\n💰 ₹${pgData.priceRange}\n\n${window.location.href}`}
+                                    className="template-textarea"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {showBookingForm && (
                 <form className="booking-form" onSubmit={handleBookingSubmit}>
