@@ -277,25 +277,6 @@ const SinglePg = () => {
                                     </button>
                                 </div>
                             </div>
-                            
-                            <div className="share-template">
-                                <div className="template-header">
-                                    <label>Message template:</label>
-                                    <button
-                                        className={`copy-button ${templateCopySuccess ? 'copied' : ''}`}
-                                        onClick={handleCopyTemplate}
-                                        type="button"
-                                    >
-                                        <Copy size={16} />
-                                        {templateCopySuccess ? 'Copied!' : 'Copy Template'}
-                                    </button>
-                                </div>
-                                <textarea
-                                    readOnly
-                                    value={`Check out this amazing PG I found!\n\n${pgData.name}\n📍 ${pgData.address}\n💰 ₹${pgData.priceRange}\n\n${window.location.href}`}
-                                    className="template-textarea"
-                                />
-                            </div>
                         </div>
                     </div>
                 </div>
