@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import Map from '../components/Map'
-import { BookmarkPlus, BookmarkCheck, ArrowLeft, Share2, Copy, X } from 'lucide-react'
+import { BookmarkPlus, BookmarkCheck, ArrowLeft, Share2, Copy, X, Calendar } from 'lucide-react'
 import '../App.css'
 
 const SinglePg = () => {
@@ -12,9 +12,11 @@ const SinglePg = () => {
     const [error, setError] = useState(null)
     const [isBookmarked, setIsBookmarked] = useState(false)
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
-    const [showBookingForm, setShowBookingForm] = useState(false)
+    const [showBookingModal, setShowBookingModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [copySuccess, setCopySuccess] = useState(false)
+    const [templateCopySuccess, setTemplateCopySuccess] = useState(false)
+    const [bookingSubmitting, setBookingSubmitting] = useState(false)
     const [bookingDetails, setBookingDetails] = useState({
         name: '',
         email: '',
@@ -87,18 +89,35 @@ const SinglePg = () => {
         }))
     }
 
-    const handleBookingSubmit = (e) => {
+    const handleBookingSubmit = async (e) => {
         e.preventDefault()
-        // Replace with API call if needed
-        console.log("Booking submitted:", bookingDetails)
-        alert("Visit booked successfully!")
-        setShowBookingForm(false)
-        setBookingDetails({ name: '', email: '', phone: '', date: '' })
+        try {
+            setBookingSubmitting(true)
+            // Replace with actual API call if needed
+            console.log("Booking submitted:", bookingDetails)
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            
+            alert("Visit booked successfully!")
+            setShowBookingModal(false)
+            setBookingDetails({ name: '', email: '', phone: '', date: '' })
+        } catch (err) {
+            console.error("Booking error:", err)
+            alert("Failed to book visit. Please try again.")
+        } finally {
+            setBookingSubmitting(false)
+        }
     }
 
     const handleShare = () => {
         setShowShareModal(true)
         setCopySuccess(false)
+        setTemplateCopySuccess(false)
+    }
+
+    const handleBookVisit = () => {
+        setShowBookingModal(true)
     }
 
     const handleCopyUrl = async () => {
@@ -121,9 +140,35 @@ const SinglePg = () => {
         }
     }
 
+    const handleCopyTemplate = async () => {
+        const templateText = `Check out this amazing PG I found!\n\n${pgData.name}\n📍 ${pgData.address}\n💰 ₹${pgData.priceRange}\n\n${window.location.href}`
+        try {
+            await navigator.clipboard.writeText(templateText)
+            setTemplateCopySuccess(true)
+            setTimeout(() => setTemplateCopySuccess(false), 2000)
+        } catch (err) {
+            console.error('Failed to copy template:', err)
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea')
+            textArea.value = templateText
+            document.body.appendChild(textArea)
+            textArea.select()
+            document.execCommand('copy')
+            document.body.removeChild(textArea)
+            setTemplateCopySuccess(true)
+            setTimeout(() => setTemplateCopySuccess(false), 2000)
+        }
+    }
+
     const closeShareModal = () => {
         setShowShareModal(false)
         setCopySuccess(false)
+        setTemplateCopySuccess(false)
+    }
+
+    const closeBookingModal = () => {
+        setShowBookingModal(false)
+        setBookingDetails({ name: '', email: '', phone: '', date: '' })
     }
 
     if (isLoading) {
@@ -185,9 +230,10 @@ const SinglePg = () => {
 
                     <button
                         className="book-visit-button"
-                        onClick={() => setShowBookingForm(prev => !prev)}
+                        onClick={handleBookVisit}
                     >
-                        {showBookingForm ? 'Cancel' : 'Book a Visit'}
+                        <Calendar size={20} />
+                        <span>Book a Visit</span>
                     </button>
                 </div>
             </div>
@@ -233,7 +279,17 @@ const SinglePg = () => {
                             </div>
                             
                             <div className="share-template">
-                                <label>Message template:</label>
+                                <div className="template-header">
+                                    <label>Message template:</label>
+                                    <button
+                                        className={`copy-button ${templateCopySuccess ? 'copied' : ''}`}
+                                        onClick={handleCopyTemplate}
+                                        type="button"
+                                    >
+                                        <Copy size={16} />
+                                        {templateCopySuccess ? 'Copied!' : 'Copy Template'}
+                                    </button>
+                                </div>
                                 <textarea
                                     readOnly
                                     value={`Check out this amazing PG I found!\n\n${pgData.name}\n📍 ${pgData.address}\n💰 ₹${pgData.priceRange}\n\n${window.location.href}`}
@@ -245,50 +301,93 @@ const SinglePg = () => {
                 </div>
             )}
 
-            {showBookingForm && (
-                <form className="booking-form" onSubmit={handleBookingSubmit}>
-                    <div className="form-group">
-                        <label>Name:</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={bookingDetails.name}
-                            onChange={handleInputChange}
-                            required
-                        />
+            {/* Book Visit Modal */}
+            {showBookingModal && (
+                <div className="modal-overlay" onClick={closeBookingModal}>
+                    <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Book a Visit</h3>
+                            <button className="close-button" onClick={closeBookingModal}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                        
+                        <div className="booking-content">
+                            <div className="pg-preview">
+                                <img src={pgData.photo} alt={pgData.name} className="preview-image" />
+                                <div className="preview-details">
+                                    <h4>{pgData.name}</h4>
+                                    <p>{pgData.address}</p>
+                                    <p>₹{pgData.priceRange}</p>
+                                </div>
+                            </div>
+
+                            <form className="booking-form" onSubmit={handleBookingSubmit}>
+                                <div className="form-group">
+                                    <label>Name:</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={bookingDetails.name}
+                                        onChange={handleInputChange}
+                                        required
+                                        placeholder="Enter your full name"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Email:</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={bookingDetails.email}
+                                        onChange={handleInputChange}
+                                        required
+                                        placeholder="Enter your email"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Phone:</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={bookingDetails.phone}
+                                        onChange={handleInputChange}
+                                        required
+                                        placeholder="Enter your phone number"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Date of Visit:</label>
+                                    <input
+                                        type="date"
+                                        name="date"
+                                        value={bookingDetails.date}
+                                        onChange={handleInputChange}
+                                        required
+                                        min={new Date().toISOString().split('T')[0]}
+                                    />
+                                </div>
+                                <div className="form-actions">
+                                    <button 
+                                        type="button" 
+                                        className="cancel-button" 
+                                        onClick={closeBookingModal}
+                                        disabled={bookingSubmitting}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="submit-booking-button"
+                                        disabled={bookingSubmitting}
+                                    >
+                                        {bookingSubmitting ? 'Booking...' : 'Book Visit'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={bookingDetails.email}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Phone:</label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={bookingDetails.phone}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Date of Visit:</label>
-                        <input
-                            type="date"
-                            name="date"
-                            value={bookingDetails.date}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="submit-booking-button">Submit</button>
-                </form>
+                </div>
             )}
 
             <div className="pg-content">
