@@ -3,37 +3,42 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function FilterListingPage() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [listings, setListings] = useState([]);
-  const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(50000);
   const [genderFilter, setGenderFilter] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-
+  // Debounce the search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300); // 300ms debounce delay
+    return () => clearTimeout(handler); // Clear timeout if input changes
+  }, [search]);
 
   const handleLogout = async () => {
     try {
       await axios({
-        method:"POST",
-        url:`${import.meta.env.VITE_BACKEND_USER}/logout`,
+        method: "POST",
+        url: `${import.meta.env.VITE_BACKEND_USER}/logout`,
         withCredentials: true
-      })
-      navigate("/"); // Navigate only after successful logout
+      });
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
   };
 
-
   useEffect(() => {
-
     const fetchListings = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_BACKEND_PG}`, {
           params: {
-            ...(search && { name: search }),
+            ...(debouncedSearch && { name: debouncedSearch }),
             ...(minPrice > 0 && { minPrice }),
             ...(maxPrice < 50000 && { maxPrice }),
             ...(genderFilter && { gender: genderFilter }),
@@ -46,7 +51,7 @@ export default function FilterListingPage() {
     };
 
     fetchListings();
-  }, [search, minPrice, maxPrice, genderFilter]);
+  }, [debouncedSearch, minPrice, maxPrice, genderFilter]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -62,9 +67,9 @@ export default function FilterListingPage() {
         </div>
         <nav className="flex items-center gap-6 text-sm">
           <div className="space-x-4 text-sm text-teal-700 font-medium">
-        <a href="#" onClick={()=>navigate('/')}>Home</a>
-        <a href="#" onClick={()=>navigate('/filter')}>Find PGs</a>
-        <a href="#" onClick={()=>navigate('/bookmarks')}>BookMarks</a>
+            <a href="#" onClick={() => navigate('/')}>Home</a>
+            <a href="#" onClick={() => navigate('/filter')}>Find PGs</a>
+            <a href="#" onClick={() => navigate('/bookmarks')}>BookMarks</a>
           </div>
 
           {/* Dropdown */}
@@ -81,7 +86,7 @@ export default function FilterListingPage() {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 bg-white border border-[#504B3A]/20 rounded-lg shadow-lg w-48 py-2">
-                <a href="#"  onClick={()=>navigate('/profile')} className="block px-4 py-2 text-sm text-[#504B3A]">
+                <a href="#" onClick={() => navigate('/profile')} className="block px-4 py-2 text-sm text-[#504B3A]">
                   Profile
                 </a>
                 <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
@@ -126,7 +131,7 @@ export default function FilterListingPage() {
           </div>
 
           <div>
-          <label className="block font-semibold">Min Price</label>
+            <label className="block font-semibold">Min Price</label>
             <input
               type="range"
               min="1000"
@@ -147,7 +152,7 @@ export default function FilterListingPage() {
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               className="w-full"
             />
-            
+
             <div className="text-sm">₹{minPrice} – ₹{maxPrice}</div>
           </div>
         </aside>
@@ -203,49 +208,48 @@ export default function FilterListingPage() {
       </div>
 
       {/* Footer */}
-<footer className="border-t p-8 bg-white text-sm text-gray-600">
-  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
-    <div>
-      <h4 className="font-semibold mb-2">Use Cases</h4>
-      <ul className="space-y-1">
-        <li>Student housing discovery</li>
-        <li>Professional relocation</li>
-        <li>Personalized PG browsing</li>
-        <li>Booking site visits</li>
-        <li>Saving/bookmarking PGs</li>
-        <li>Mobile-responsive exploration</li>
-        <li>Feedback and ratings system</li>
-      </ul>
-    </div>
+      <footer className="border-t p-8 bg-white text-sm text-gray-600">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+          <div>
+            <h4 className="font-semibold mb-2">Use Cases</h4>
+            <ul className="space-y-1">
+              <li>Student housing discovery</li>
+              <li>Professional relocation</li>
+              <li>Personalized PG browsing</li>
+              <li>Booking site visits</li>
+              <li>Saving/bookmarking PGs</li>
+              <li>Mobile-responsive exploration</li>
+              <li>Feedback and ratings system</li>
+            </ul>
+          </div>
 
-    <div>
-      <h4 className="font-semibold mb-2">Explore</h4>
-      <ul className="space-y-1">
-        <li>PG Listings & Filters</li>
-        <li>Profile & Preferences</li>
-        <li>Map-based PG Search</li>
-        <li>Real-time Suggestions</li>
-        <li>Dark Mode UI</li>
-        <li>Ratings & Reviews</li>
-        <li>Similar PG Recommendations</li>
-      </ul>
-    </div>
+          <div>
+            <h4 className="font-semibold mb-2">Explore</h4>
+            <ul className="space-y-1">
+              <li>PG Listings & Filters</li>
+              <li>Profile & Preferences</li>
+              <li>Map-based PG Search</li>
+              <li>Real-time Suggestions</li>
+              <li>Dark Mode UI</li>
+              <li>Ratings & Reviews</li>
+              <li>Similar PG Recommendations</li>
+            </ul>
+          </div>
 
-    <div>
-      <h4 className="font-semibold mb-2">Resources</h4>
-      <ul className="space-y-1">
-        <li>Blog & Guides</li>
-        <li>Best Practices for Users</li>
-        <li>Support & Contact Form</li>
-        <li>Developer API Docs</li>
-        <li>Location Data (OpenStreetMap)</li>
-        <li>Progress Trackers</li>
-        <li>Resource Library</li>
-      </ul>
-    </div>
-  </div>
-</footer>
-
+          <div>
+            <h4 className="font-semibold mb-2">Resources</h4>
+            <ul className="space-y-1">
+              <li>Blog & Guides</li>
+              <li>Best Practices for Users</li>
+              <li>Support & Contact Form</li>
+              <li>Developer API Docs</li>
+              <li>Location Data (OpenStreetMap)</li>
+              <li>Progress Trackers</li>
+              <li>Resource Library</li>
+            </ul>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
