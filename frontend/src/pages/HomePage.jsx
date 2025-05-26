@@ -14,8 +14,8 @@ const Navbar = () => {
   React.useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}/`, { withCredentials: true });
-        setIsLoggedIn(res.data.loggedIn);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, { withCredentials: true });
+        setIsLoggedIn(res.data.data);
       } catch (error) {
         setIsLoggedIn(false);
       }

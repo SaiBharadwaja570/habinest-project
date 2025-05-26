@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { Home, Search, Bookmark, User, Settings, LogOut } from "lucide-react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
