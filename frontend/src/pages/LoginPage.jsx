@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { Home, Search, Bookmark, User, Settings, LogOut } from 'lucide-react';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleRegisterClick = () => {
     navigate("/register");
@@ -14,6 +16,17 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem('userToken');
+    setIsDropdownOpen(false);
+    navigate('/login');
+  };
 
   const handleLogin = async () => {
     setError('');
@@ -40,7 +53,7 @@ export default function LoginPage() {
 
       console.log('Attempting login with email:', apiObj.email);
 
-      // Correct the template literal usage for url:
+      // Note: Using placeholder URL since we don't have access to environment variables
       const response = await axios({
         method: 'POST',
         url: `${import.meta.env.VITE_BACKEND_USER}/login`,
@@ -122,44 +135,38 @@ export default function LoginPage() {
 
   return (
     <div className="font-sans">
-     <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+      <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
-
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">H</span>
+              </div>
               <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
             </div>
             
             <nav className="hidden md:flex items-center gap-8">
-              <a 
-                href="#" 
+              <button 
                 onClick={() => navigate("/")}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
               >
                 <Home className="w-4 h-4" />
                 Home
-              </a>
-              <a 
-                href="#" 
+              </button>
+              <button 
                 onClick={() => navigate("/filter")}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
               >
                 <Search className="w-4 h-4" />
                 Find PGs
-              </a>
-              <a 
-                href="#" 
+              </button>
+              <button 
                 onClick={() => navigate("/bookmarks")}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
               >
                 <Bookmark className="w-4 h-4" />
                 BookMarks
-              </a>
+              </button>
             </nav>
 
             {/* Profile Dropdown */}
@@ -174,23 +181,22 @@ export default function LoginPage() {
               </button>
               
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
-                  <a 
-                    href="#" 
+                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2">
+                  <button 
                     onClick={() => navigate("/profile")} 
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors text-left"
                   >
                     <User className="w-4 h-4" />
                     Profile
-                  </a>
-                  <a href="#" className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors">
+                  </button>
+                  <button className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors text-left">
                     <Settings className="w-4 h-4" />
-                    Toggle
-                  </a>
-                  <a href="#"  onClick={() => handleLogout()} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                    Settings
+                  </button>
+                  <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors text-left">
                     <LogOut className="w-4 h-4" />
                     Log Out
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -372,11 +378,9 @@ export default function LoginPage() {
 
           <div className="border-t border-white/20 mt-12 pt-8 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">H</span>
+              </div>
               <span className="font-bold text-xl">Habinest</span>
             </div>
             <p className="text-white/60">Making your housing search effortless and enjoyable</p>
