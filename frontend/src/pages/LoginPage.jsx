@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; // Keep axios here as you are using it directly
+import axios from 'axios';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [success, setSuccess] = useState('');
 
   const handleLogin = async () => {
-    // Clear previous messages at the start of a new login attempt
     setError('');
     setSuccess('');
 
@@ -31,102 +30,88 @@ export default function LoginPage() {
       return;
     }
 
-    setIsLoading(true); // Start loading state
+    setIsLoading(true);
 
     try {
       const apiObj = {
-        email: email.trim(), // Trim whitespace from email
-        password
+        email: email.trim(),
+        password,
       };
 
-      console.log('Attempting login with email:', apiObj.email); // Log email for debugging, but NEVER password
+      console.log('Attempting login with email:', apiObj.email);
 
+      // Correct the template literal usage for url:
       const response = await axios({
         method: 'POST',
-        // Ensure VITE_BACKEND_USER points to your backend's auth base URL,
-        // e.g., 'http://localhost:3000/auth' if your server mounts auth routes at '/auth'
         url: `${import.meta.env.VITE_BACKEND_USER}/login`,
         data: apiObj,
-        withCredentials: true, // Important for sending/receiving cookies (if your backend uses session cookies)
-        timeout: 10000 // 10 second timeout for the request
+        withCredentials: true,
+        timeout: 10000,
       });
 
       console.log('Login successful response data:', response.data);
 
       setSuccess('Login successful! Redirecting...');
 
-      // Assuming your backend returns a token or user info on successful login
-      // If your backend sets an HTTP-only cookie, you might not need to store anything here.
-      // If it returns a JWT in the body, store it:
       if (response.data && response.data.token) {
-          localStorage.setItem('userToken', response.data.token);
-          // Potentially store user info too:
-          // localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+        localStorage.setItem('userToken', response.data.token);
       }
 
-      // Small delay to show success message before navigating
       setTimeout(() => {
-        navigate('/'); // Navigate to dashboard or home page
+        navigate('/');
       }, 1000);
 
     } catch (err) {
       console.error('Login error caught in component:', err);
 
-      // --- Enhanced Error Handling based on Axios error structure ---
       if (axios.isCancel(err)) {
         setError('Login request cancelled.');
       } else if (err.code === 'ECONNABORTED') {
-        // Specific check for request timeout (Axios's code for timeouts)
         setError('Request timed out. Please check your internet connection and try again.');
       } else if (err.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx (i.e., a server-side error)
         const status = err.response.status;
-        const message = err.response.data?.message || err.response.statusText || 'Login failed due to server error.'; // Fallback to statusText
+        const message = err.response.data?.message || err.response.statusText || 'Login failed due to server error.';
 
         console.log('Server responded with error details:', {
           status,
           message,
-          data: err.response.data
+          data: err.response.data,
         });
 
         switch (status) {
-          case 400: // Bad Request: Often due to invalid input (e.g., missing fields, wrong format)
+          case 400:
             setError(`Invalid request: ${message}`);
             break;
-          case 401: // Unauthorized: Invalid credentials, missing/invalid token
+          case 401:
             setError('Invalid email or password. Please check your credentials.');
             break;
-          case 403: // Forbidden: Authenticated but not authorized to perform action
+          case 403:
             setError('Access denied. You do not have permission to perform this action.');
             break;
-          case 404: // Not Found: Endpoint or resource not found (e.g., user email not registered)
+          case 404:
             setError('User not found or login endpoint is incorrect. Please check your email or register first.');
             break;
-          case 409: // Conflict: (e.g., user already exists if trying to register, but could apply to login state)
+          case 409:
             setError(`Conflict: ${message}`);
             break;
-          case 429: // Too Many Requests: Rate limiting applied
+          case 429:
             setError('Too many login attempts. Please try again after some time.');
             break;
-          case 500: // Internal Server Error: Generic server-side error
+          case 500:
             setError('Server error. Please try again later.');
             break;
-          default: // Catch any other unexpected HTTP errors
+          default:
             setError(`Login failed: ${message}`);
         }
       } else if (err.request) {
-        // The request was made but no response was received
-        // This typically means a network issue or the backend server is down/unreachable
         console.log('Network error (no response received):', err.request);
         setError('Network error. Please check your internet connection and try again.');
       } else {
-        // Something else happened in setting up the request that triggered an Error
         console.log('Unexpected error during request setup:', err.message);
         setError('An unexpected error occurred. Please try again.');
       }
     } finally {
-      setIsLoading(false); // Always stop loading, regardless of success or failure
+      setIsLoading(false);
     }
   };
 
@@ -137,16 +122,81 @@ export default function LoginPage() {
 
   return (
     <div className="font-sans">
-      {/* Navbar */}
-      <nav className="flex justify-between items-center p-4 border-b bg-white shadow-sm">
-        <img src="/HabinestLogo.jpg" alt="Habinest Logo" className="h-12 w-12" />
+     <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+  <img
+    src="HabinestLogo.jpg"  
+    alt="Home"
+    className="w-10 h-10 object-cover"
+  />
 
-        <div className="space-x-4 text-sm text-teal-700 font-medium">
-          <a href="#" onClick={() => navigate('/')}>Home</a>
-          <a href="#" onClick={() => navigate('/filter')}>Find PGs</a>
-          <a href="#" onClick={() => navigate('/bookmarks')}>BookMarks</a>
+              <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
+            </div>
+            
+            <nav className="hidden md:flex items-center gap-8">
+              <a 
+                href="#" 
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
+              >
+                <Home className="w-4 h-4" />
+                Home
+              </a>
+              <a 
+                href="#" 
+                onClick={() => navigate("/filter")}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
+              >
+                <Search className="w-4 h-4" />
+                Find PGs
+              </a>
+              <a 
+                href="#" 
+                onClick={() => navigate("/bookmarks")}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
+              >
+                <Bookmark className="w-4 h-4" />
+                BookMarks
+              </a>
+            </nav>
+
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={toggleDropdown} 
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] p-0.5 hover:scale-105 transition-transform duration-200"
+              >
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                  <User className="w-6 h-6 text-[#504B3A]" />
+                </div>
+              </button>
+              
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
+                  <a 
+                    href="#" 
+                    onClick={() => navigate("/profile")} 
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    Profile
+                  </a>
+                  <a href="#" className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors">
+                    <Settings className="w-4 h-4" />
+                    Toggle
+                  </a>
+                  <a href="#"  onClick={() => handleLogout()} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                    <LogOut className="w-4 h-4" />
+                    Log Out
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </nav>
+      </header>
 
       {/* Login Section */}
       <section className="bg-blue-700 text-white py-16 px-4 text-center">
@@ -181,8 +231,8 @@ export default function LoginPage() {
             value={email}
             className="w-full p-3 rounded-md text-black border border-black"
             onChange={(e) => {
-              setEmail(e.target.value)
-              clearMessages() // Clear messages when user types
+              setEmail(e.target.value);
+              clearMessages();
             }}
             disabled={isLoading}
           />
@@ -192,8 +242,8 @@ export default function LoginPage() {
             value={password}
             className="w-full p-3 rounded-md text-black border border-black"
             onChange={(e) => {
-              setPassword(e.target.value)
-              clearMessages() // Clear messages when user types
+              setPassword(e.target.value);
+              clearMessages();
             }}
             disabled={isLoading}
           />
@@ -277,45 +327,59 @@ export default function LoginPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t p-8 bg-white text-sm text-gray-600">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
-          <div>
-            <h4 className="font-semibold mb-2">Use Cases</h4>
-            <ul className="space-y-1">
-              <li>Student housing discovery</li>
-              <li>Professional relocation</li>
-              <li>Personalized PG Browse</li>
-              <li>Booking site visits</li>
-              <li>Saving/bookmarking PGs</li>
-              <li>Mobile-responsive exploration</li>
-              <li>Feedback and ratings system</li>
-            </ul>
+      <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h4 className="font-bold text-lg mb-6 text-[#E4DFDA]">Use Cases</h4>
+              <ul className="space-y-3 text-white/80">
+                <li className="hover:text-white transition-colors cursor-pointer">Student housing discovery</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Professional relocation</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Personalized PG browsing</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Booking site visits</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Saving/bookmarking PGs</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Mobile-responsive exploration</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Feedback and ratings system</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-lg mb-6 text-[#E4DFDA]">Explore</h4>
+              <ul className="space-y-3 text-white/80">
+                <li className="hover:text-white transition-colors cursor-pointer">PG Listings & Filters</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Profile & Preferences</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Map-based PG Search</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Real-time Suggestions</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Dark Mode UI</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Ratings & Reviews</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Similar PG Recommendations</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-lg mb-6 text-[#E4DFDA]">Resources</h4>
+              <ul className="space-y-3 text-white/80">
+                <li className="hover:text-white transition-colors cursor-pointer">Blog & Guides</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Best Practices for Users</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Support & Contact Form</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Developer API Docs</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Location Data (OpenStreetMap)</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Progress Trackers</li>
+                <li className="hover:text-white transition-colors cursor-pointer">Resource Library</li>
+              </ul>
+            </div>
           </div>
 
-          <div>
-            <h4 className="font-semibold mb-2">Explore</h4>
-            <ul className="space-y-1">
-              <li>PG Listings & Filters</li>
-              <li>Profile & Preferences</li>
-              <li>Map-based PG Search</li>
-              <li>Real-time Suggestions</li>
-              <li>Dark Mode UI</li>
-              <li>Ratings & Reviews</li>
-              <li>Similar PG Recommendations</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-2">Resources</h4>
-            <ul className="space-y-1">
-              <li>Blog & Guides</li>
-              <li>Best Practices for Users</li>
-              <li>Support & Contact Form</li>
-              <li>Developer API Docs</li>
-              <li>Location Data (OpenStreetMap)</li>
-              <li>Progress Trackers</li>
-              <li>Resource Library</li>
-            </ul>
+          <div className="border-t border-white/20 mt-12 pt-8 text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+  <img
+    src="HabinestLogo.jpg"  
+    alt="Home"
+    className="w-10 h-10 object-cover"
+  />
+              <span className="font-bold text-xl">Habinest</span>
+            </div>
+            <p className="text-white/60">Making your housing search effortless and enjoyable</p>
           </div>
         </div>
       </footer>
