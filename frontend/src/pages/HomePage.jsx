@@ -14,8 +14,8 @@ const Navbar = () => {
   React.useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/user/check-login", { withCredentials: true });
-        setIsLoggedIn(res.data.loggedIn);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, { withCredentials: true });
+        setIsLoggedIn(res.data.data);
       } catch (error) {
         setIsLoggedIn(false);
       }
@@ -27,7 +27,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/api/user/logout", {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
       setIsLoggedIn(false);
       navigate("/");
     } catch (error) {
