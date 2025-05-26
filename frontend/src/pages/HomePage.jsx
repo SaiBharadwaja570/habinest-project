@@ -9,27 +9,41 @@ import axios from "axios";
 const Navbar = () => {
   const navigate = useNavigate();
   const [isDropdownOpen, setDropdownOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/user/check-login", { withCredentials: true });
+        setIsLoggedIn(res.data.loggedIn);
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    };
+    checkLoginStatus();
+  }, []);
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:8000/api/user/logout", {}, { withCredentials: true });
+      setIsLoggedIn(false);
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
-  };  
+  };
 
   return (
     <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
+          <img
+            src="HabinestLogo.jpg"
+            alt="Home"
+            className="w-10 h-10 object-cover"
+          />
           <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
         </div>
 
@@ -58,34 +72,56 @@ const Navbar = () => {
         </nav>
 
         <div className="relative">
-          <button
-            onClick={toggleDropdown}
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] hover:scale-105 transition-transform duration-200"
-          >
-            <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-              <User className="w-6 h-6 text-[#504B3A]" />
-            </div>
-          </button>
+          {isLoggedIn ? (
+            <>
+              <button
+                onClick={toggleDropdown}
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] hover:scale-105 transition-transform duration-200"
+              >
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                  <User className="w-6 h-6 text-[#504B3A]" />
+                </div>
+              </button>
 
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
-              <a
-                href="#"
-                onClick={() => navigate("/profile")}
-                className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
-              >
-                <User className="w-4 h-4" /> Profile
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
-              >
-                <Settings className="w-4 h-4" /> Settings
-              </a>
-                  <a href="#"  onClick={() => handleLogout()} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                    <LogOut className="w-4 h-4" />
-                    Log Out
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
+                  <a
+                    href="#"
+                    onClick={() => navigate("/profile")}
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
+                  >
+                    <User className="w-4 h-4" /> Profile
                   </a>
+                  <a
+                    href="#"
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
+                  >
+                    <Settings className="w-4 h-4" /> Settings
+                  </a>
+                  <a
+                    href="#"
+                    onClick={() => handleLogout()}
+                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" /> Log Out
+                  </a>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/login")}
+                className="px-4 py-2 rounded-lg text-[#504B3A] border border-[#504B3A]/20 hover:bg-[#69995D]/10 transition-all duration-200"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow hover:bg-[#007FFF]/90 transition-all duration-200"
+              >
+                Register
+              </button>
             </div>
           )}
         </div>
@@ -93,7 +129,6 @@ const Navbar = () => {
     </header>
   );
 };
-
 // Footer (taken from FilterListingPage)
 const Footer = () => (
   <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
