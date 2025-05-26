@@ -12,7 +12,7 @@ const app = express()
 app.use(express.json())
 
 app.use(cors({
-    origin: 'https://habinest-project-uzqf.vercel.app/',
+    origin: 'https://habinest-project-uzqf.vercel.app',
     credentials: true
 }))
 
