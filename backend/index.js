@@ -2,34 +2,19 @@ import app from "./app.js";
 import dotenv from 'dotenv'
 import userDB from "./src/db/userDB.js";
 import listingsDB from "./src/db/listingsDB.js";
-import ApiError from "./src/utils/ApiError.js";
 import visitDB from "./src/db/visitDB.js";
+
 dotenv.config();
 
-app.on('error', (error) => {
-    console.error("Error:", error);
-    throw error;
-})
+const connectDBs = async () => {
+  await userDB();
+  await listingsDB();
+  await visitDB();
+};
 
-const startServer = async () => {
-
-    try {
-
-        await userDB().then(res=>{console.log("Connected user")}).catch(err=>{console.log(err)})
-
-        await listingsDB().then(res=>{console.log("Connected listing")}).catch(err=>{console.log(err)})
-
-        await visitDB().then(res=>{console.log("Connected visit")}).catch(err=>{console.log(err)})
-
-        app.listen(process.env.PORT || 8000, () =>{
-            console.log(`Server listening on port: ${process.env.PORT}`)
-        })
-
-    } catch (error) {
-
-        throw new ApiError(500, "Server Error: ", error);
-
-    }
+// Export handler for Vercel
+export default async function handler(req, res) {
+  await connectDBs(); // Ensure DBs are connected before handling request
+  console.log("All dbs connected")
+  return app(req, res); // Let Express handle it
 }
-
-export default startServer;
