@@ -19,7 +19,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions)); // handle preflight
+
 
 // express.urlencoded() parses the data and makes it available in the req.body object
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
