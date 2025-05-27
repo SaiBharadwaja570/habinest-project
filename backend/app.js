@@ -13,7 +13,11 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://habinest-project-frontend.vercel.app'],
+    origin: [
+    'http://localhost:5173', 
+    'https://habinest-project-frontend.vercel.app',
+    'https://habinest-project-hapj.vercel.app'
+  ],
     credentials: true
 }));
 
