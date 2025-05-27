@@ -19,7 +19,8 @@ import FirstPage from "../pages/FirstPage";
 function App() {
   return (
       <Routes>
-        <Route path="/" element={<FirstPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/welcome" element={<FirstPage />} />
         <Route path="/:id" element={<SinglePg />} />
         <Route
           path="/login"

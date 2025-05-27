@@ -50,7 +50,7 @@ export default function LoginPage() {
 
         // No need to store tokens - they're in HTTP-only cookies
         setTimeout(() => {
-            navigate('/');
+            navigate('/welcome');
         }, 1000);
     } catch (err) {
         setError(
