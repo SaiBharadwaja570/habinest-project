@@ -17,8 +17,7 @@ const Navbar = () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
       setIsLoggedIn(false);
-      localStorage.removeItem("isLoggedIn")
-      navigate("/");
+      navigate("/welcome");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }

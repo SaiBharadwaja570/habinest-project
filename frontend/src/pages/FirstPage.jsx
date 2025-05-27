@@ -15,6 +15,7 @@ const FirstPage = () => {
                 setLoading(false);
                 localStorage.setItem("isLoggedIn", true)
             } catch (error) {
+                localStorage.removeItem("isLoggedIn")
                 setIsLoggedIn(false);
                 setLoading(false);
             }
