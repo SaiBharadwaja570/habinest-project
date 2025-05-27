@@ -91,7 +91,7 @@ const Navbar = () => {
                     onClick={() => handleLogout()}
                     className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
                   >
-                    <LogOut className="w-4 h-4" /> Log Out
+                    <LogOut className="w-4 h-4" onClick={handleLogout}/> Log Out
                   </a>
                 </div>
               )}
