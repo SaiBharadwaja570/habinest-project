@@ -153,7 +153,7 @@ export default function LoginPage() {
 
         const response = await axios({
             method: 'POST',
-            url: `${import.meta.env.VITE_BACKEND_USER}/login`,
+            url: `https://habinest-project-hapj.vercel.app/api/user/login`,
             data: apiObj,
             withCredentials: true, // This is crucial for cookies
             timeout: 10000,
