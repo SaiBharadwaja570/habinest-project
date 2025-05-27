@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const VisitPage = () => {
     const [visits, setVisits] = useState(null);
-    const [pg, setPg] = useState(null);
+    const [pgs, setPgs] = useState(null);
     const [loading, setLoading] = useState(true);
     useEffect(()=>{
         axios({
@@ -30,7 +30,7 @@ const VisitPage = () => {
             );
             const pgResponses = await Promise.all(pgRequests);
             const fetchedPgs = pgResponses.map((res) => res.data.data); // Assuming API response structure
-            setPg(fetchedPgs);
+            setPgs(fetchedPgs);
             setLoading(false);
           } catch (error) {
             console.error("Error fetching PG data:", error);
@@ -38,7 +38,7 @@ const VisitPage = () => {
         };
         fetchPGData();
       }, [visits]);
-      console.log(pg)
+      console.log(pgs)
     return (
     <div>
         {loading ? (
