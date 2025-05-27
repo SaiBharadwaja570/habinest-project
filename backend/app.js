@@ -13,9 +13,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-  origin: 'https://habinest-project.vercel.app', 
-  credentials: true
+    origin: ['http://localhost:5173', 'https://habinest-project.vercel.app'],
+    credentials: true
 }));
+
 
 
 //The express.static() is a built-in middleware function in Express.js that allows you to serve static files (like images, HTML, CSS, and JavaScript) directly to the client.
