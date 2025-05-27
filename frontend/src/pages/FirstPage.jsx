@@ -1,17 +1,19 @@
 import React, {useState, useEffect} from "react";
 import HomePage from './HomePage'
-import PGListPage from './PGListPage'
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const FirstPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
+    const navigate=useNavigate();
     useEffect(() => {
         const checkLoginStatus = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, { withCredentials: true });
                 setIsLoggedIn(res.data.data);
                 setLoading(false);
+                localStorage.setItem("isLoggedIn", true)
             } catch (error) {
                 setIsLoggedIn(false);
                 setLoading(false);
@@ -30,7 +32,7 @@ const FirstPage = () => {
 
     return (
         <div>
-            {isLoggedIn ? ( isLoggedIn.type=="owner" ? <PGListPage/> : <HomePage isLoggedIn={true}/>) : (<HomePage isLoggedIn={false}/>) }
+            {isLoggedIn ? ( isLoggedIn.type=="owner" ? navigate("/pg-list") : navigate('/')) : (navigate('/')) }
         </div>
     )
 }

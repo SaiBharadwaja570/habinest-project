@@ -6,10 +6,10 @@ import { Button } from "../components/ui/button";
 import axios from "axios";
 
 
-const Navbar = ({loggedIn}) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn"));
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
@@ -17,6 +17,7 @@ const Navbar = ({loggedIn}) => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
       setIsLoggedIn(false);
+      localStorage.removeItem("isLoggedIn")
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
@@ -137,7 +138,7 @@ const Navbar = ({loggedIn}) => {
 // );
 
 // Home Page Body
-const HomePage = ({isLoggedIn}) => {
+const HomePage = () => {
   const featuredPGs = [
     {
       name: "Zolo Highstreet",

@@ -44,12 +44,11 @@ export default function RegisterPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
-
+                <img
+                  src="HabinestLogo.jpg"  
+                  alt="Home"
+                  className="w-10 h-10 object-cover"
+                />
               <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
             </div>
             
