@@ -11,10 +11,7 @@ const app = express()
 
 app.use(express.json())
 
-app.use(cors({
-    origin: 'https://habinest-project-uzqf.vercel.app',
-    credentials: true
-}))
+app.use(cors());
 
 // express.urlencoded() parses the data and makes it available in the req.body object
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
