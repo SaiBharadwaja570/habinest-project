@@ -92,11 +92,13 @@ const SinglePg = () => {
         e.preventDefault()
         try {
             setBookingSubmitting(true)
-            // Replace with actual API call if needed
+            await axios({
+                method: "POST",
+                url: `${import.meta.env.VITE_BACKEND_VISITS}/book/${id}`,
+                data: bookingDetails,
+                withCredentials: true
+            })
             console.log("Booking submitted:", bookingDetails)
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000))
             
             alert("Visit booked successfully!")
             setShowBookingModal(false)
