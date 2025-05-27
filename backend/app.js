@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser'
 import bookmarkRouter from './src/routes/bookmark.routes.js'
 import visitRouter from './src/routes/visit.routes.js'
 
-
 const app = express()
 
 app.use(cookieParser());
