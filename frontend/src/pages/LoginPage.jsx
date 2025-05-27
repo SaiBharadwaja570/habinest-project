@@ -15,120 +15,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleLogout = () => {
-    // Remove token from localStorage
-    localStorage.removeItem('userToken');
-    setIsDropdownOpen(false);
-    navigate('/login');
-  };
-
-  // const handleLogin = async () => {
-  //   setError('');
-  //   setSuccess('');
-
-  //   // --- Input Validation ---
-  //   if (!email || !password) {
-  //     setError('Please enter both email and password.');
-  //     return;
-  //   }
-
-  //   if (!email.includes('@')) {
-  //     setError('Please enter a valid email address.');
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-
-  //   try {
-  //     const apiObj = {
-  //       email: email.trim(),
-  //       password,
-  //     };
-
-  //     console.log('Attempting login with email:', apiObj.email);
-
-  //     // Note: Using placeholder URL since we don't have access to environment variables
-  //     const response = await axios({
-  //       method: 'POST',
-  //       url: `${import.meta.env.VITE_BACKEND_USER}/login`,
-  //       data: apiObj,
-  //       withCredentials: true,
-  //       timeout: 10000,
-  //     });
-
-  //     console.log('Login successful response data:', response.data);
-
-  //     setSuccess('Login successful! Redirecting...');
-
-  //     if (response.data && response.data.token) {
-  //       localStorage.setItem('userToken', response.data.token);
-  //     }
-
-  //     setTimeout(() => {
-  //       navigate('/');
-  //     }, 1000);
-
-  //   } catch (err) {
-  //     console.error('Login error caught in component:', err);
-
-  //     if (axios.isCancel(err)) {
-  //       setError('Login request cancelled.');
-  //     } else if (err.code === 'ECONNABORTED') {
-  //       setError('Request timed out. Please check your internet connection and try again.');
-  //     } else if (err.response) {
-  //       const status = err.response.status;
-  //       const message = err.response.data?.message || err.response.statusText || 'Login failed due to server error.';
-
-  //       console.log('Server responded with error details:', {
-  //         status,
-  //         message,
-  //         data: err.response.data,
-  //       });
-
-  //       switch (status) {
-  //         case 400:
-  //           setError(`Invalid request: ${message}`);
-  //           break;
-  //         case 401:
-  //           setError('Invalid email or password. Please check your credentials.');
-  //           break;
-  //         case 403:
-  //           setError('Access denied. You do not have permission to perform this action.');
-  //           break;
-  //         case 404:
-  //           setError('User not found or login endpoint is incorrect. Please check your email or register first.');
-  //           break;
-  //         case 409:
-  //           setError(`Conflict: ${message}`);
-  //           break;
-  //         case 429:
-  //           setError('Too many login attempts. Please try again after some time.');
-  //           break;
-  //         case 500:
-  //           setError('Server error. Please try again later.');
-  //           break;
-  //         default:
-  //           setError(`Login failed: ${message}`);
-  //       }
-  //     } else if (err.request) {
-  //       console.log('Network error (no response received):', err.request);
-  //       setError('Network error. Please check your internet connection and try again.');
-  //     } else {
-  //       console.log('Unexpected error during request setup:', err.message);
-  //       setError('An unexpected error occurred. Please try again.');
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const handleLogin = async () => {
     setError('');
     setSuccess('');
@@ -167,7 +53,10 @@ export default function LoginPage() {
             navigate('/');
         }, 1000);
     } catch (err) {
-        // Your existing error handling...
+        setError(
+          err.response?.data?.message ||
+          'Login failed. Please check your credentials and try again.'
+        );
     } finally {
         setIsLoading(false);
     }
@@ -180,81 +69,7 @@ export default function LoginPage() {
 
   return (
     <div className="font-sans">
-      <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-<div className="w-10 h-10 rounded-lg overflow-hidden">
-          <img
-            src="HabinestLogo.jpg"
-            alt="Home"
-            className="w-10 h-10 object-cover"
-          />
-</div>
-
-              <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
-            </div>
-            
-            <nav className="hidden md:flex items-center gap-8">
-              <button 
-                onClick={() => navigate("/")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-              >
-                <Home className="w-4 h-4" />
-                Home
-              </button>
-              <button 
-                onClick={() => navigate("/filter")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-              >
-                <Search className="w-4 h-4" />
-                Find PGs
-              </button>
-              <button 
-                onClick={() => navigate("/bookmarks")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
-              >
-                <Bookmark className="w-4 h-4" />
-                BookMarks
-              </button>
-            </nav>
-
-            {/* Profile Dropdown */}
-            <div className="relative">
-              <button 
-                onClick={toggleDropdown} 
-                className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] p-0.5 hover:scale-105 transition-transform duration-200"
-              >
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                  <User className="w-6 h-6 text-[#504B3A]" />
-                </div>
-              </button>
-              
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2">
-                  <button 
-                    onClick={() => navigate("/profile")} 
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors text-left"
-                  >
-                    <User className="w-4 h-4" />
-                    Profile
-                  </button>
-                  <button className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors text-left">
-                    <Settings className="w-4 h-4" />
-                    Settings
-                  </button>
-                  <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors text-left">
-                    <LogOut className="w-4 h-4" />
-                    Log Out
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Login Section */}
+      
       {/* Login Section */}
 <section className="bg-gradient-to-br from-[#69995D]/10 to-[#E4DFDA]/40 text-[#504B3A] py-16 px-4 text-center">
   <h1 className="text-3xl font-bold mb-8">Login</h1>
