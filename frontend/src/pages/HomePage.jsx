@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { Home, Search, Bookmark, User, Settings, LogOut } from "lucide-react";
 import { Card } from "../components/ui/card";
@@ -6,22 +6,10 @@ import { Button } from "../components/ui/button";
 import axios from "axios";
 
 
-const Navbar = () => {
+const Navbar = ({loggedIn}) => {
   const navigate = useNavigate();
-  const [isDropdownOpen, setDropdownOpen] = React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, { withCredentials: true });
-        setIsLoggedIn(res.data.data);
-      } catch (error) {
-        setIsLoggedIn(false);
-      }
-    };
-    checkLoginStatus();
-  }, []);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
@@ -130,26 +118,26 @@ const Navbar = () => {
   );
 };
 // Footer (taken from FilterListingPage)
-const Footer = () => (
-  <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
-    <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-      <div className="flex items-center justify-center gap-3 mb-4">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
-        <span className="font-bold text-xl">Habinest</span>
-      </div>
-      <p className="text-white/60">
-        Making your housing search effortless and enjoyable
-      </p>
-    </div>
-  </footer>
-);
+// const Footer = () => (
+//   <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
+//     <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+//       <div className="flex items-center justify-center gap-3 mb-4">
+//   <img
+//     src="HabinestLogo.jpg"  
+//     alt="Home"
+//     className="w-10 h-10 object-cover"
+//   />
+//         <span className="font-bold text-xl">Habinest</span>
+//       </div>
+//       <p className="text-white/60">
+//         Making your housing search effortless and enjoyable
+//       </p>
+//     </div>
+//   </footer>
+// );
 
 // Home Page Body
-const HomePage = () => {
+const HomePage = ({isLoggedIn}) => {
   const featuredPGs = [
     {
       name: "Zolo Highstreet",
@@ -194,7 +182,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E4DFDA] to-[#69995D]/10">
-      <Navbar />
+      <Navbar loggedIn={isLoggedIn}/>
 
       <main className="max-w-7xl mx-auto px-4 py-12">
         <section className="mb-12">

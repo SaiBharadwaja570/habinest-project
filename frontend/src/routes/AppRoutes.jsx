@@ -13,11 +13,12 @@ import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
 import VisitPage from "../pages/VisitPage";
+import FirstPage from "../pages/FirstPage";
 
 function App() {
   return (
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<FirstPage />} />
         <Route path="/:id" element={<SinglePg />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
