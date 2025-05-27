@@ -54,48 +54,6 @@ export default function RegisterPage() {
 
   return (
     <div className="font-sans">
-      {/* Navbar */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-                <img
-                  src="HabinestLogo.jpg"  
-                  alt="Home"
-                  className="w-10 h-10 object-cover"
-                />
-              <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
-            </div>
-            
-            <nav className="hidden md:flex items-center gap-8">
-              <a 
-                href="#" 
-                onClick={() => navigate("/")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-              >
-                <Home className="w-4 h-4" />
-                Home
-              </a>
-              <a 
-                href="#" 
-                onClick={() => navigate("/filter")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-              >
-                <Search className="w-4 h-4" />
-                Find PGs
-              </a>
-              <a 
-                href="#" 
-                onClick={() => navigate("/bookmarks")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
-              >
-                <Bookmark className="w-4 h-4" />
-                BookMarks
-              </a>
-            </nav>
-
-  return (
-    <div className="font-sans">
 <section className="flex flex-col items-center justify-center bg-gradient-to-br from-green-500 to-green-700 py-16 px-4">
   <div className="w-full max-w-md bg-white/90 backdrop-blur shadow-2xl rounded-3xl p-8 border border-[#504B3A]/10 transition-all duration-300">
     <h1 className="text-2xl font-bold text-center mb-6 text-[#504B3A]">Create an Account</h1>
