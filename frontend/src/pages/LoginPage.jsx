@@ -155,7 +155,7 @@ export default function LoginPage() {
             method: 'POST',
             url: `https://habinest-project-hapj.vercel.app/api/user/login`,
             data: apiObj,
-            withCredentials: true, // This is crucial for cookies
+            withCredentials: false, // This is crucial for cookies
             timeout: 30000,
         });
 

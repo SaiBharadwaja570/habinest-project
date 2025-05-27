@@ -9,7 +9,6 @@ import ProfilePage from "../pages/ProfilePage";
 import PGListPage from "../pages/PGListPage";
 import FilterListingPage from "../pages/FilterListingPage";
 import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
-import OwnerPgForm from "../pages/OwnerPgForm";
 import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
