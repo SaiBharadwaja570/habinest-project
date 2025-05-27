@@ -26,7 +26,6 @@ function App() {
         <Route path="/filter" element={<FilterListingPage />} />
         <Route path="/bookmarks" element={<BookmarkedPGsPage />} />
         <Route path="/map" element={<Map />} />
-        <Route path="/create-pg" element={<OwnerPgForm />} />
         <Route path="/update-pg/:id" element={<UpdatePgPage />} />
       </Routes>
   );
