@@ -37,6 +37,26 @@ export default function RegisterPage() {
     })
   }
 
+  const handleRegisterAsOwner= async ()=>{
+    
+    const apiObj={
+      name,
+      email,
+      phone,
+      password,
+      type: "owner"
+    }
+
+    axios({
+      method: 'POST',
+      url: `${import.meta.env.VITE_BACKEND_USER}/register`,
+      data: apiObj
+    }).then(()=>{
+      alert("User registered succesfully")
+      navigate('/login')
+    })
+  }
+
   return (
     <div className="font-sans">
       {/* Navbar */}
@@ -81,7 +101,7 @@ export default function RegisterPage() {
             </nav>
 
             {/* Profile Dropdown */}
-            <div className="relative">
+            {/* <div className="relative">
               <button 
                 onClick={toggleDropdown} 
                 className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] p-0.5 hover:scale-105 transition-transform duration-200"
@@ -111,7 +131,7 @@ export default function RegisterPage() {
                   </a>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </header>
@@ -154,7 +174,14 @@ export default function RegisterPage() {
         onClick={handleRegister}
         className="flex-1 py-2 rounded-xl font-semibold text-white bg-[#007FFF] hover:bg-[#0066CC] transition-colors text-center"
       >
-        Register
+        Register as User
+      </button>
+
+      <button
+        onClick={handleRegisterAsOwner}
+        className="flex-1 py-2 rounded-xl font-semibold text-white bg-[#007FFF] hover:bg-[#0066CC] transition-colors text-center"
+      >
+        Register as Owner
       </button>
 
       <button

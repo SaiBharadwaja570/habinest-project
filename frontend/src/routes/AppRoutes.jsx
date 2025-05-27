@@ -9,18 +9,29 @@ import ProfilePage from "../pages/ProfilePage";
 import PGListPage from "../pages/PGListPage";
 import FilterListingPage from "../pages/FilterListingPage";
 import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
-import OwnerPgForm from "../pages/OwnerPgForm";
 import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
+import RedirectIfLoggedIn from "./RedirectIfLoggedIn";
 
 function App() {
   return (
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/:id" element={<SinglePg />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/login"
+          element={
+          <RedirectIfLoggedIn>
+            <LoginPage />
+          </RedirectIfLoggedIn>
+        }
+        />
+        <Route path="/register" element={
+          <RedirectIfLoggedIn>
+            <RegisterPage />
+          </RedirectIfLoggedIn>
+        } />
         <Route path="/owner-form" element={<OwnerPgForm />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/pg-list" element={<PGListPage />} />
