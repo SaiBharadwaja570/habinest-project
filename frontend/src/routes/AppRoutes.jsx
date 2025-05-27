@@ -9,7 +9,7 @@ import ProfilePage from "../pages/ProfilePage";
 import PGListPage from "../pages/PGListPage";
 import FilterListingPage from "../pages/FilterListingPage";
 import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
-import CreatePG from "../pages/OwnerPgForm";
+import OwnerPgForm from "../pages/OwnerPgForm";
 import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
@@ -27,7 +27,7 @@ function App() {
         <Route path="/filter" element={<FilterListingPage />} />
         <Route path="/bookmarks" element={<BookmarkedPGsPage />} />
         <Route path="/map" element={<Map />} />
-        <Route path="/create-pg" element={<CreatePG />} />
+        <Route path="/create-pg" element={<OwnerPgForm />} />
         <Route path="/update-pg/:id" element={<UpdatePgPage />} />
       </Routes>
   );
