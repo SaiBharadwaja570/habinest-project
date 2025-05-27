@@ -5,7 +5,6 @@ import { Home, Search, Bookmark, User, Settings, LogOut } from 'lucide-react';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleRegisterClick = () => {
     navigate("/register");
@@ -16,13 +15,17 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(prev => !prev);
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
+    // Remove token from localStorage
+    localStorage.removeItem('userToken');
+    setIsDropdownOpen(false);
     navigate('/login');
   };
 
@@ -137,9 +140,14 @@ export default function LoginPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">H</span>
-              </div>
+<div className="w-10 h-10 rounded-lg overflow-hidden">
+          <img
+            src="HabinestLogo.jpg"
+            alt="Home"
+            className="w-10 h-10 object-cover"
+          />
+</div>
+
               <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
             </div>
             
@@ -203,85 +211,86 @@ export default function LoginPage() {
       </header>
 
       {/* Login Section */}
-      <section className="bg-blue-700 text-white py-16 px-4 text-center">
-        <h1 className="text-3xl font-bold mb-8">Login</h1>
+      {/* Login Section */}
+<section className="bg-gradient-to-br from-[#69995D]/10 to-[#E4DFDA]/40 text-[#504B3A] py-16 px-4 text-center">
+  <h1 className="text-3xl font-bold mb-8">Login</h1>
 
-        {/* Error Message */}
-        {error && (
-          <div className="max-w-xl mx-auto mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-            <div className="flex justify-between items-center">
-              <span className="text-sm">{error}</span>
-              <button
-                onClick={clearMessages}
-                className="text-red-500 hover:text-red-700 ml-2"
-              >
-                ×
-              </button>
-            </div>
-          </div>
-        )}
+  {/* Error Message */}
+  {error && (
+    <div className="max-w-xl mx-auto mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+      <div className="flex justify-between items-center">
+        <span className="text-sm">{error}</span>
+        <button
+          onClick={clearMessages}
+          className="text-red-500 hover:text-red-700 ml-2"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  )}
 
-        {/* Success Message */}
-        {success && (
-          <div className="max-w-xl mx-auto mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
-            <span className="text-sm">{success}</span>
-          </div>
-        )}
+  {/* Success Message */}
+  {success && (
+    <div className="max-w-xl mx-auto mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
+      <span className="text-sm">{success}</span>
+    </div>
+  )}
 
-        <div className="max-w-xl mx-auto space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            className="w-full p-3 rounded-md text-black border border-black"
-            onChange={(e) => {
-              setEmail(e.target.value);
-              clearMessages();
-            }}
-            disabled={isLoading}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            className="w-full p-3 rounded-md text-black border border-black"
-            onChange={(e) => {
-              setPassword(e.target.value);
-              clearMessages();
-            }}
-            disabled={isLoading}
-          />
-        </div>
+  <div className="max-w-xl mx-auto space-y-4">
+    <input
+      type="email"
+      placeholder="Email"
+      value={email}
+      className="w-full p-3 rounded-md border border-[#504B3A]/20 focus:outline-none focus:ring-2 focus:ring-green-300 transition-colors text-[#504B3A]"
+      onChange={(e) => {
+        setEmail(e.target.value);
+        clearMessages();
+      }}
+      disabled={isLoading}
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      className="w-full p-3 rounded-md border border-[#504B3A]/20 focus:outline-none focus:ring-2 focus:ring-green-300 transition-colors text-[#504B3A]"
+      onChange={(e) => {
+        setPassword(e.target.value);
+        clearMessages();
+      }}
+      disabled={isLoading}
+    />
+  </div>
 
-        <div className="flex justify-center gap-4 mt-8">
-          <button
-            className={`px-6 py-2 rounded-md font-semibold ${
-              isLoading
-                ? 'bg-gray-500 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700'
-            } text-white transition-colors`}
-            onClick={handleLogin}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Logging in...' : 'Login'}
-          </button>
+  <div className="flex justify-center gap-4 mt-8">
+    <button
+      className={`px-6 py-2 rounded-md font-semibold ${
+        isLoading
+          ? 'bg-gray-500 cursor-not-allowed'
+          : 'bg-[#69995D] hover:bg-[#5e8d52]'
+      } text-white transition-colors`}
+      onClick={handleLogin}
+      disabled={isLoading}
+    >
+      {isLoading ? 'Logging in...' : 'Login'}
+    </button>
 
-          <button
-            onClick={handleRegisterClick}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
-            disabled={isLoading}
-          >
-            Register
-          </button>
-        </div>
+    <button
+      onClick={handleRegisterClick}
+      className="bg-[#007FFF] hover:bg-[#0066CC] text-white px-6 py-2 rounded-md font-semibold transition-colors"
+      disabled={isLoading}
+    >
+      Register
+    </button>
+  </div>
 
-        {/* Loading indicator */}
-        {isLoading && (
-          <div className="mt-4">
-            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-          </div>
-        )}
-      </section>
+  {/* Loading indicator */}
+  {isLoading && (
+    <div className="mt-4">
+      <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#504B3A]"></div>
+    </div>
+  )}
+</section>
 
       {/* Info Section */}
       <section className="py-12 px-4 text-center">
@@ -376,9 +385,11 @@ export default function LoginPage() {
 
           <div className="border-t border-white/20 mt-12 pt-8 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">H</span>
-              </div>
+          <img
+            src="HabinestLogo.jpg"
+            alt="Home"
+            className="w-10 h-10 object-cover"
+          />
               <span className="font-bold text-xl">Habinest</span>
             </div>
             <p className="text-white/60">Making your housing search effortless and enjoyable</p>
