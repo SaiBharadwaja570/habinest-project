@@ -7,20 +7,15 @@ import visitDB from "./src/db/visitDB.js";
 
 dotenv.config();
 
-let dbsConnected = false;
-
 const connectDBs = async () => {
-  if (!dbsConnected) {
-    await userDB();
-    await listingsDB();
-    await visitDB();
-    dbsConnected = true;
-    console.log("All dbs connected");
-  }
+  await userDB();
+  await listingsDB();
+  await visitDB();
 };
 
-// Initialize DBs once when the serverless function starts
-connectDBs();
-
-// Export the Express app directly
-export default app;
+// Export handler for Vercel
+export default async function handler(req, res) {
+  await connectDBs(); // Ensure DBs are connected before handling request
+  console.log("All dbs connected")
+  return app(req, res); // Let Express handle it
+}
