@@ -11,23 +11,21 @@ export default function PGListPage() {
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
-  // Fetch PGs
-  useEffect(() => {
-    const fetchMyPgs = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/owner-pgs`, {
-          withCredentials: true,
-        });
-        setPgList(res.data.data);
-      } catch (error) {
-        console.error("Error fetching owner's PGs:", error);
-      }
-    };
+  const fetchMyPgs = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/owner-pgs`, {
+        withCredentials: true,
+      });
+      setPgList(res.data.data);
+    } catch (error) {
+      console.error("Error fetching owner's PGs:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchMyPgs();
   }, []);
 
-  // Delete PG
   const handleDelete = async (pgId) => {
     if (!window.confirm("Are you sure you want to delete this PG?")) return;
     try {
@@ -38,6 +36,11 @@ export default function PGListPage() {
     } catch (error) {
       console.error("Failed to delete PG:", error);
     }
+  };
+
+  const handleLogout = () => {
+    // You can integrate logout logic here
+    console.log("Logging out...");
   };
 
   return (
@@ -68,7 +71,7 @@ export default function PGListPage() {
               <button className="block w-full text-left px-4 py-2 text-sm text-[#504B3A]">
                 Settings
               </button>
-              <button className="block w-full text-left px-4 py-2 text-sm text-[#504B3A]">
+              <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-[#504B3A]">
                 Log Out
               </button>
             </div>
@@ -88,12 +91,20 @@ export default function PGListPage() {
                   <h3 className="font-semibold text-lg text-[#504B3A]">{pg.name}</h3>
                   <p className="text-sm text-gray-600">{pg.address}</p>
                 </div>
-                <Button
-                  className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full"
-                  onClick={() => handleDelete(pg._id)}
-                >
-                  Delete
-                </Button>
+                <div className="space-x-2">
+                  <Button
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full"
+                    onClick={() => navigate(`/owner-form/${pg._id}`)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full"
+                    onClick={() => handleDelete(pg._id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))
@@ -109,51 +120,47 @@ export default function PGListPage() {
         </div>
       </main>
 
-
-{/* Footer */}
-<footer className="border-t p-8 bg-white text-sm text-gray-600">
-  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
-    <div>
-      <h4 className="font-semibold mb-2">Use Cases</h4>
-      <ul className="space-y-1">
-        <li>Student housing discovery</li>
-        <li>Professional relocation</li>
-        <li>Personalized PG browsing</li>
-        <li>Booking site visits</li>
-        <li>Saving/bookmarking PGs</li>
-        <li>Mobile-responsive exploration</li>
-        <li>Feedback and ratings system</li>
-      </ul>
-    </div>
-
-    <div>
-      <h4 className="font-semibold mb-2">Explore</h4>
-      <ul className="space-y-1">
-        <li>PG Listings & Filters</li>
-        <li>Profile & Preferences</li>
-        <li>Map-based PG Search</li>
-        <li>Real-time Suggestions</li>
-        <li>Dark Mode UI</li>
-        <li>Ratings & Reviews</li>
-        <li>Similar PG Recommendations</li>
-      </ul>
-    </div>
-
-    <div>
-      <h4 className="font-semibold mb-2">Resources</h4>
-      <ul className="space-y-1">
-        <li>Blog & Guides</li>
-        <li>Best Practices for Users</li>
-        <li>Support & Contact Form</li>
-        <li>Developer API Docs</li>
-        <li>Location Data (OpenStreetMap)</li>
-        <li>Progress Trackers</li>
-        <li>Resource Library</li>
-      </ul>
-    </div>
-  </div>
-</footer>
-
+      {/* Footer */}
+      <footer className="border-t p-8 bg-white text-sm text-gray-600">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+          <div>
+            <h4 className="font-semibold mb-2">Use Cases</h4>
+            <ul className="space-y-1">
+              <li>Student housing discovery</li>
+              <li>Professional relocation</li>
+              <li>Personalized PG browsing</li>
+              <li>Booking site visits</li>
+              <li>Saving/bookmarking PGs</li>
+              <li>Mobile-responsive exploration</li>
+              <li>Feedback and ratings system</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Explore</h4>
+            <ul className="space-y-1">
+              <li>PG Listings & Filters</li>
+              <li>Profile & Preferences</li>
+              <li>Map-based PG Search</li>
+              <li>Real-time Suggestions</li>
+              <li>Dark Mode UI</li>
+              <li>Ratings & Reviews</li>
+              <li>Similar PG Recommendations</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Resources</h4>
+            <ul className="space-y-1">
+              <li>Blog & Guides</li>
+              <li>Best Practices for Users</li>
+              <li>Support & Contact Form</li>
+              <li>Developer API Docs</li>
+              <li>Location Data (OpenStreetMap)</li>
+              <li>Progress Trackers</li>
+              <li>Resource Library</li>
+            </ul>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
