@@ -11,15 +11,10 @@ const app = express()
 
 app.use(express.json())
 
-app.use(cors({
-    origin: 'https://habinest-project.vercel.app',
-    credentials: true
-}))
-
+app.use(cors());
 
 // express.urlencoded() parses the data and makes it available in the req.body object
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
-
 
 //The express.static() is a built-in middleware function in Express.js that allows you to serve static files (like images, HTML, CSS, and JavaScript) directly to the client.
 app.use(express.static("public"))

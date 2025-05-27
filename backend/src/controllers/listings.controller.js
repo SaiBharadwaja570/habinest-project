@@ -40,8 +40,8 @@ const getPGs = asyncHandler(async (req, res) => {
   }
 
   const pgs = await List.find(filter);
-  // if(!pgs || pgs.length == 0) throw new ApiError(404, "Pgs not found");
   
+  // if(!pgs || pgs.length == 0) throw new ApiError(404, "Pgs not found");
   return res
     .status(200)
     .json(new ApiResponse(200, pgs, "pgs fetched successfully!!"));
@@ -159,10 +159,96 @@ const deletePg = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "PG deleted successfully"));
 });
 
+
+const updatePG = asyncHandler(async (req, res) => {
+  const pgId = req.params.id;
+  const { name, address, priceRange, sharingType, gender } = req.body;
+
+  // Validate PG ID
+  if (!mongoose.Types.ObjectId.isValid(pgId)) {
+    throw new ApiError(400, "Invalid PG ID");
+  }
+  const userId = req.user._id;
+
+  // Check if the PG exists and is owned by the user
+  const existingPg = await List.findById(pgId);
+  if (!existingPg) {
+    throw new ApiError(404, "PG not found");
+  }
+
+  // Check if the PG is in the user's myPg list
+  const user = await User.findById(userId);
+  if (!user.myPg.includes(pgId)) {
+    throw new ApiError(403, "You are not authorized to update this PG");
+  }
+
+  // Check if updating name conflicts with another PG (excluding current PG)
+  if (name && name.trim() !== existingPg.name) {
+    const nameConflict = await List.findOne({ 
+      name: name.trim(), 
+      _id: { $ne: pgId } 
+    });
+    if (nameConflict) {
+      throw new ApiError(409, "PG with this name already exists");
+    }
+  }
+
+  // Prepare update object
+  const updateData = {};
+  
+  // Update basic fields if provided
+  if (name?.trim()) updateData.name = name.trim();
+  if (address?.trim()) updateData.address = address.trim();
+  if (priceRange) updateData.priceRange = priceRange;
+  if (sharingType?.trim()) updateData.sharingType = sharingType.trim();
+  if (gender?.trim()) updateData.gender = gender.trim();
+
+  // Handle photo update if new photo is provided
+  if (req.files?.photo?.[0]?.path) {
+    const localImagePath = req.files.photo[0].path;
+    console.log("New image path:", localImagePath);
+    
+    const imageUrlOnCloudinary = await uploadImageOnCloudinary(localImagePath);
+    updateData.photo = imageUrlOnCloudinary.url;
+  }
+
+  // Handle address change - update coordinates if address is being updated
+  if (address?.trim() && address.trim() !== existingPg.address) {
+    const coordinatesResult = await getCoordinatesFromAddress(address.trim());
+    if (!coordinatesResult?.lat || !coordinatesResult?.lon) {
+      throw new ApiError(400, "Could not determine valid coordinates for the new address.");
+    }
+
+    const latitude = parseFloat(coordinatesResult.lat);
+    const longitude = parseFloat(coordinatesResult.lon);
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+      throw new ApiError(400, "Invalid latitude or longitude values.");
+    }
+
+    updateData.location = {
+      type: 'Point',
+      coordinates: [longitude, latitude],
+    };
+  }
+
+  // Update the PG
+  const updatedPG = await List.findByIdAndUpdate(
+    pgId,
+    updateData,
+    { new: true, runValidators: true }
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedPG, "PG updated successfully"));
+});
+
 export {
     getPGs,
     createPG,
     getSinglePG,
     getOwnerPGs,
+    updatePG,
     deletePg
 }
