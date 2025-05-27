@@ -325,7 +325,7 @@ export default function LoginPage() {
       className="bg-[#007FFF] hover:bg-[#0066CC] text-white px-6 py-2 rounded-md font-semibold transition-colors"
       disabled={isLoading}
     >
-      Register
+      Signup
     </button>
   </div>
 
