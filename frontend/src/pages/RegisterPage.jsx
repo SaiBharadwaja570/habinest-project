@@ -14,11 +14,6 @@ export default function RegisterPage() {
   const [email, setEmail]= useState('')
   const [phone, setPhone]= useState('')
   const [password, setPassword]= useState('')
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
 
   const handleRegister= async ()=>{
     const apiObj={
@@ -27,6 +22,26 @@ export default function RegisterPage() {
       phone,
       password
     }
+    axios({
+      method: 'POST',
+      url: `${import.meta.env.VITE_BACKEND_USER}/register`,
+      data: apiObj
+    }).then(()=>{
+      alert("User registered succesfully")
+      navigate('/login')
+    })
+  }
+
+  const handleRegisterAsOwner= async ()=>{
+    
+    const apiObj={
+      name,
+      email,
+      phone,
+      password,
+      type: "owner"
+    }
+
     axios({
       method: 'POST',
       url: `${import.meta.env.VITE_BACKEND_USER}/register`,
@@ -79,41 +94,8 @@ export default function RegisterPage() {
               </a>
             </nav>
 
-            {/* Profile Dropdown */}
-            <div className="relative">
-              <button 
-                onClick={toggleDropdown} 
-                className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] p-0.5 hover:scale-105 transition-transform duration-200"
-              >
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                  <User className="w-6 h-6 text-[#504B3A]" />
-                </div>
-              </button>
-              
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
-                  <a 
-                    href="#" 
-                    onClick={() => navigate("/profile")} 
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
-                  >
-                    <User className="w-4 h-4" />
-                    Profile
-                  </a>
-                  <a href="#" className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors">
-                    <Settings className="w-4 h-4" />
-                    Toggle
-                  </a>
-                  <a href="#"  onClick={() => handleLogout()} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                    <LogOut className="w-4 h-4" />
-                    Log Out
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+  return (
+    <div className="font-sans">
 <section className="flex flex-col items-center justify-center bg-gradient-to-br from-green-500 to-green-700 py-16 px-4">
   <div className="w-full max-w-md bg-white/90 backdrop-blur shadow-2xl rounded-3xl p-8 border border-[#504B3A]/10 transition-all duration-300">
     <h1 className="text-2xl font-bold text-center mb-6 text-[#504B3A]">Create an Account</h1>
@@ -153,7 +135,14 @@ export default function RegisterPage() {
         onClick={handleRegister}
         className="flex-1 py-2 rounded-xl font-semibold text-white bg-[#007FFF] hover:bg-[#0066CC] transition-colors text-center"
       >
-        Register
+        Register as User
+      </button>
+
+      <button
+        onClick={handleRegisterAsOwner}
+        className="flex-1 py-2 rounded-xl font-semibold text-white bg-[#007FFF] hover:bg-[#0066CC] transition-colors text-center"
+      >
+        Register as Owner
       </button>
 
       <button

@@ -12,6 +12,7 @@ import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
 import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
+import RedirectIfLoggedIn from "./RedirectIfLoggedIn";
 import VisitPage from "../pages/VisitPage";
 import FirstPage from "../pages/FirstPage";
 
@@ -21,8 +22,19 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/welcome" element={<FirstPage />} />
         <Route path="/:id" element={<SinglePg />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/login"
+          element={
+          <RedirectIfLoggedIn>
+            <LoginPage />
+          </RedirectIfLoggedIn>
+        }
+        />
+        <Route path="/register" element={
+          <RedirectIfLoggedIn>
+            <RegisterPage />
+          </RedirectIfLoggedIn>
+        } />
         <Route path="/owner-form" element={<OwnerPgForm />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/pg-list" element={<PGListPage />} />
