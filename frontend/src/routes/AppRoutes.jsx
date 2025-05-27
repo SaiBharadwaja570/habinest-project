@@ -12,6 +12,7 @@ import BookmarkedPGsPage from "../pages/BookmarkedPGsPage";
 import SinglePg from "../pages/SinglePg";
 import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
+import VisitPage from "../pages/VisitPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/bookmarks" element={<BookmarkedPGsPage />} />
         <Route path="/map" element={<Map />} />
         <Route path="/update-pg/:id" element={<UpdatePgPage />} />
+        <Route path="/visits" element={<VisitPage />} />
       </Routes>
   );
 }
