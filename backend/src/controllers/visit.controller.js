@@ -31,7 +31,7 @@ const showVisit = async(req,res) => {
         return res.status(200).json(new ApiResponse(200, "No PGs found for this user", []));
     }
     const visits = await Visit.find({ pgId: { $in: myPgIds } });
-    return res.status(200).json(new ApiResponse(200, "Visits fetched", visits));
+    return res.status(200).json(new ApiResponse(200, visits ,"Visits fetched"));
 }
 
 export{createVisit, showVisit}
