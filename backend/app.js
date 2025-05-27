@@ -11,7 +11,7 @@ const app = express()
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.urlencoded({extended: true}));
 app.use(cors({
   origin: 'https://habinest-project.vercel.app', 
   credentials: true
