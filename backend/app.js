@@ -11,15 +11,10 @@ const app = express()
 
 app.use(express.json())
 
-const corsOptions = {
-    origin: 'https://habinest-project.vercel.app',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // handle preflight
+app.use(cors({
+    origin: 'https://habinest-project.vercel.app/',
+    credentials: true
+}))
 
 
 // express.urlencoded() parses the data and makes it available in the req.body object
