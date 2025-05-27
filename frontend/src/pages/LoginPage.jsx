@@ -29,105 +29,150 @@ export default function LoginPage() {
     navigate('/login');
   };
 
+  // const handleLogin = async () => {
+  //   setError('');
+  //   setSuccess('');
+
+  //   // --- Input Validation ---
+  //   if (!email || !password) {
+  //     setError('Please enter both email and password.');
+  //     return;
+  //   }
+
+  //   if (!email.includes('@')) {
+  //     setError('Please enter a valid email address.');
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     const apiObj = {
+  //       email: email.trim(),
+  //       password,
+  //     };
+
+  //     console.log('Attempting login with email:', apiObj.email);
+
+  //     // Note: Using placeholder URL since we don't have access to environment variables
+  //     const response = await axios({
+  //       method: 'POST',
+  //       url: `${import.meta.env.VITE_BACKEND_USER}/login`,
+  //       data: apiObj,
+  //       withCredentials: true,
+  //       timeout: 10000,
+  //     });
+
+  //     console.log('Login successful response data:', response.data);
+
+  //     setSuccess('Login successful! Redirecting...');
+
+  //     if (response.data && response.data.token) {
+  //       localStorage.setItem('userToken', response.data.token);
+  //     }
+
+  //     setTimeout(() => {
+  //       navigate('/');
+  //     }, 1000);
+
+  //   } catch (err) {
+  //     console.error('Login error caught in component:', err);
+
+  //     if (axios.isCancel(err)) {
+  //       setError('Login request cancelled.');
+  //     } else if (err.code === 'ECONNABORTED') {
+  //       setError('Request timed out. Please check your internet connection and try again.');
+  //     } else if (err.response) {
+  //       const status = err.response.status;
+  //       const message = err.response.data?.message || err.response.statusText || 'Login failed due to server error.';
+
+  //       console.log('Server responded with error details:', {
+  //         status,
+  //         message,
+  //         data: err.response.data,
+  //       });
+
+  //       switch (status) {
+  //         case 400:
+  //           setError(`Invalid request: ${message}`);
+  //           break;
+  //         case 401:
+  //           setError('Invalid email or password. Please check your credentials.');
+  //           break;
+  //         case 403:
+  //           setError('Access denied. You do not have permission to perform this action.');
+  //           break;
+  //         case 404:
+  //           setError('User not found or login endpoint is incorrect. Please check your email or register first.');
+  //           break;
+  //         case 409:
+  //           setError(`Conflict: ${message}`);
+  //           break;
+  //         case 429:
+  //           setError('Too many login attempts. Please try again after some time.');
+  //           break;
+  //         case 500:
+  //           setError('Server error. Please try again later.');
+  //           break;
+  //         default:
+  //           setError(`Login failed: ${message}`);
+  //       }
+  //     } else if (err.request) {
+  //       console.log('Network error (no response received):', err.request);
+  //       setError('Network error. Please check your internet connection and try again.');
+  //     } else {
+  //       console.log('Unexpected error during request setup:', err.message);
+  //       setError('An unexpected error occurred. Please try again.');
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleLogin = async () => {
     setError('');
     setSuccess('');
 
-    // --- Input Validation ---
     if (!email || !password) {
-      setError('Please enter both email and password.');
-      return;
+        setError('Please enter both email and password.');
+        return;
     }
 
     if (!email.includes('@')) {
-      setError('Please enter a valid email address.');
-      return;
+        setError('Please enter a valid email address.');
+        return;
     }
 
     setIsLoading(true);
 
     try {
-      const apiObj = {
-        email: email.trim(),
-        password,
-      };
+        const apiObj = {
+            email: email.trim(),
+            password,
+        };
 
-      console.log('Attempting login with email:', apiObj.email);
-
-      // Note: Using placeholder URL since we don't have access to environment variables
-      const response = await axios({
-        method: 'POST',
-        url: `${import.meta.env.VITE_BACKEND_USER}/login`,
-        data: apiObj,
-        withCredentials: true,
-        timeout: 10000,
-      });
-
-      console.log('Login successful response data:', response.data);
-
-      setSuccess('Login successful! Redirecting...');
-
-      if (response.data && response.data.token) {
-        localStorage.setItem('userToken', response.data.token);
-      }
-
-      setTimeout(() => {
-        navigate('/');
-      }, 1000);
-
-    } catch (err) {
-      console.error('Login error caught in component:', err);
-
-      if (axios.isCancel(err)) {
-        setError('Login request cancelled.');
-      } else if (err.code === 'ECONNABORTED') {
-        setError('Request timed out. Please check your internet connection and try again.');
-      } else if (err.response) {
-        const status = err.response.status;
-        const message = err.response.data?.message || err.response.statusText || 'Login failed due to server error.';
-
-        console.log('Server responded with error details:', {
-          status,
-          message,
-          data: err.response.data,
+        const response = await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_BACKEND_USER}/login`,
+            data: apiObj,
+            withCredentials: true, // This is crucial for cookies
+            timeout: 10000,
         });
 
-        switch (status) {
-          case 400:
-            setError(`Invalid request: ${message}`);
-            break;
-          case 401:
-            setError('Invalid email or password. Please check your credentials.');
-            break;
-          case 403:
-            setError('Access denied. You do not have permission to perform this action.');
-            break;
-          case 404:
-            setError('User not found or login endpoint is incorrect. Please check your email or register first.');
-            break;
-          case 409:
-            setError(`Conflict: ${message}`);
-            break;
-          case 429:
-            setError('Too many login attempts. Please try again after some time.');
-            break;
-          case 500:
-            setError('Server error. Please try again later.');
-            break;
-          default:
-            setError(`Login failed: ${message}`);
-        }
-      } else if (err.request) {
-        console.log('Network error (no response received):', err.request);
-        setError('Network error. Please check your internet connection and try again.');
-      } else {
-        console.log('Unexpected error during request setup:', err.message);
-        setError('An unexpected error occurred. Please try again.');
-      }
+        console.log('Login successful, user:', response.data.data);
+        setSuccess('Login successful! Redirecting...');
+
+        // No need to store tokens - they're in HTTP-only cookies
+        setTimeout(() => {
+            navigate('/');
+        }, 1000);
+
+    } catch (err) {
+        // Your existing error handling...
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
 
   const clearMessages = () => {
     setError('');
