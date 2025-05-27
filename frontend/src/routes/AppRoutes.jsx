@@ -14,11 +14,12 @@ import Map from "../components/Map";
 import UpdatePgPage from "../pages/UpdatePgPage";
 import RedirectIfLoggedIn from "./RedirectIfLoggedIn";
 import VisitPage from "../pages/VisitPage";
+import FirstPage from "../pages/FirstPage";
 
 function App() {
   return (
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<FirstPage />} />
         <Route path="/:id" element={<SinglePg />} />
         <Route
           path="/login"
