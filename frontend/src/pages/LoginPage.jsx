@@ -16,13 +16,17 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(prev => !prev);
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
+    // Remove token from localStorage
+    localStorage.removeItem('userToken');
+    setIsDropdownOpen(false);
     navigate('/login');
   };
 
@@ -137,6 +141,7 @@ export default function LoginPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">H</span>
               </div>
@@ -289,7 +294,6 @@ export default function LoginPage() {
         <p className="text-gray-500 mb-8">
           Your personalized gateway to secure, fast, and smart accommodation discovery.
         </p>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
           <div>
             <div className="text-xl mb-2">ⓘ Personalized Listings</div>
@@ -376,9 +380,11 @@ export default function LoginPage() {
 
           <div className="border-t border-white/20 mt-12 pt-8 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
+
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">H</span>
               </div>
+
               <span className="font-bold text-xl">Habinest</span>
             </div>
             <p className="text-white/60">Making your housing search effortless and enjoyable</p>
