@@ -166,7 +166,6 @@ export default function LoginPage() {
         setTimeout(() => {
             navigate('/');
         }, 1000);
-
     } catch (err) {
         // Your existing error handling...
     } finally {

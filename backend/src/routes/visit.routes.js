@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post("/book/:id", createVisit);
 
-router.get("/show", verifyJWT,showVisit)
+router.get("/show", verifyJWT, showVisit)
 
 export default router
