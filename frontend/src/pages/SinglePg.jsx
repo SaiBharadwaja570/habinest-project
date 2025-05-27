@@ -15,7 +15,6 @@ const SinglePg = () => {
     const [showBookingModal, setShowBookingModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [copySuccess, setCopySuccess] = useState(false)
-    const [templateCopySuccess, setTemplateCopySuccess] = useState(false)
     const [bookingSubmitting, setBookingSubmitting] = useState(false)
     const [bookingDetails, setBookingDetails] = useState({
         name: '',
@@ -113,7 +112,6 @@ const SinglePg = () => {
     const handleShare = () => {
         setShowShareModal(true)
         setCopySuccess(false)
-        setTemplateCopySuccess(false)
     }
 
     const handleBookVisit = () => {
@@ -140,30 +138,9 @@ const SinglePg = () => {
         }
     }
 
-    const handleCopyTemplate = async () => {
-        const templateText = `Check out this amazing PG I found!\n\n${pgData.name}\n📍 ${pgData.address}\n💰 ₹${pgData.priceRange}\n\n${window.location.href}`
-        try {
-            await navigator.clipboard.writeText(templateText)
-            setTemplateCopySuccess(true)
-            setTimeout(() => setTemplateCopySuccess(false), 2000)
-        } catch (err) {
-            console.error('Failed to copy template:', err)
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea')
-            textArea.value = templateText
-            document.body.appendChild(textArea)
-            textArea.select()
-            document.execCommand('copy')
-            document.body.removeChild(textArea)
-            setTemplateCopySuccess(true)
-            setTimeout(() => setTemplateCopySuccess(false), 2000)
-        }
-    }
-
     const closeShareModal = () => {
         setShowShareModal(false)
         setCopySuccess(false)
-        setTemplateCopySuccess(false)
     }
 
     const closeBookingModal = () => {
@@ -276,25 +253,6 @@ const SinglePg = () => {
                                         {copySuccess ? 'Copied!' : 'Copy'}
                                     </button>
                                 </div>
-                            </div>
-                            
-                            <div className="share-template">
-                                <div className="template-header">
-                                    <label>Message template:</label>
-                                    <button
-                                        className={`copy-button ${templateCopySuccess ? 'copied' : ''}`}
-                                        onClick={handleCopyTemplate}
-                                        type="button"
-                                    >
-                                        <Copy size={16} />
-                                        {templateCopySuccess ? 'Copied!' : 'Copy Template'}
-                                    </button>
-                                </div>
-                                <textarea
-                                    readOnly
-                                    value={`Check out this amazing PG I found!\n\n${pgData.name}\n📍 ${pgData.address}\n💰 ₹${pgData.priceRange}\n\n${window.location.href}`}
-                                    className="template-textarea"
-                                />
                             </div>
                         </div>
                     </div>

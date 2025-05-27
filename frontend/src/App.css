@@ -648,3 +648,435 @@
   background: #ccc;
   cursor: not-allowed;
 }
+
+/* Modal Overlay - Shared styles for both share and booking modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/* Modal Container - Shared styles */
+.share-modal,
+.booking-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal Header - Shared styles */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Content Areas */
+.share-content,
+.booking-content {
+  padding: 0 24px 24px 24px;
+}
+
+/* PG Preview - Shared styles */
+.pg-preview {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.preview-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.preview-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.preview-details h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-details p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-details p:last-child {
+  font-weight: 600;
+  color: #059669;
+}
+
+/* Booking Form Styles */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-button,
+.submit-booking-button {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cancel-button {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.submit-booking-button {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.submit-booking-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.cancel-button:disabled,
+.submit-booking-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Share Modal Specific Styles */
+.url-container {
+  margin-bottom: 24px;
+}
+
+.url-container label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.url-input-container {
+  display: flex;
+  gap: 8px;
+}
+
+.url-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background-color: #f9fafb;
+  color: #6b7280;
+}
+
+.copy-button {
+  padding: 12px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.copy-button:hover {
+  background-color: #2563eb;
+}
+
+.copy-button.copied {
+  background-color: #059669;
+}
+
+.copy-button.copied:hover {
+  background-color: #047857;
+}
+
+/* Share Template */
+.share-template {
+  margin-bottom: 12px;
+}
+
+.template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.template-header label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.template-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background-color: #f9fafb;
+  color: #6b7280;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Header Actions Styles */
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.share-button,
+.bookmark-button,
+.book-visit-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.share-button {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.share-button:hover {
+  background-color: #2563eb;
+}
+
+.bookmark-button {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.bookmark-button:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.bookmark-button.bookmarked {
+  background-color: #dcfce7;
+  color: #059669;
+  border-color: #bbf7d0;
+}
+
+.bookmark-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.book-visit-button {
+  background-color: #059669;
+  color: white;
+}
+
+.book-visit-button:hover {
+  background-color: #047857;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 16px;
+  }
+  
+  .share-modal,
+  .booking-modal {
+    max-width: 100%;
+  }
+  
+  .modal-header {
+    padding: 20px 20px 0 20px;
+    margin-bottom: 20px;
+  }
+  
+  .share-content,
+  .booking-content {
+    padding: 0 20px 20px 20px;
+  }
+  
+  .pg-preview {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .preview-image {
+    width: 60px;
+    height: 60px;
+    align-self: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .url-input-container {
+    flex-direction: column;
+  }
+  
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .share-button,
+  .bookmark-button,
+  .book-visit-button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-header h3 {
+    font-size: 1.125rem;
+  }
+  
+  .preview-details h4 {
+    font-size: 0.9rem;
+  }
+  
+  .preview-details p {
+    font-size: 0.8rem;
+  }
+}

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import User from "../models/user.models.js";
-import { getPGs, createPG, getSinglePG, getOwnerPGs, deletePg } from "../controllers/listings.controller.js";
+import { getPGs, createPG, getSinglePG, getOwnerPGs, deletePg, updatePG } from "../controllers/listings.controller.js";
 import upload from "../middlewares/multer.middleware.js";
 import { isOwner } from "../middlewares/owner.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -15,6 +15,16 @@ router.post(
     { name: 'photo', maxCount: 1 }
   ]), 
   createPG                     
+);
+
+router.put(
+  '/:id',
+  verifyJWT,
+  isOwner,
+  upload.fields([
+    { name: 'photo', maxCount: 1 }
+  ]),
+  updatePG
 );
 
 router.get('/owner-pgs', verifyJWT, isOwner, getOwnerPGs)
