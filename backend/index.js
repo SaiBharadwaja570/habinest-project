@@ -1,4 +1,3 @@
-// index.js
 import app from "./app.js";
 import dotenv from 'dotenv'
 import userDB from "./src/db/userDB.js";

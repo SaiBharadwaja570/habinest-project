@@ -42,8 +42,21 @@ const listingsSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number], // longitudes and latitudes
+    },
+  },
+
+  ratings: [
+    {
+      user: {
+        type: String,
+        required: true
+      },
+      rating: { type: Number, min: 0, max: 5, required: true },
+      comment: String,
+      createdAt: { type: Date, default: Date.now }
     }
-  }
+  ]
+
 }, { timestamps: true });
 
 listingsSchema.index({ location: '2dsphere' });

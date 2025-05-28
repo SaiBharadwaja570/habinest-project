@@ -5,6 +5,7 @@ import listingsRouter from './src/routes/listings.routes.js'
 import cookieParser from 'cookie-parser'
 import bookmarkRouter from './src/routes/bookmark.routes.js'
 import visitRouter from './src/routes/visit.routes.js'
+import ratingsRouter from './src/routes/ratings.routes.js'
 
 const app = express()
 
@@ -37,6 +38,10 @@ app.use('/api/pg', listingsRouter)
 //for-bookmarks
 app.use('/api/bookmarks', bookmarkRouter);
 
+// visits
 app.use('/api/visits', visitRouter);
+
+// reviews
+app.use('/api/ratings', ratingsRouter);
 
 export default app;
