@@ -16,7 +16,7 @@ app.use(cors({
     origin: [
     'http://localhost:5173', 
     'https://habinest-project-frontend.vercel.app',
-    'https://habinest-project-hapj.vercel.app'
+    'https://habinest-project-hd1p.onrender.com'
   ],
     credentials: true
 }));
