@@ -1,10 +1,13 @@
-import app from "./app.js";
-import dotenv from 'dotenv'
-import userDB from "./src/db/userDB.js";
-import listingsDB from "./src/db/listingsDB.js";
-import visitDB from "./src/db/visitDB.js";
+// server.js
+import dotenv from 'dotenv';
+import app from './app.js';
+import userDB from './src/db/userDB.js';
+import listingsDB from './src/db/listingsDB.js';
+import visitDB from './src/db/visitDB.js';
 
 dotenv.config();
+
+const PORT = process.env.PORT || 8000;
 
 const connectDBs = async () => {
   await userDB();
@@ -12,9 +15,18 @@ const connectDBs = async () => {
   await visitDB();
 };
 
-// Export handler for Vercel
-export default async function handler(req, res) {
-  await connectDBs(); // Ensure DBs are connected before handling request
-  console.log("All dbs connected")
-  return app(req, res); // Let Express handle it
-}
+const startServer = async () => {
+  try {
+    await connectDBs();
+    console.log("✅ All DBs connected");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Error starting server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
