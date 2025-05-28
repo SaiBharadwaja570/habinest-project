@@ -10,7 +10,6 @@ export default function LoginPage() {
     navigate("/register");
   };
 
-// Apply dark mode on first load based on saved preference
 useEffect(() => {
   const theme = localStorage.getItem('theme');
   if (theme === 'dark') {
@@ -20,10 +19,10 @@ useEffect(() => {
   }
 }, []);
 
-// Update toggleDarkMode to save preference
 const toggleDarkMode = () => {
   const html = document.documentElement;
   const isDark = html.classList.toggle('dark');
+  console.log('Toggled dark mode:', isDark); // debug
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 };
 
@@ -68,7 +67,7 @@ const toggleDarkMode = () => {
 
       const response = await axios({
         method: 'POST',
-        url: `https://habinest-project-hapj.vercel.app/api/user/login`,
+        url: `${import.meta.env.VITE_BACKEND_USER}/login`,
         data: apiObj,
         withCredentials: true,
         timeout: 30000,
