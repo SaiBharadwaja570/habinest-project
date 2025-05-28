@@ -54,6 +54,15 @@ const ProfilePage = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data?.message || error.message);
+    }
+  };
+
   const fetchUser = async () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_USER}`, {
@@ -337,7 +346,7 @@ const ProfilePage = () => {
                 {/* Logout Button */}
                 <div className="pt-4">
                   <Button
-                    onClick={() => navigate("/logout")}
+                    onClick={handleLogout}
                     className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-medium"
                   >
                     <LogOut className="w-4 h-4 mr-2" /> 
