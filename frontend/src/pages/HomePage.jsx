@@ -84,7 +84,7 @@ const Navbar = () => {
                     href="#"
                     className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
                   >
-                    <Settings className="w-4 h-4" /> Settings
+                    <Settings className="w-4 h-4" /> Set
                   </a>
                   <a
                     href="#"
