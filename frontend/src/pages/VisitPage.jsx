@@ -173,7 +173,7 @@ const toggleDropdown = () => {
                       <h4 className="font-semibold text-[#69995D] mb-2">🏠 PG Details</h4>
                       <div className="grid md:grid-cols-2 gap-4">
                         <p>
-                          <span className="font-medium text-gray-600">Name:</span> {pgInfo.pgName}
+                          <span className="font-medium text-gray-600">Name:</span> {pgInfo.name}
                         </p>
                         <p>
                           <span className="font-medium text-gray-600">Address:</span> {pgInfo.address}

@@ -376,7 +376,7 @@ const SinglePg = () => {
                             <p>{pgData.gender}</p>
                         </div>
 
-                        {pgData.amenities && (
+                        {/* {pgData.amenities && (
                             <div className="pg-amenities">
                                 <h3>Amenities</h3>
                                 <ul className="amenities-list">
@@ -385,7 +385,7 @@ const SinglePg = () => {
                                     ))}
                                 </ul>
                             </div>
-                        )}
+                        )} */}
                     </div>
                 </div>
             </div>
