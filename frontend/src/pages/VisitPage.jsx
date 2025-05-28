@@ -55,7 +55,7 @@ const VisitPage = () => {
                 {pgInfo ? (
                 <>
                     <h4>PG Details:</h4>
-                    <p>Name: {pgInfo.pgName}</p>
+                    <p>Name: {pgInfo.name}</p>
                     <p>Address: {pgInfo.address}</p>
                     {/* Add more PG fields as needed */}
                 </>
