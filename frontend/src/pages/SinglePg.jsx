@@ -495,29 +495,6 @@ const SinglePg = () => {
             {submittingReview ? 'Submitting...' : 'Submit Review'}
         </button>
     </form>
-
-    {/* Display Reviews */}
-    <div className="reviews-list">
-        {loadingRatings ? (
-            <p>Loading reviews...</p>
-        ) : reviews.length === 0 ? (
-            <p>No reviews yet.</p>
-        ) : (
-            reviews.map((rev, index) => (
-                <div key={index} className="review-item">
-                    <strong>{rev.user}</strong>
-                    <div>
-                        {[...Array(5)].map((_, i) => (
-                            <span key={i} className={i < rev.rating ? "star filled" : "star"}>
-                                ⭐
-                            </span>
-                        ))}
-                    </div>
-                    <p>{rev.comment}</p>
-                </div>
-            ))
-        )}
-    </div>
 </div>
         </div>
     )
