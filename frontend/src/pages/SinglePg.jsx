@@ -16,94 +16,34 @@ const SinglePg = () => {
     const [showShareModal, setShowShareModal] = useState(false)
     const [copySuccess, setCopySuccess] = useState(false)
     const [bookingSubmitting, setBookingSubmitting] = useState(false)
-
-    const [rating, setRating] = useState(0);
-    const [comment, setComment] = useState('');
-    const [reviews, setReviews] = useState([]);
-    const [avgRating, setAvgRating] = useState(0);
-    const [reviewCount, setReviewCount] = useState(0);
-    const [loadingRatings, setLoadingRatings] = useState(true);
-    const [submittingReview, setSubmittingReview] = useState(false);
-
     const [bookingDetails, setBookingDetails] = useState({
         name: '',
         email: '',
         phone: '',
         date: ''
-    });
-
-    
+    })
 
     useEffect(() => {
-    const fetchPgData = async () => {
-        try {
-            setIsLoading(true);
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/${id}`);
-            setPgData(response.data.data);
+        const fetchPgData = async () => {
+            try {
+                setIsLoading(true)
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/${id}`)
+                setPgData(response.data.data)
 
-            const bookmarkStatus = await axios.get(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/status/${id}`, {
-                withCredentials: true
-            });
-            setIsBookmarked(bookmarkStatus.data.isBookmarked);
-
-            // Fetch ratings
-            const avgRatingRes = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/average/${id}`);
-            setAvgRating(avgRatingRes.data.avgRating);
-            setReviewCount(avgRatingRes.data.count);
-
-            const reviewsRes = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/${id}`);
-            setReviews(reviewsRes.data);
-        } catch (err) {
-            console.error("ERROR", err);
-            setError("Failed to load PG details");
-        } finally {
-            setIsLoading(false);
-            setLoadingRatings(false);
-        }
-    };
-    fetchPgData();
-}, [id]);
-
-    const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    if (!rating || !comment.trim()) return;
-
-    setSubmittingReview(true);
-    try {
-        const response = await axios.post(
-            `${import.meta.env.VITE_BACKEND_RATINGS}/${id}`,
-            { rating, comment },
-            { withCredentials: true }
-        );
-
-        // Update UI
-        const updatedReviews = [...reviews];
-        const userIndex = updatedReviews.findIndex(r => r.user === response.data.user);
-
-        if (userIndex !== -1) {
-            updatedReviews[userIndex].rating = rating;
-            updatedReviews[userIndex].comment = comment;
-        } else {
-            updatedReviews.push({ user: response.data.user, rating, comment });
+                const bookmarkStatus = await axios.get(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/status/${id}`, {
+                    withCredentials: true
+                })
+                setIsBookmarked(bookmarkStatus.data.isBookmarked)
+            } catch (err) {
+                console.error("ERROR", err)
+                setError("Failed to load PG details")
+            } finally {
+                setIsLoading(false)
+            }
         }
 
-        setReviews(updatedReviews);
-        setRating(0);
-        setComment('');
-
-        // Re-fetch average
-        const avgRatingRes = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/average/${id}`);
-        setAvgRating(avgRatingRes.data.avgRating);
-        setReviewCount(avgRatingRes.data.count);
-
-        alert('Review submitted successfully!');
-    } catch (err) {
-        console.error("Error submitting review:", err);
-        alert("Failed to submit review.");
-    } finally {
-        setSubmittingReview(false);
-    }
-};
+        fetchPgData()
+    }, [id])
 
     const handleBookmark = async () => {
         try {
@@ -456,46 +396,6 @@ const SinglePg = () => {
                     <Map coords={pgData.location.coordinates} name={pgData.name} />
                 </div>
             </div>
-
-            <div className="pg-ratings-section">
-    <h2>Ratings & Reviews</h2>
-    <div className="rating-summary">
-        <span className="avg-rating">{avgRating}</span>
-        <span className="star">⭐</span>
-        <span className="review-count">({reviewCount} reviews)</span>
-    </div>
-
-    {/* Post a Review */}
-    <form className="review-form" onSubmit={handleReviewSubmit}>
-        <h3>Leave a Review</h3>
-        <div className="rating-input">
-            <label>Rating:</label>
-            <select
-                value={rating}
-                onChange={(e) => setRating(Number(e.target.value))}
-                required
-            >
-                <option value="">Select</option>
-                {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>{num} Star{num > 1 ? 's' : ''}</option>
-                ))}
-            </select>
-        </div>
-        <div className="form-group">
-            <label>Comment:</label>
-            <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows="4"
-                required
-                placeholder="Write your review..."
-            />
-        </div>
-        <button type="submit" disabled={submittingReview}>
-            {submittingReview ? 'Submitting...' : 'Submit Review'}
-        </button>
-    </form>
-</div>
         </div>
     )
 }
