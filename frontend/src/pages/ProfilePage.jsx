@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Pencil, LogOut, Save } from "lucide-react";
+import { Home, Search, Bookmark } from "lucide-react";
 import axios from "axios";
 
 const ProfilePage = () => {
@@ -96,25 +97,53 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#E4DFDA] text-black">
-      <header className="flex justify-between items-center p-4 border-b bg-[#007FFF] text-white">
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate("/")}
-        >
-          <img
-            src="/HabinestLogo.jpg"
-            alt="Habinest Logo"
-            className="h-10 w-10"
-          />
-          <span className="text-2xl font-bold">Habinest</span>
-        </div>
+  {/* Header */}
+<header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+  <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="flex items-center justify-between">
+      {/* Logo */}
+      <div className="flex items-center gap-3">
+        <img
+          src="HabinestLogo.jpg"
+          alt="Home"
+          className="w-10 h-10 object-cover"
+        />
+        <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
+      </div>
 
-        <nav className="space-x-4 text-sm text-gray-100 font-medium">
-          <button onClick={() => navigate("/")}>Home</button>
-          <button onClick={() => navigate("/filter")}>Find PGs</button>
-          <button onClick={() => navigate("/bookmarks")}>BookMarks</button>
+      {/* Centered Nav */}
+      <div className="flex-1 flex justify-center">
+        <nav className="flex items-center gap-8">
+          <a
+            href="#"
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
+          >
+            <Home className="w-4 h-4" />
+            Home
+          </a>
+          <a
+            href="#"
+            onClick={() => navigate("/filter")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
+          >
+            <Search className="w-4 h-4" />
+            Find PGs
+          </a>
+          <a
+            href="#"
+            onClick={() => navigate("/bookmarks")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
+          >
+            <Bookmark className="w-4 h-4" />
+            BookMarks
+          </a>
         </nav>
-      </header>
+      </div>
+    </div>
+  </div>
+</header>
+
 
       <main className="flex-grow p-8">
         <Card className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6">

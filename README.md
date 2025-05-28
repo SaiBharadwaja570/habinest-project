@@ -1,39 +1,39 @@
-# 🏡 Habinest – A Personalized PG Discovery Platform
+# 🏡 nest – Personalized PG Discovery Platform
 
-Habinest is a full-stack web application built to help students and professionals discover paying guest (PG) accommodations tailored to their preferences. It offers a seamless experience for users to find, filter, and connect with PGs that suit their lifestyle and budget.
+Habinest is a full-stack web application designed to help students and professionals discover paying guest (PG) accommodations tailored to their needs. Users can easily search, filter, and connect with PGs that match their preferences and budget.
 
 ---
 
 ## ✨ Features
 
-- 🔍 **Personalized PG Discovery** – Search PGs based on preferences like location, budget, gender, food options, etc.
-- 🔐 **Authentication** – Secure user authentication.
-- 📦 **Admin Panel** – Admins can manage PG listings using AdminBro.
-- 💬 **Contact & Inquiry System** – Let users easily reach out for bookings or inquiries.
+- 🔍 **Personalized Search:** Find PGs by location, budget, gender, food options, and more.
+- 🔐 **Secure Authentication:** User login and registration.
+- 🛠️ **Admin Panel:** Manage PG listings with AdminBro.
+- 💬 **Inquiry System:** Users can contact PG owners for bookings or questions.
 
 ---
 
 ## 🧱 Tech Stack
 
-### 🔹 Frontend
+### Frontend
 - React.js
 - TailwindCSS / Material UI
 - React Router
 
-### 🔹 Backend
+### Backend
 - Node.js
 - Express.js
 
-### 🔹 Database & Auth
+### Database & Authentication
 - MongoDB
 - Firebase Authentication
 
-### 🔹 Admin Panel
+### Admin Panel
 - AdminBro
 
 ---
 
-## 🗂️ Project Structure (Backend)
+## 🗂️ Backend Project Structure
 
 ```
 backend/
@@ -55,7 +55,7 @@ backend/
 
 ## 🚀 Getting Started
 
-### 1. Clone the repo
+### 1. Clone the repository
 
 ```bash
 git clone git@github.com:SaiBharadwaja570/habinest-project.git
@@ -68,9 +68,9 @@ cd habinest
 npm install
 ```
 
-### 3. Configure environment
+### 3. Configure environment variables
 
-Create a `.env` file and add the following:
+Create a `.env` file with:
 
 ```env
 PORT=3000
@@ -78,11 +78,68 @@ MONGO_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>
 CORS_ORIGIN=*
 ```
 
-### 4. Start the backend
+### 4. Start the backend server
 
 ```bash
 npm run dev
 ```
 
 ---
+
+## 📁 Frontend Project Structure
+
+```
+frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── routes/
+│   ├── services/
+│   ├── App.js
+│   ├── index.js
+│   └── styles/
+├── .env
+├── .gitignore
+└── package.json
+```
+
+---
+
+## 📝 Usage
+
+- **Browse Listings:** Search and filter PG accommodations based on your preferences.
+- **Register/Login:** Create an account or log in to save favorites and send inquiries.
+- **Admin Panel:** Admins can add, edit, or remove PG listings.
+- **Contact Owners:** Use the inquiry system to connect with PG owners.
+
+---
+
+## 🛡️ Security
+
+- Passwords are securely handled using Firebase Authentication.
+- Sensitive data is managed via environment variables.
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Open a pull request.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 📬 Contact
+
+For questions or feedback, open an issue or contact [Sai Bharadwaja](mailto:saibharadwaja570@gmail.com).
 

@@ -103,9 +103,6 @@ export default function OwnerPgForm() {
           Profile
         </a>
         <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
-          Settings
-        </a>
-        <a href="#" className="block px-4 py-2 text-sm text-[#504B3A]">
           Log Out
         </a>
       </div>
