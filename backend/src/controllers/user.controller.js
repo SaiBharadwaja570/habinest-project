@@ -29,107 +29,47 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 };
 
-// Register User
-// const registerUser = asyncHandler(async (req, res) => {
-//     const { name, phone, email, password, type='user' } = req.body;
-
-//     if (!email || !password || !name || !phone) {
-//         throw new ApiError(400, "All fields are required");
-//     }
-
-//     const existingUser = await User.findOne({
-//         $or: [{ email }, { name }]
-//     });
-
-//     if (existingUser) {
-//         throw new ApiError(409, "User already exists");
-//     }
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     if (!hashedPassword) {
-//         throw new ApiError(500, "Error hashing password");
-//     }
-
-//     const userData = {
-//         name,
-//         phone,
-//         email,
-//         password: hashedPassword,
-//         type
-//     };
-
-//     if (type === 'owner') {
-//         userData.myPg = [];
-//     } else {
-//         userData.bookmarks = [];
-//     }
-//     const newUser = await User.create(userData);
-//     const safeUser = newUser.toObject();
-//     delete safeUser.password;
-
-//     return res
-//         .status(201)
-//         .json(new ApiResponse(201, safeUser, "User registered successfully"));
-// });
+// Register 
 const registerUser = asyncHandler(async (req, res) => {
-    try {
-        console.log("Incoming registration request:", req.body);
+    const { name, phone, email, password, type='user' } = req.body;
 
-        const { name, phone, email, password } = req.body;
-
-        if (!email || !password || !name || !phone) {
-            console.log("Validation failed");
-            throw new ApiError(400, "All fields are required");
-        }
-
-        const existingUser = await User.findOne({
-            $or: [{ email }, { name }]
-        });
-
-        if (existingUser) {
-            console.log("User already exists:", existingUser);
-            throw new ApiError(409, "User already exists");
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        if (!hashedPassword) {
-            console.log("Hashing failed");
-            throw new ApiError(500, "Error hashing password");
-        }
-
-        const userData = {
-            name,
-            phone,
-            email,
-            password: hashedPassword
-        };
-
-        if (type === 'owner') {
-            userData.myPg = [];
-        } else {
-            userData.bookmarks = [];
-        }
-
-        console.log("Creating user with data:", userData);
-
-        const newUser = await User.create(userData);
-
-        if (!newUser) {
-            console.log("User creation failed");
-            throw new ApiError(500, "Failed to create user");
-        }
-
-        const safeUser = newUser.toObject();
-        delete safeUser.password;
-
-        console.log("User registered successfully:", safeUser);
-
-        return res.status(201).json(new ApiResponse(201, safeUser, "User registered successfully"));
-
-    } catch (err) {
-        console.error("Registration error:", err);
-        throw err;
+    if (!email || !password || !name || !phone) {
+        throw new ApiError(400, "All fields are required");
     }
+
+    const existingUser = await User.findOne({
+        $or: [{ email }, { name }]
+    });
+
+    if (existingUser) {
+        throw new ApiError(409, "User already exists");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    if (!hashedPassword) {
+        throw new ApiError(500, "Error hashing password");
+    }
+
+    const userData = {
+        name,
+        phone,
+        email,
+        password: hashedPassword,
+        type
+    };
+
+    if (type === 'owner') {
+        userData.myPg = [];
+    } else {
+        userData.bookmarks = [];
+    }
+    const newUser = await User.create(userData);
+    const safeUser = newUser.toObject();
+    delete safeUser.password;
+
+    return res
+        .status(201)
+        .json(new ApiResponse(201, safeUser, "User registered successfully"));
 });
 
 
