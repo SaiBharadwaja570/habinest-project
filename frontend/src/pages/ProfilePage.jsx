@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Pencil, LogOut, Save } from "lucide-react";
+import { Pencil, LogOut, Save, User } from "lucide-react";
 import { Home, Search, Bookmark } from "lucide-react";
 import axios from "axios";
 
@@ -15,6 +15,7 @@ const ProfilePage = () => {
     email: "",
     phone: "",
   });
+  const [isOwner, setIsOwner] = useState(false);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -69,8 +70,29 @@ const ProfilePage = () => {
     }
   };
 
+  const getUserRole = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_USER}/`, {
+        withCredentials: true,
+      });
+
+      const role = response.data?.data?.type;
+
+      if (role === "owner") {
+        setIsOwner(true);
+      } else {
+        setIsOwner(false);
+      }
+
+    } catch (error) {
+      setIsOwner(false);
+      console.error("Failed to fetch user role:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
+    getUserRole();
   }, []);
 
   const handleChange = (e) => {
@@ -96,163 +118,232 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#E4DFDA] text-black">
-  {/* Header */}
-<header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-  <div className="max-w-7xl mx-auto px-4 py-4">
-    <div className="flex items-center justify-between">
-      {/* Logo */}
-      <div className="flex items-center gap-3">
-        <img
-          src="HabinestLogo.jpg"
-          alt="Home"
-          className="w-10 h-10 object-cover"
-        />
-        <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
-      </div>
-
-      {/* Centered Nav */}
-      <div className="flex-1 flex justify-center">
-        <nav className="flex items-center gap-8">
-          <a
-            href="#"
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-          >
-            <Home className="w-4 h-4" />
-            Home
-          </a>
-          <a
-            href="#"
-            onClick={() => navigate("/filter")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-          >
-            <Search className="w-4 h-4" />
-            Find PGs
-          </a>
-          <a
-            href="#"
-            onClick={() => navigate("/bookmarks")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
-          >
-            <Bookmark className="w-4 h-4" />
-            BookMarks
-          </a>
-        </nav>
-      </div>
-    </div>
-  </div>
-</header>
-
-
-      <main className="flex-grow p-8">
-        <Card className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6">
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col items-center">
+    <div className="min-h-screen bg-[#E4DFDA] text-black">
+      {/* Header */}
+      <header className="bg-white/90 shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
               <img
-                src="/profile.png"
-                alt="Profile"
-                className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-[#007FFF]"
+                src="HabinestLogo.jpg"
+                alt="Home"
+                className="w-10 h-10 object-cover"
               />
-              <Button variant="ghost" className="mt-2 text-[#007FFF]">
-                <Pencil className="mr-2 h-4 w-4" /> Edit Picture
-              </Button>
+              <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
             </div>
 
-            <div className="space-y-4">
-              {user ? (
-                ["name", "email", "phone"].map((field) => (
-                  <div key={field} className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-500">
-                        {field.charAt(0).toUpperCase() + field.slice(1)}:
-                      </p>
-                      {editField === field ? (
-                        <input
-                          type="text"
-                          name={field}
-                          value={formData[field]}
-                          onChange={handleChange}
-                          className="border rounded px-2 py-1"
-                        />
+            {/* Centered Nav */}
+            <div className="flex-1 flex justify-center">
+              {
+                isOwner ? (
+                  <nav className="flex items-center gap-4">
+                    <a 
+                      href="#" 
+                      onClick={() => navigate("/pg-list")}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg hover:bg-[#0066CC]"
+                    >
+                      <Search className="w-4 h-4" />
+                      Your PG's
+                    </a>
+                    <a 
+                      href="#" 
+                      onClick={() => navigate("/visits")}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10"
+                    >
+                      <Bookmark className="w-4 h-4" />
+                      Booked Visits
+                    </a>
+                  </nav>
+                ) : (
+                  <nav className="flex items-center gap-4">
+                    <a
+                      href="#"
+                      onClick={() => navigate("/")}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10"
+                    >
+                      <Home className="w-4 h-4" />
+                      Home
+                    </a>
+                    <a
+                      href="#"
+                      onClick={() => navigate("/filter")}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10"
+                    >
+                      <Search className="w-4 h-4" />
+                      Find PGs
+                    </a>
+                    <a
+                      href="#"
+                      onClick={() => navigate("/bookmarks")}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg hover:bg-[#0066CC]"
+                    >
+                      <Bookmark className="w-4 h-4" />
+                      BookMarks
+                    </a>
+                  </nav>
+                )
+              }
+            </div> 
+          </div>
+        </div>
+      </header>
+
+      <main className="p-6">
+        <Card className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-lg">
+          <div className="bg-gradient-to-r from-[#69995D] to-[#504B3A] p-6 text-white rounded-t-2xl">
+            <h1 className="text-2xl font-bold text-center">Profile Settings</h1>
+          </div>
+          
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Profile Picture Section */}
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-24 h-24 bg-gradient-to-br from-[#007FFF] to-[#0066CC] rounded-full flex items-center justify-center shadow-lg">
+                  <User className="w-12 h-12 text-white" />
+                </div>
+                <div className="text-center">
+                  <h2 className="text-lg font-semibold text-[#504B3A]">
+                    {user?.name || "Loading..."}
+                  </h2>
+                  <p className="text-[#69995D] text-sm">
+                    {isOwner ? "PG Owner" : "User"}
+                  </p>
+                </div>
+              </div>
+
+              {/* User Information Section */}
+              <div className="md:col-span-2 space-y-4">
+                {user ? (
+                  <>
+                    {["name", "email", "phone"].map((field) => (
+                      <div key={field} className="bg-gray-50 p-4 rounded-lg border">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <label className="text-sm font-medium text-[#69995D] mb-1 block">
+                              {field.charAt(0).toUpperCase() + field.slice(1)}
+                            </label>
+                            {editField === field ? (
+                              <input
+                                type={field === "email" ? "email" : "text"}
+                                name={field}
+                                value={formData[field]}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-[#007FFF] focus:outline-none"
+                              />
+                            ) : (
+                              <p className="text-base font-medium text-[#504B3A]">
+                                {user[field] || `No ${field} provided`}
+                              </p>
+                            )}
+                          </div>
+                          <div className="ml-3">
+                            {editField === field ? (
+                              <Button
+                                onClick={() =>
+                                  handleUpdate(
+                                    field === "phone"
+                                      ? "Phone"
+                                      : field.charAt(0).toUpperCase() + field.slice(1)
+                                  )
+                                }
+                                className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg"
+                              >
+                                <Save className="w-4 h-4" />
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                onClick={() => setEditField(field)}
+                                className="text-[#69995D] hover:text-[#007FFF] p-2 rounded-lg"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Password Change Section */}
+                    <div className="bg-gray-50 p-4 rounded-lg border">
+                      {editField === "password" ? (
+                        <div className="space-y-3">
+                          <h3 className="text-base font-semibold text-[#504B3A]">Change Password</h3>
+                          <div>
+                            <label className="text-sm font-medium text-[#69995D] mb-1 block">
+                              Current Password
+                            </label>
+                            <input
+                              type="password"
+                              name="currentPassword"
+                              value={passwordData.currentPassword}
+                              onChange={handlePasswordChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-[#007FFF] focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-[#69995D] mb-1 block">
+                              New Password
+                            </label>
+                            <input
+                              type="password"
+                              name="newPassword"
+                              value={passwordData.newPassword}
+                              onChange={handlePasswordChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-[#007FFF] focus:outline-none"
+                            />
+                          </div>
+                          <div className="flex gap-3 pt-2">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => setEditField(null)}
+                              className="px-4 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 rounded-lg"
+                            >
+                              Cancel
+                            </Button>
+                            <Button 
+                              onClick={handleChangePassword}
+                              className="bg-[#007FFF] hover:bg-[#0066CC] text-white px-4 py-2 rounded-lg"
+                            >
+                              Update Password
+                            </Button>
+                          </div>
+                        </div>
                       ) : (
-                        <p className="text-lg font-semibold">{user[field]}</p>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-base font-semibold text-[#504B3A]">Security</h3>
+                            <p className="text-[#69995D] text-sm">Change your account password</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            onClick={() => setEditField("password")}
+                            className="text-[#69995D] hover:text-[#007FFF] p-2 rounded-lg"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                        </div>
                       )}
                     </div>
-                    {editField === field ? (
-                      <Save
-                        className="text-green-600 cursor-pointer"
-                        onClick={() =>
-                          handleUpdate(
-                            field === "phone"
-                              ? "Phone"
-                              : field.charAt(0).toUpperCase() + field.slice(1)
-                          )
-                        }
-                      />
-                    ) : (
-                      <Pencil
-                        className="text-[#504B3A] cursor-pointer"
-                        onClick={() => setEditField(field)}
-                      />
-                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007FFF] mx-auto mb-3"></div>
+                    <p className="text-[#69995D]">Loading user information...</p>
                   </div>
-                ))
-              ) : (
-                <p className="text-center text-gray-500">Loading user...</p>
-              )}
+                )}
 
-              {editField === "password" ? (
-                <div className="space-y-2">
-                  <div>
-                    <label className="block text-sm text-gray-500">
-                      Current Password
-                    </label>
-                    <input
-                      type="password"
-                      name="currentPassword"
-                      value={passwordData.currentPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full border rounded px-2 py-1"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-500">
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="newPassword"
-                      value={passwordData.newPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full border rounded px-2 py-1"
-                    />
-                  </div>
-                  <div className="flex gap-4 mt-2">
-                    <Button variant="ghost" onClick={() => setEditField(null)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleChangePassword}>Submit</Button>
-                  </div>
+                {/* Logout Button */}
+                <div className="pt-4">
+                  <Button
+                    onClick={() => navigate("/logout")}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-medium"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" /> 
+                    Sign Out
+                  </Button>
                 </div>
-              ) : (
-                <div className="flex items-center justify-between">
-                  <p className="text-lg font-semibold">Change Password</p>
-                  <Pencil
-                    className="text-[#504B3A] cursor-pointer"
-                    onClick={() => setEditField("password")}
-                  />
-                </div>
-              )}
-
-              <div className="pt-4">
-                <Button
-                  variant="destructive"
-                  className="flex items-center gap-2"
-                  onClick={() => navigate("/logout")}
-                >
-                  <LogOut className="w-4 h-4" /> Log Out
-                </Button>
               </div>
             </div>
           </CardContent>
@@ -304,11 +395,11 @@ const ProfilePage = () => {
 
           <div className="border-t border-white/20 mt-12 pt-8 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
+              <img
+                src="HabinestLogo.jpg"  
+                alt="Home"
+                className="w-10 h-10 object-cover rounded-lg"
+              />
               <span className="font-bold text-xl">Habinest</span>
             </div>
             <p className="text-white/60">Making your housing search effortless and enjoyable</p>
