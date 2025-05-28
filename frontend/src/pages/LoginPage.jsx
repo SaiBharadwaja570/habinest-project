@@ -10,23 +10,9 @@ export default function LoginPage() {
     navigate("/register");
   };
 
-// Apply dark mode on first load based on saved preference
-useEffect(() => {
-  const theme = localStorage.getItem('theme');
-  if (theme === 'dark') {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
-}, []);
-
-// Update toggleDarkMode to save preference
-const toggleDarkMode = () => {
-  const html = document.documentElement;
-  const isDark = html.classList.toggle('dark');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-};
-
+  const toggleDarkMode = () => {
+    document.documentElement.classList.toggle('dark');
+  };
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
