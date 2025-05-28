@@ -1,4 +1,4 @@
-# 🏡 Habinest – Personalized PG Discovery Platform
+# 🏡 nest – Personalized PG Discovery Platform
 
 Habinest is a full-stack web application designed to help students and professionals discover paying guest (PG) accommodations tailored to their needs. Users can easily search, filter, and connect with PGs that match their preferences and budget.
 
