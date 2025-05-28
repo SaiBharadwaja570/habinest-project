@@ -10,7 +10,6 @@ export default function LoginPage() {
     navigate("/register");
   };
 
-// Apply dark mode on first load based on saved preference
 useEffect(() => {
   const theme = localStorage.getItem('theme');
   if (theme === 'dark') {
@@ -23,6 +22,7 @@ useEffect(() => {
 const toggleDarkMode = () => {
   const html = document.documentElement;
   const isDark = html.classList.toggle('dark');
+  console.log('Toggled dark mode:', isDark); // debug
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 };
 
