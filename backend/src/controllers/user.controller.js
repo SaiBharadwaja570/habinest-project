@@ -75,7 +75,7 @@ const registerUser = asyncHandler(async (req, res) => {
     try {
         console.log("Incoming registration request:", req.body);
 
-        const { name, phone, email, password, type = 'user' } = req.body;
+        const { name, phone, email, password } = req.body;
 
         if (!email || !password || !name || !phone) {
             console.log("Validation failed");
@@ -101,8 +101,7 @@ const registerUser = asyncHandler(async (req, res) => {
             name,
             phone,
             email,
-            password: hashedPassword,
-            type
+            password: hashedPassword
         };
 
         if (type === 'owner') {
