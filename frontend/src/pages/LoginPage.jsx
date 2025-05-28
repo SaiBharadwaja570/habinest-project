@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Home, User, LogOut } from 'lucide-react';
@@ -10,9 +10,22 @@ export default function LoginPage() {
     navigate("/register");
   };
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-  };
+// Apply dark mode on first load based on saved preference
+useEffect(() => {
+  const theme = localStorage.getItem('theme');
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}, []);
+
+const toggleDarkMode = () => {
+  const html = document.documentElement;
+  const isDark = html.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+};
+
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
