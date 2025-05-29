@@ -8,13 +8,12 @@ const postReview = asyncHandler(async (req, res) => {
     const user = req.user.email; // or req.user.id or req.user.name depending on auth
 
     const listing = await PG.findById(listingId);
-    if (!listing) return res.status(404).json({ message: "Listing not found" });
+    if (!listing) return res.status(404).json({ message: "PG not found" });
 
     // Check if the user already reviewed
     const existingIndex = listing.ratings.findIndex(r => r.user === user);
 
     if (existingIndex !== -1) {
-      // Update existing review
       listing.ratings[existingIndex].rating = rating;
       listing.ratings[existingIndex].comment = comment;
       listing.ratings[existingIndex].createdAt = new Date();
