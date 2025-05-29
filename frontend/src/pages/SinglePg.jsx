@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import Map from '../components/Map'
-import { BookmarkPlus, BookmarkCheck, ArrowLeft, Share2, Copy, X, Calendar } from 'lucide-react'
+import { BookmarkPlus, BookmarkCheck, ArrowLeft, Share2, Copy, X, Calendar, Star, MessageSquare } from 'lucide-react'
 import '../App.css'
 
 const SinglePg = () => {
@@ -14,6 +14,7 @@ const SinglePg = () => {
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
     const [showBookingModal, setShowBookingModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
+    const [showReviewModal, setShowReviewModal] = useState(false)
     const [copySuccess, setCopySuccess] = useState(false)
     const [bookingSubmitting, setBookingSubmitting] = useState(false)
     const [bookingDetails, setBookingDetails] = useState({
@@ -22,6 +23,13 @@ const SinglePg = () => {
         phone: '',
         date: ''
     })
+
+    // Reviews state
+    const [reviews, setReviews] = useState([])
+    const [averageRating, setAverageRating] = useState({ avgRating: 0, count: 0 })
+    const [reviewsLoading, setReviewsLoading] = useState(false)
+    const [reviewSubmitting, setReviewSubmitting] = useState(false)
+    const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
 
     useEffect(() => {
         const fetchPgData = async () => {
@@ -34,6 +42,10 @@ const SinglePg = () => {
                     withCredentials: true
                 })
                 setIsBookmarked(bookmarkStatus.data.isBookmarked)
+                
+                // Fetch reviews and average rating
+                await fetchReviews()
+                await fetchAverageRating()
             } catch (err) {
                 console.error("ERROR", err)
                 setError("Failed to load PG details")
@@ -44,6 +56,56 @@ const SinglePg = () => {
 
         fetchPgData()
     }, [id])
+
+    const fetchReviews = async () => {
+        try {
+            setReviewsLoading(true)
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/${id}`)
+            setReviews(response.data)
+        } catch (err) {
+            console.error("Error fetching reviews:", err)
+        } finally {
+            setReviewsLoading(false)
+        }
+    }
+
+    const fetchAverageRating = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/average/${id}`)
+            setAverageRating(response.data)
+        } catch (err) {
+            console.error("Error fetching average rating:", err)
+        }
+    }
+
+    const handleSubmitReview = async (e) => {
+        e.preventDefault()
+        try {
+            setReviewSubmitting(true)
+            await axios.post(
+                `${import.meta.env.VITE_BACKEND_RATINGS}/${id}`,
+                newReview,
+                { withCredentials: true }
+            )
+            
+            alert("Review submitted successfully!")
+            setShowReviewModal(false)
+            setNewReview({ rating: 5, comment: '' })
+            
+            // Refresh reviews and average rating
+            await fetchReviews()
+            await fetchAverageRating()
+        } catch (err) {
+            console.error("Review submission error:", err)
+            if (err.response?.status === 401) {
+                alert("Please login to submit a review")
+            } else {
+                alert("Failed to submit review. Please try again.")
+            }
+        } finally {
+            setReviewSubmitting(false)
+        }
+    }
 
     const handleBookmark = async () => {
         try {
@@ -88,6 +150,14 @@ const SinglePg = () => {
         }))
     }
 
+    const handleReviewInputChange = (e) => {
+        const { name, value } = e.target
+        setNewReview(prev => ({
+            ...prev,
+            [name]: name === 'rating' ? parseInt(value) : value
+        }))
+    }
+
     const handleBookingSubmit = async (e) => {
         e.preventDefault()
         try {
@@ -120,6 +190,10 @@ const SinglePg = () => {
         setShowBookingModal(true)
     }
 
+    const handleWriteReview = () => {
+        setShowReviewModal(true)
+    }
+
     const handleCopyUrl = async () => {
         const currentUrl = window.location.href
         try {
@@ -148,6 +222,27 @@ const SinglePg = () => {
     const closeBookingModal = () => {
         setShowBookingModal(false)
         setBookingDetails({ name: '', email: '', phone: '', date: '' })
+    }
+
+    const closeReviewModal = () => {
+        setShowReviewModal(false)
+        setNewReview({ rating: 5, comment: '' })
+    }
+
+    const renderStars = (rating, interactive = false, onRatingChange = null) => {
+        return (
+            <div className={`stars-container ${interactive ? 'interactive' : ''}`}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                        key={star}
+                        size={16}
+                        className={`star ${star <= rating ? 'filled' : ''}`}
+                        onClick={interactive && onRatingChange ? () => onRatingChange(star) : undefined}
+                        style={{ cursor: interactive ? 'pointer' : 'default' }}
+                    />
+                ))}
+            </div>
+        )
     }
 
     if (isLoading) {
@@ -350,6 +445,70 @@ const SinglePg = () => {
                 </div>
             )}
 
+            {/* Review Modal */}
+            {showReviewModal && (
+                <div className="modal-overlay" onClick={closeReviewModal}>
+                    <div className="review-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Write a Review</h3>
+                            <button className="close-button" onClick={closeReviewModal}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                        
+                        <div className="review-content">
+                            <div className="pg-preview">
+                                <img src={pgData.photo} alt={pgData.name} className="preview-image" />
+                                <div className="preview-details">
+                                    <h4>{pgData.name}</h4>
+                                    <p>{pgData.address}</p>
+                                </div>
+                            </div>
+
+                            <form className="review-form" onSubmit={handleSubmitReview}>
+                                <div className="form-group">
+                                    <label>Rating:</label>
+                                    <div className="rating-input">
+                                        {renderStars(newReview.rating, true, (rating) => 
+                                            setNewReview(prev => ({ ...prev, rating }))
+                                        )}
+                                        <span className="rating-text">({newReview.rating}/5)</span>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label>Comment:</label>
+                                    <textarea
+                                        name="comment"
+                                        value={newReview.comment}
+                                        onChange={handleReviewInputChange}
+                                        placeholder="Share your experience about this PG..."
+                                        rows={4}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-actions">
+                                    <button 
+                                        type="button" 
+                                        className="cancel-button" 
+                                        onClick={closeReviewModal}
+                                        disabled={reviewSubmitting}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="submit-review-button"
+                                        disabled={reviewSubmitting}
+                                    >
+                                        {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="pg-content">
                 <div className="pg-image-container">
                     <img
@@ -376,18 +535,57 @@ const SinglePg = () => {
                             <p>{pgData.gender}</p>
                         </div>
 
-                        {/* {pgData.amenities && (
-                            <div className="pg-amenities">
-                                <h3>Amenities</h3>
-                                <ul className="amenities-list">
-                                    {pgData.amenities.map((amenity, index) => (
-                                        <li key={index} className="amenity-item">{amenity}</li>
-                                    ))}
-                                </ul>
+                        {/* Rating Summary */}
+                        <div className="pg-rating-summary">
+                            <h3>Rating</h3>
+                            <div className="rating-info">
+                                {renderStars(Math.round(averageRating.avgRating))}
+                                <span className="rating-text">
+                                    {averageRating.avgRating}/5 ({averageRating.count} reviews)
+                                </span>
                             </div>
-                        )} */}
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="reviews-section">
+                <div className="reviews-header">
+                    <h2>Reviews ({averageRating.count})</h2>
+                    <button 
+                        className="write-review-button"
+                        onClick={handleWriteReview}
+                    >
+                        <MessageSquare size={20} />
+                        Write Review
+                    </button>
+                </div>
+
+                {reviewsLoading ? (
+                    <div className="reviews-loading">Loading reviews...</div>
+                ) : reviews.length > 0 ? (
+                    <div className="reviews-list">
+                        {reviews.map((review, index) => (
+                            <div key={index} className="review-item">
+                                <div className="review-header">
+                                    <div className="reviewer-info">
+                                        <span className="reviewer-name">{review.user}</span>
+                                        <span className="review-date">
+                                            {new Date(review.createdAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    {renderStars(review.rating)}
+                                </div>
+                                <p className="review-comment">{review.comment}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="no-reviews">
+                        <p>No reviews yet. Be the first to review this PG!</p>
+                    </div>
+                )}
             </div>
 
             <div className="pg-map-container">
