@@ -5,12 +5,12 @@ import { averageRatings, getReviews, postReview } from "../controllers/ratings.c
 const router = Router();
 
 // Post a new rating/review for a PG (requires authentication)
-router.post('/:pgId', verifyJWT, postReview);
+router.post('/:id', verifyJWT, postReview);
 
 // Get all ratings/reviews for a PG (public)
-router.get('/:pgId', getReviews);
+router.get('/:id', getReviews);
 
 // Get average rating for a PG (public)
-router.get('/average/:pgId', averageRatings);
+router.get('/average/:id', averageRatings);
 
 export default router;
