@@ -116,7 +116,7 @@ export default function PGListPage() {
         </div>
       </header>
 
-  <main className="p-8 max-w-3xl mx-auto space-y-6">
+  <div className="p-8 max-w-3xl mx-auto space-y-6">
   {pgList.length === 0 ? (
     <div className="text-center py-10 bg-white rounded-xl shadow-inner border border-dashed border-gray-300">
       <p className="text-gray-500 text-lg">You have not added any PGs yet.</p>
@@ -167,7 +167,7 @@ export default function PGListPage() {
       </Card>
     ))
   )}
-</main>
+</div>
 
 
 
