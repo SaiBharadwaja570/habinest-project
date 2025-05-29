@@ -179,7 +179,7 @@ export default function PGListPage() {
             Add New PG
           </Button>
         </div>
-      </main>
+      </div>
 
       {/* Footer */}
       <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
