@@ -151,7 +151,7 @@ export default function PGListPage() {
                 <div className="flex gap-2">
                   <Button
                     className="bg-[#007FFF] hover:bg-[#0066cc] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
-                    onClick={() => navigate(`/owner-form/${pg._id}`)}
+                    onClick={() => navigate(`/update-pg/${pg._id}`)}
                   >
                     Edit
                   </Button>
