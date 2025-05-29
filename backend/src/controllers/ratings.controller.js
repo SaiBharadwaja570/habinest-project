@@ -6,8 +6,10 @@ const postReview = asyncHandler(async (req, res) => {
     const listingId = req.params.id;
     const { rating, comment } = req.body;
     const user = req.user.email; // or req.user.id or req.user.name depending on auth
+    console.log("listingId ", listingId);
 
     const listing = await PG.findById(listingId);
+    console.log(listing)
     if (!listing) return res.status(404).json({ message: "PG not found" });
 
     // Check if the user already reviewed
