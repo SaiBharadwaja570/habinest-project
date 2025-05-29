@@ -78,11 +78,11 @@ const Navbar = () => {
                     onClick={() => navigate("/profile")}
                     className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
                   >
-                    <User className="w-4 h-4" /> Prof
+                    <User className="w-4 h-4" /> Profile
                   </a>
                   <a
                     href="#"
-                    onClick={() => handleLogout()}
+                    onClick={handleLogout}
                     className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <LogOut className="w-4 h-4"/> Log Out
