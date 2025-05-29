@@ -12,7 +12,7 @@ Habinest is a comprehensive full-stack web application designed to help students
 - **Bookmarks & Reviews:** Save favorite PGs for later, leave ratings and reviews, and view detailed PG information including image galleries and amenities.
 - **Admin Panel:** Admins can add, edit, or remove PG listings, manage user inquiries, and oversee platform content.
 - **Inquiry System:** Users can contact PG owners directly through the platform for bookings or questions.
-- **Responsive Design:** Fully optimized for both mobile and desktop devices, with dark mode support and modern UI/UX.
+- **Responsive Design:** Fully optimized for desktop devices and modern UI/UX.
 - **Notifications & Confirmations:** Toast notifications for actions (success, error, info) and confirmation dialogs for sensitive operations.
 
 ---
