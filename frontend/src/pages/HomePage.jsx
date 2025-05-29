@@ -17,7 +17,7 @@ const Navbar = () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
       setIsLoggedIn(false);
-      navigate("/welcome");
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
@@ -111,24 +111,6 @@ const Navbar = () => {
     </header>
   );
 };
-// Footer (taken from FilterListingPage)
-// const Footer = () => (
-//   <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
-//     <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-//       <div className="flex items-center justify-center gap-3 mb-4">
-//   <img
-//     src="HabinestLogo.jpg"  
-//     alt="Home"
-//     className="w-10 h-10 object-cover"
-//   />
-//         <span className="font-bold text-xl">Habinest</span>
-//       </div>
-//       <p className="text-white/60">
-//         Making your housing search effortless and enjoyable
-//       </p>
-//     </div>
-//   </footer>
-// );
 
 // Home Page Body
 const HomePage = () => {

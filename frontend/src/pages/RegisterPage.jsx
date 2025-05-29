@@ -114,46 +114,43 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   return (
     <div className="font-sans min-h-screen flex flex-col bg-gradient-to-br from-green-100 to-green-200">
-            {/* Header */}
-<header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-  <div className="max-w-7xl mx-auto px-4 py-4">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <img
-          src="HabinestLogo.jpg"
-          alt="Home"
-          className="w-10 h-10 object-cover"
-        />
-        <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
-      </div>
-
-      {/* Centered Home button */}
-      <nav className="flex-1 flex justify-center">
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200"
-        >
-          <Home className="w-4 h-4" />
-          Home
-        </button>
-      </nav>
-
-      {/* Spacer to keep Home centered */}
-      <div className="w-10"></div>
-    </div>
-  </div>
-</header>
+      {/* Header */}
+      <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src="HabinestLogo.jpg"
+                alt="Home"
+                className="w-10 h-10 object-cover rounded-full border-2 border-[#69995D]"
+              />
+              <span className="font-bold text-2xl text-[#504B3A] tracking-wide">Habinest</span>
+            </div>
+            <nav className="flex-1 flex justify-center">
+              <button
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10 transition-all duration-200 font-medium"
+              >
+                <Home className="w-4 h-4" />
+                Home
+              </button>
+            </nav>
+            <div className="w-10"></div>
+          </div>
+        </div>
+      </header>
 
       <section className="flex flex-col items-center justify-center flex-1 px-4 py-10">
-        <div className="w-full max-w-md bg-white/90 backdrop-blur rounded-2xl shadow-xl p-8 border border-gray-200 transition-transform transform hover:scale-105 duration-300">
-          <h1 className="text-3xl font-bold text-center mb-6 text-[#504B3A]">Create an Account</h1>
+        <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-10 border border-gray-100 transition-transform transform hover:scale-[1.03] duration-300">
+          <h1 className="text-3xl font-extrabold text-center mb-7 text-[#504B3A] tracking-tight">Create Your Account</h1>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-sm flex justify-between items-center">
+            <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-sm flex justify-between items-center animate-shake">
               <span className="text-sm font-medium">{error}</span>
               <button
                 onClick={clearMessages}
                 className="text-red-500 hover:text-red-700 font-bold ml-2"
+                aria-label="Clear error"
               >
                 &times;
               </button>
@@ -161,73 +158,100 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
           )}
 
           {success && (
-            <div className="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-lg shadow-sm text-sm">
+            <div className="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-lg shadow-sm text-sm animate-fade-in">
               {success}
             </div>
           )}
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Name"
-              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-gray-400 transition"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                clearMessages();
-              }}
-              disabled={isLoading}
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-gray-400 transition"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                clearMessages();
-              }}
-              disabled={isLoading}
-            />
-            <input
-              type="text"
-              placeholder="Phone number"
-              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-gray-400 transition"
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                clearMessages();
-              }}
-              disabled={isLoading}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-gray-400 transition"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                clearMessages();
-              }}
-              disabled={isLoading}
-            />
+          <div className="space-y-5">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder=" "
+                className="peer w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-transparent transition bg-gray-50"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  clearMessages();
+                }}
+                disabled={isLoading}
+                autoComplete="name"
+                id="register-name"
+              />
+              <label htmlFor="register-name" className="absolute left-3 top-3 text-gray-400 text-xs transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[#69995D] bg-white px-1 pointer-events-none">
+                Name
+              </label>
+            </div>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder=" "
+                className="peer w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-transparent transition bg-gray-50"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearMessages();
+                }}
+                disabled={isLoading}
+                autoComplete="email"
+                id="register-email"
+              />
+              <label htmlFor="register-email" className="absolute left-3 top-3 text-gray-400 text-xs transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[#69995D] bg-white px-1 pointer-events-none">
+                Email
+              </label>
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder=" "
+                className="peer w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-transparent transition bg-gray-50"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  clearMessages();
+                }}
+                disabled={isLoading}
+                autoComplete="tel"
+                id="register-phone"
+              />
+              <label htmlFor="register-phone" className="absolute left-3 top-3 text-gray-400 text-xs transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[#69995D] bg-white px-1 pointer-events-none">
+                Phone Number
+              </label>
+            </div>
+            <div className="relative">
+              <input
+                type="password"
+                placeholder=" "
+                className="peer w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#69995D] text-sm text-gray-800 placeholder-transparent transition bg-gray-50"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  clearMessages();
+                }}
+                disabled={isLoading}
+                autoComplete="new-password"
+                id="register-password"
+              />
+              <label htmlFor="register-password" className="absolute left-3 top-3 text-gray-400 text-xs transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-xs peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[#69995D] bg-white px-1 pointer-events-none">
+                Password
+              </label>
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 mt-8">
             <button
               onClick={handleRegister}
-              className={`flex-1 py-2 rounded-xl font-semibold text-white transition-colors ${
+              className={`flex-1 py-2 rounded-xl font-semibold text-white shadow-md transition-colors ${
                 isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#007FFF] hover:bg-[#0066CC]"
               }`}
               disabled={isLoading}
             >
               {isLoading ? "Registering..." : "Register as User"}
             </button>
-
             <button
               onClick={handleRegisterAsOwner}
-              className={`flex-1 py-2 rounded-xl font-semibold text-white transition-colors ${
-                isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#007FFF] hover:bg-[#0066CC]"
+              className={`flex-1 py-2 rounded-xl font-semibold text-white shadow-md transition-colors ${
+                isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#69995D] hover:bg-[#507A3A]"
               }`}
               disabled={isLoading}
             >
@@ -235,12 +259,18 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
             </button>
           </div>
 
+          <div className="flex items-center my-6">
+            <div className="flex-grow border-t border-gray-200"></div>
+            <span className="mx-3 text-gray-400 text-xs">or</span>
+            <div className="flex-grow border-t border-gray-200"></div>
+          </div>
+
           <button
             onClick={handleLoginClick}
-            className="w-full mt-4 py-2 rounded-xl font-semibold text-[#504B3A] border border-[#504B3A] hover:bg-[#504B3A]/10 transition"
+            className="w-full py-2 rounded-xl font-semibold text-[#504B3A] border border-[#504B3A] hover:bg-[#504B3A]/10 transition shadow-sm"
             disabled={isLoading}
           >
-            Login
+            Already have an account? <span className="underline font-bold">Login</span>
           </button>
 
           {isLoading && (
@@ -250,7 +280,8 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
           )}
         </div>
       </section>
-            <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
+
+      <footer className="mt-16 bg-gradient-to-br from-[#504B3A] to-[#69995D] text-white">
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
@@ -265,7 +296,6 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
                 <li className="hover:text-white transition-colors cursor-pointer">Feedback and ratings system</li>
               </ul>
             </div>
-
             <div>
               <h4 className="font-bold text-lg mb-6 text-[#E4DFDA]">Explore</h4>
               <ul className="space-y-3 text-white/80">
@@ -278,7 +308,6 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
                 <li className="hover:text-white transition-colors cursor-pointer">Similar PG Recommendations</li>
               </ul>
             </div>
-
             <div>
               <h4 className="font-bold text-lg mb-6 text-[#E4DFDA]">Resources</h4>
               <ul className="space-y-3 text-white/80">
@@ -292,14 +321,13 @@ const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
               </ul>
             </div>
           </div>
-
           <div className="border-t border-white/20 mt-12 pt-8 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
+              <img
+                src="HabinestLogo.jpg"
+                alt="Home"
+                className="w-10 h-10 object-cover rounded-full border-2 border-[#69995D]"
+              />
               <span className="font-bold text-xl">Habinest</span>
             </div>
             <p className="text-white/60">Making your housing search effortless and enjoyable</p>

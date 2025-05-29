@@ -19,29 +19,13 @@ useEffect(() => {
   }
 }, []);
 
-const toggleDarkMode = () => {
-  const html = document.documentElement;
-  const isDark = html.classList.toggle('dark');
-  console.log('Toggled dark mode:', isDark); // debug
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-};
-
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleLogout = () => {
-    // Placeholder for logout logic
-    console.log('Logging out...');
-  };
 
   const handleLogin = async () => {
     setError('');
@@ -170,27 +154,55 @@ const toggleDarkMode = () => {
         />
       </div>
 
-      <div className="flex justify-center gap-4 mt-8">
-        <button
-          className={`px-6 py-2 rounded-xl font-semibold ${
-            isLoading
-              ? 'bg-gray-500 cursor-not-allowed'
-              : 'bg-[#69995D] hover:bg-[#5e8d52]'
-          } text-white transition-colors`}
-          onClick={handleLogin}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Logging in...' : 'Login'}
-        </button>
+      <div className="flex flex-col items-center gap-6 mt-8">
+  {/* Main Login Button */}
+  <button
+    className={`w-full max-w-sm px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+      isLoading
+        ? 'bg-gray-400 cursor-not-allowed text-gray-200'
+        : 'bg-[#69995D] hover:bg-[#5e8d52] hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
+    } text-white shadow-md`}
+    onClick={handleLogin}
+    disabled={isLoading}
+  >
+    {isLoading ? (
+      <span className="flex items-center justify-center gap-2">
+        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        Logging in...
+      </span>
+    ) : (
+      'Login'
+    )}
+  </button>
 
-        <button
-          onClick={handleRegisterClick}
-          className="bg-[#007FFF] hover:bg-[#0066CC] text-white px-6 py-2 rounded-xl font-semibold transition-colors"
-          disabled={isLoading}
-        >
-          Signup
-        </button>
-      </div>
+  {/* Divider with "OR" */}
+  <div className="flex items-center w-full max-w-sm gap-4">
+    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+    <span className="text-sm text-gray-500 font-medium px-2">OR</span>
+    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+  </div>
+
+  {/* Sign Up Section */}
+  <div className="text-center space-y-3">
+    <p className="text-gray-600 text-sm">
+      Don't have an account yet?
+    </p>
+    <button
+      onClick={handleRegisterClick}
+      className={`px-8 py-3 rounded-xl font-semibold transition-all duration-200 border-2 ${
+        isLoading
+          ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+          : 'border-[#007FFF] text-[#007FFF] hover:bg-[#007FFF] hover:text-white hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
+      }`}
+      disabled={isLoading}
+    >
+      Create New Account
+    </button>
+    <p className="text-xs text-gray-500">
+      Join thousands of users finding their perfect PG
+    </p>
+  </div>
+</div>
 
       {isLoading && (
         <div className="flex justify-center mt-4">

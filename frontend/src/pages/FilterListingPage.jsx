@@ -12,6 +12,7 @@ export default function FilterListingPage() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn"));
 
   // Debounce the search input
   useEffect(() => {
@@ -26,7 +27,8 @@ export default function FilterListingPage() {
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
-      navigate("/welcome");
+      setIsLoggedIn(false);
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
@@ -84,32 +86,53 @@ export default function FilterListingPage() {
           </nav>
 
           <div className="relative">
-            <button
-              onClick={toggleDropdown}
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] hover:scale-105 transition-transform duration-200"
-            >
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                <User className="w-6 h-6 text-[#504B3A]" />
-              </div>
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
-                <button
-                  onClick={() => navigate("/profile")}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
-                >
-                  <User className="w-4 h-4" /> Profile
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" /> Log Out
-                </button>
-              </div>
-            )}
-          </div>
+                    {isLoggedIn ? (
+                      <>
+                        <button
+                          onClick={toggleDropdown}
+                          className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] hover:scale-105 transition-transform duration-200"
+                        >
+                          <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                            <User className="w-6 h-6 text-[#504B3A]" />
+                          </div>
+                        </button>
+          
+                        {isDropdownOpen && (
+                          <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
+                            <a
+                              href="#"
+                              onClick={() => navigate("/profile")}
+                              className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
+                            >
+                              <User className="w-4 h-4" /> Profile
+                            </a>
+                            <a
+                              href="#"
+                              onClick={handleLogout}
+                              className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                              <LogOut className="w-4 h-4"/> Log Out
+                            </a>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => navigate("/login")}
+                          className="px-4 py-2 rounded-lg text-[#504B3A] border border-[#504B3A]/20 hover:bg-[#69995D]/10 transition-all duration-200"
+                        >
+                          Login
+                        </button>
+                        <button
+                          onClick={() => navigate("/register")}
+                          className="px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow hover:bg-[#007FFF]/90 transition-all duration-200"
+                        >
+                          Register
+                        </button>
+                      </div>
+                    )}
+                  </div>
         </div>
       </header>
 

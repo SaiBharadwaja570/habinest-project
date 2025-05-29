@@ -8,6 +8,7 @@ export default function FilterListingPage() {
   const [bookmarks, setBookmarks] = useState([]);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn"));
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -33,11 +34,12 @@ export default function FilterListingPage() {
     const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
+      setIsLoggedIn(false);
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
-  };  
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E4DFDA] to-[#69995D]/10">
@@ -84,40 +86,63 @@ export default function FilterListingPage() {
 
             {/* Profile Dropdown */}
             <div className="relative">
-              <button 
-                onClick={toggleDropdown} 
-                className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] p-0.5 hover:scale-105 transition-transform duration-200"
-              >
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                  <User className="w-6 h-6 text-[#504B3A]" />
-                </div>
-              </button>
-              
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
-                  <a 
-                    href="#" 
-                    onClick={() => navigate("/profile")} 
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
-                  >
-                    <User className="w-4 h-4" />
-                    Profile
-                  </a>
-                  <a href="#"  onClick={() => handleLogout()} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                    <LogOut className="w-4 h-4" />
-                    Log Out
-                  </a>
-                </div>
-              )}
-            </div>
+                      {isLoggedIn ? (
+                        <>
+                          <button
+                            onClick={toggleDropdown}
+                            className="w-12 h-12 rounded-full bg-gradient-to-br from-[#007FFF] to-[#69995D] hover:scale-105 transition-transform duration-200"
+                          >
+                            <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                              <User className="w-6 h-6 text-[#504B3A]" />
+                            </div>
+                          </button>
+            
+                          {isDropdownOpen && (
+                            <div className="absolute right-0 mt-2 bg-white/95 backdrop-blur-sm border border-[#504B3A]/10 rounded-2xl shadow-2xl w-56 py-2 animate-in slide-in-from-top-5">
+                              <a
+                                href="#"
+                                onClick={() => navigate("/profile")}
+                                className="flex items-center gap-3 w-full px-4 py-3 text-sm text-[#504B3A] hover:bg-[#69995D]/10 transition-colors"
+                              >
+                                <User className="w-4 h-4" /> Profile
+                              </a>
+                              <a
+                                href="#"
+                                onClick={handleLogout}
+                                className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                              >
+                                <LogOut className="w-4 h-4"/> Log Out
+                              </a>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => navigate("/login")}
+                            className="px-4 py-2 rounded-lg text-[#504B3A] border border-[#504B3A]/20 hover:bg-[#69995D]/10 transition-all duration-200"
+                          >
+                            Login
+                          </button>
+                          <button
+                            onClick={() => navigate("/register")}
+                            className="px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow hover:bg-[#007FFF]/90 transition-all duration-200"
+                          >
+                            Register
+                          </button>
+                        </div>
+                      )}
+                    </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="text-center mb-12">
+        { isLoggedIn ? (
+          <>
+          {/* Page Header */}
+         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-[#504B3A] mb-4">Your Bookmarks</h1>
           <p className="text-lg text-[#504B3A]/70">Properties you've saved for later</p>
           <div className="w-24 h-1 bg-gradient-to-r from-[#69995D] to-[#007FFF] mx-auto rounded-full mt-4"></div>
@@ -230,6 +255,24 @@ export default function FilterListingPage() {
               </div>
             ))}
           </div>
+        )}
+          </>
+        ) : (
+          <>
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="w-32 h-32 mb-6 bg-gradient-to-br from-[#69995D]/20 to-[#007FFF]/20 rounded-full flex items-center justify-center">
+              <Bookmark className="w-16 h-16 text-[#504B3A]/40" />
+            </div>
+            <h3 className="text-2xl font-semibold text-[#504B3A] mb-2">Please Log In</h3>
+            <p className="text-[#504B3A]/60 mb-8">You need to log in to view your bookmarks</p>
+            <button 
+              onClick={() => navigate("/login")}
+              className="bg-gradient-to-r from-[#69995D] to-[#007FFF] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+            >
+              Log In
+            </button>
+          </div>
+          </>
         )}
       </main>
 
