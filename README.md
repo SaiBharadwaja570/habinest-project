@@ -118,8 +118,6 @@ The frontend will be available at `http://localhost:5173` (default Vite port).
 ### Frontend
 - `npm run dev` – Start development server
 - `npm run build` – Build for production
-- `npm run lint` – Lint code
-- `npm run preview` – Preview production build
 
 ### Backend
 - `npm run dev` – Start backend server in development mode
