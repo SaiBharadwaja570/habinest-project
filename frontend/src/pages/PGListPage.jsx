@@ -116,36 +116,60 @@ export default function PGListPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="p-8 max-w-3xl mx-auto space-y-6">
-        {pgList.length === 0 ? (
-          <p className="text-center text-gray-600">You have not added any PGs yet.</p>
-        ) : (
-          pgList.map((pg) => (
-            <Card key={pg._id} className="rounded-xl shadow-md">
-              <CardContent className="flex justify-between items-center p-4">
-                <div>
-                  <h3 className="font-semibold text-lg text-[#504B3A]">{pg.name}</h3>
-                  <p className="text-sm text-gray-600">{pg.address}</p>
-                </div>
-                <div className="space-x-2">
-                  <Button
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full"
-                    onClick={() => navigate(`/owner-form/${pg._id}`)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full"
-                    onClick={() => handleDelete(pg._id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))
+  <main className="p-8 max-w-3xl mx-auto space-y-6">
+  {pgList.length === 0 ? (
+    <div className="text-center py-10 bg-white rounded-xl shadow-inner border border-dashed border-gray-300">
+      <p className="text-gray-500 text-lg">You have not added any PGs yet.</p>
+    </div>
+  ) : (
+    pgList.map((pg) => (
+      <Card
+        key={pg._id}
+        className="rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden"
+      >
+        {/* Image */}
+        {pg.photo && (
+          <div className="relative">
+            <img
+              src={pg.photo}
+              alt={pg.name}
+              className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute top-4 left-4">
+              <span className="bg-[#69995D] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                {pg.gender}
+              </span>
+            </div>
+          </div>
         )}
+
+        {/* Content */}
+        <CardContent className="flex justify-between items-center p-6">
+          <div>
+            <h3 className="font-bold text-lg text-[#504B3A] mb-1">{pg.name}</h3>
+            <p className="text-sm text-gray-500">{pg.address}</p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              className="bg-[#007FFF] hover:bg-[#0066cc] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
+              onClick={() => navigate(`/owner-form/${pg._id}`)}
+            >
+              Edit
+            </Button>
+            <Button
+              className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
+              onClick={() => handleDelete(pg._id)}
+            >
+              Delete
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    ))
+  )}
+</main>
+
+
 
         <div className="flex justify-center pt-4">
           <Button
