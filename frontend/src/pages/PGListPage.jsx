@@ -42,7 +42,8 @@ export default function PGListPage() {
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
-      navigate("/welcome");
+      navigate("/");
+      localStorage.removeItem("isLoggedIn");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
