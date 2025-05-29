@@ -15,6 +15,8 @@ const SinglePg = () => {
     const [showBookingModal, setShowBookingModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [showReviewModal, setShowReviewModal] = useState(false)
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+    const [loginPromptMessage, setLoginPromptMessage] = useState('')
     const [copySuccess, setCopySuccess] = useState(false)
     const [bookingSubmitting, setBookingSubmitting] = useState(false)
     const [bookingDetails, setBookingDetails] = useState({
@@ -31,6 +33,12 @@ const SinglePg = () => {
     const [reviewSubmitting, setReviewSubmitting] = useState(false)
     const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
 
+    // Helper function to handle authentication errors
+    const handleAuthError = (actionName) => {
+        setLoginPromptMessage(`Please login to ${actionName}`)
+        setShowLoginPrompt(true)
+    }
+
     useEffect(() => {
         const fetchPgData = async () => {
             try {
@@ -38,10 +46,18 @@ const SinglePg = () => {
                 const response = await axios.get(`${import.meta.env.VITE_BACKEND_PG}/${id}`)
                 setPgData(response.data.data)
 
-                const bookmarkStatus = await axios.get(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/status/${id}`, {
-                    withCredentials: true
-                })
-                setIsBookmarked(bookmarkStatus.data.isBookmarked)
+                // Try to fetch bookmark status (only if user is logged in)
+                try {
+                    const bookmarkStatus = await axios.get(`${import.meta.env.VITE_BACKEND_BOOKMARKS}/status/${id}`, {
+                        withCredentials: true
+                    })
+                    setIsBookmarked(bookmarkStatus.data.isBookmarked)
+                } catch (bookmarkErr) {
+                    // User might not be logged in, that's okay for viewing
+                    if (bookmarkErr.response?.status !== 401) {
+                        console.error("Error fetching bookmark status:", bookmarkErr)
+                    }
+                }
                 
                 // Fetch reviews and average rating
                 await fetchReviews()
@@ -98,7 +114,7 @@ const SinglePg = () => {
         } catch (err) {
             console.error("Review submission error:", err)
             if (err.response?.status === 401) {
-                alert("Please login to submit a review")
+                handleAuthError("submit a review")
             } else {
                 alert("Failed to submit review. Please try again.")
             }
@@ -118,8 +134,12 @@ const SinglePg = () => {
             setIsBookmarked(true)
         } catch (err) {
             console.error("Bookmark error:", err)
-            if (err.response?.status === 400 && err.response?.data?.message === 'Listing already bookmarked') {
+            if (err.response?.status === 401) {
+                handleAuthError("bookmark this PG")
+            } else if (err.response?.status === 400 && err.response?.data?.message === 'Listing already bookmarked') {
                 setIsBookmarked(true)
+            } else {
+                alert("Failed to bookmark. Please try again.")
             }
         } finally {
             setBookmarkLoading(false)
@@ -137,6 +157,11 @@ const SinglePg = () => {
             setIsBookmarked(false)
         } catch (err) {
             console.error("Unbookmark error:", err)
+            if (err.response?.status === 401) {
+                handleAuthError("remove bookmark")
+            } else {
+                alert("Failed to remove bookmark. Please try again.")
+            }
         } finally {
             setBookmarkLoading(false)
         }
@@ -175,7 +200,11 @@ const SinglePg = () => {
             setBookingDetails({ name: '', email: '', phone: '', date: '' })
         } catch (err) {
             console.error("Booking error:", err)
-            alert("Failed to book visit. Please try again.")
+            if (err.response?.status === 401) {
+                handleAuthError("book a visit")
+            } else {
+                alert("Failed to book visit. Please try again.")
+            }
         } finally {
             setBookingSubmitting(false)
         }
@@ -227,6 +256,11 @@ const SinglePg = () => {
     const closeReviewModal = () => {
         setShowReviewModal(false)
         setNewReview({ rating: 5, comment: '' })
+    }
+
+    const closeLoginPrompt = () => {
+        setShowLoginPrompt(false)
+        setLoginPromptMessage('')
     }
 
     const renderStars = (rating, interactive = false, onRatingChange = null) => {
@@ -311,6 +345,104 @@ const SinglePg = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Login Prompt Modal */}
+            {showLoginPrompt && (
+                <div className="modal-overlay" onClick={closeLoginPrompt} style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000
+                }}>
+                    <div className="login-prompt-modal" onClick={(e) => e.stopPropagation()} style={{
+                        background: 'white',
+                        borderRadius: '12px',
+                        padding: '24px',
+                        maxWidth: '400px',
+                        width: '90%',
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                        position: 'relative'
+                    }}>
+                        <div className="modal-header" style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '20px',
+                            borderBottom: '1px solid #eee',
+                            paddingBottom: '12px'
+                        }}>
+                            <h3 style={{ margin: 0, color: '#333' }}>Login Required</h3>
+                            <button className="close-button" onClick={closeLoginPrompt} style={{
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: '4px',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                        
+                        <div className="login-prompt-content">
+                            <p style={{
+                                marginBottom: '20px',
+                                color: '#666',
+                                textAlign: 'center',
+                                fontSize: '16px',
+                                lineHeight: '1.5'
+                            }}>{loginPromptMessage}</p>
+                            <div className="login-prompt-actions" style={{
+                                display: 'flex',
+                                gap: '12px',
+                                justifyContent: 'center'
+                            }}>
+                                <button 
+                                    className="cancel-button" 
+                                    onClick={closeLoginPrompt}
+                                    style={{
+                                        background: '#f8f9fa',
+                                        color: '#6c757d',
+                                        border: '1px solid #dee2e6',
+                                        padding: '10px 20px',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <Link 
+                                    to="/login" 
+                                    className="login-button"
+                                    onClick={closeLoginPrompt}
+                                    style={{
+                                        background: '#007bff',
+                                        color: 'white',
+                                        padding: '10px 20px',
+                                        borderRadius: '6px',
+                                        textDecoration: 'none',
+                                        fontWeight: '500',
+                                        transition: 'background-color 0.2s',
+                                        display: 'inline-block'
+                                    }}
+                                >
+                                    Login
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Share Modal */}
             {showShareModal && (
