@@ -68,7 +68,7 @@ export default function PGListPage() {
             <nav className="hidden md:flex items-center gap-8">
               <a 
                 href="#" 
-                onClick={() => navigate("/filter")}
+                onClick={() => navigate("/pg-list")}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg"
               >
                 <Search className="w-4 h-4" />
