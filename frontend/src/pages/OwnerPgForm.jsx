@@ -206,10 +206,9 @@ export default function OwnerPgForm() {
               onChange={(e) => dispatch({ type: "sharing", payload: e.target.value })}
               className="w-full border border-gray-300 p-2 rounded-lg mt-1"
             >
-              <option value="Public">Public</option>
-              <option value="Private">Private</option>
-              <option value="Girls Only">Girls Only</option>
-              <option value="Boys Only">Boys Only</option>
+              <option value="Single">Single Sharing</option>
+              <option value="Double">Double Sharing</option>
+              <option value="Triple">Triple Sharing</option>
             </select>
           </div>
 
