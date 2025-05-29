@@ -24,6 +24,8 @@ export default function FilterListingPage() {
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
+
+
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
@@ -54,6 +56,8 @@ export default function FilterListingPage() {
 
     fetchListings();
   }, [debouncedSearch, minPrice, maxPrice, genderFilter]);
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E4DFDA] to-[#69995D]/10">
@@ -225,10 +229,6 @@ export default function FilterListingPage() {
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-[#69995D]" />
                       <span className="text-sm text-[#504B3A]">{listing.sharingType}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-semibold text-[#504B3A]">{listing.rating || "N/A"}</span>
                     </div>
                   </div>
                   <div className="text-xl font-bold text-[#007FFF]">₹{listing.priceRange}</div>
