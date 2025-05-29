@@ -151,7 +151,7 @@ const ProfilePage = () => {
                     <a 
                       href="#" 
                       onClick={() => navigate("/pg-list")}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg hover:bg-[#0066CC]"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10"
                     >
                       <Search className="w-4 h-4" />
                       Your PG's
@@ -186,7 +186,7 @@ const ProfilePage = () => {
                     <a
                       href="#"
                       onClick={() => navigate("/bookmarks")}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#007FFF] text-white shadow-lg hover:bg-[#0066CC]"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#504B3A] hover:bg-[#69995D]/10"
                     >
                       <Bookmark className="w-4 h-4" />
                       BookMarks
