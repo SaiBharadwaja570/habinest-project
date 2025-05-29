@@ -57,7 +57,6 @@ useEffect(() => {
         timeout: 30000,
       });
 
-      console.log('Login successful, user:', response.data.data);
       setSuccess('Login successful! Redirecting...');
 
       setTimeout(() => {
