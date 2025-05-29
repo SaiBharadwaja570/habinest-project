@@ -51,17 +51,16 @@ export default function PGListPage() {
 
   return (
     <div className="min-h-screen bg-[#E4DFDA] text-black">
-            {/* Header */}
+      {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
-
+              <img
+                src="HabinestLogo.jpg"  
+                alt="Home"
+                className="w-10 h-10 object-cover"
+              />
               <span className="font-bold text-2xl text-[#504B3A]">Habinest</span>
             </div>
             
@@ -116,60 +115,57 @@ export default function PGListPage() {
         </div>
       </header>
 
-  <div className="p-8 max-w-3xl mx-auto space-y-6">
-  {pgList.length === 0 ? (
-    <div className="text-center py-10 bg-white rounded-xl shadow-inner border border-dashed border-gray-300">
-      <p className="text-gray-500 text-lg">You have not added any PGs yet.</p>
-    </div>
-  ) : (
-    pgList.map((pg) => (
-      <Card
-        key={pg._id}
-        className="rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden"
-      >
-        {/* Image */}
-        {pg.photo && (
-          <div className="relative">
-            <img
-              src={pg.photo}
-              alt={pg.name}
-              className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-            />
-            <div className="absolute top-4 left-4">
-              <span className="bg-[#69995D] text-white px-3 py-1 rounded-full text-xs font-semibold">
-                {pg.gender}
-              </span>
-            </div>
+      <div className="p-8 max-w-3xl mx-auto space-y-6">
+        {pgList.length === 0 ? (
+          <div className="text-center py-10 bg-white rounded-xl shadow-inner border border-dashed border-gray-300">
+            <p className="text-gray-500 text-lg">You have not added any PGs yet.</p>
           </div>
+        ) : (
+          pgList.map((pg) => (
+            <Card
+              key={pg._id}
+              className="rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden"
+            >
+              {/* Image */}
+              {pg.photo && (
+                <div className="relative">
+                  <img
+                    src={pg.photo}
+                    alt={pg.name}
+                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-[#69995D] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      {pg.gender}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Content */}
+              <CardContent className="flex justify-between items-center p-6">
+                <div>
+                  <h3 className="font-bold text-lg text-[#504B3A] mb-1">{pg.name}</h3>
+                  <p className="text-sm text-gray-500">{pg.address}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    className="bg-[#007FFF] hover:bg-[#0066cc] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
+                    onClick={() => navigate(`/owner-form/${pg._id}`)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
+                    onClick={() => handleDelete(pg._id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))
         )}
-
-        {/* Content */}
-        <CardContent className="flex justify-between items-center p-6">
-          <div>
-            <h3 className="font-bold text-lg text-[#504B3A] mb-1">{pg.name}</h3>
-            <p className="text-sm text-gray-500">{pg.address}</p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              className="bg-[#007FFF] hover:bg-[#0066cc] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
-              onClick={() => navigate(`/owner-form/${pg._id}`)}
-            >
-              Edit
-            </Button>
-            <Button
-              className="bg-[#D9534F] hover:bg-[#c9302c] text-white px-4 py-1 rounded-full shadow-sm transition-colors"
-              onClick={() => handleDelete(pg._id)}
-            >
-              Delete
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    ))
-  )}
-</div>
-
-
 
         <div className="flex justify-center pt-4">
           <Button
@@ -227,11 +223,11 @@ export default function PGListPage() {
 
           <div className="border-t border-white/20 mt-12 pt-8 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-  <img
-    src="HabinestLogo.jpg"  
-    alt="Home"
-    className="w-10 h-10 object-cover"
-  />
+              <img
+                src="HabinestLogo.jpg"  
+                alt="Home"
+                className="w-10 h-10 object-cover"
+              />
               <span className="font-bold text-xl">Habinest</span>
             </div>
             <p className="text-white/60">Making your housing search effortless and enjoyable</p>

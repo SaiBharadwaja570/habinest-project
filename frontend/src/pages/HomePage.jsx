@@ -13,7 +13,6 @@ const Navbar = () => {
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
-
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
