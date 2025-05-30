@@ -27,8 +27,9 @@ const toggleDropdown = () => {
     const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_USER}/logout`, {}, { withCredentials: true });
-      navigate("/");
       localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("isOwner");
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data?.message || error.message);
     }
