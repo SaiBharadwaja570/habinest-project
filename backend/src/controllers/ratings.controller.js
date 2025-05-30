@@ -5,7 +5,7 @@ const postReview = asyncHandler(async (req, res) => {
   try {
     const listingId = req.params.id;
     const { rating, comment } = req.body;
-    const user = req.user.email; 
+    const user = req.user.name; 
     console.log("listingId ", listingId);
 
     const listing = await PG.findById(listingId);
