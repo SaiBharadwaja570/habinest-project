@@ -77,7 +77,6 @@ const SinglePg = () => {
     try {
         setReviewsLoading(true)
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/${id}`)
-        console.log("Reviews fetched:", response.data) // Add this for debugging
         setReviews(response.data)
     } catch (err) {
         console.error("Error fetching reviews:", err)
