@@ -115,11 +115,6 @@ const Navbar = () => {
 
 // Home Page Body
 const HomePage = () => {
-  const navigate = useNavigate();
-  if(localStorage.getItem("isOwner"))
-  {
-    navigate('/pg-list');
-  }
   const featuredPGs = [
     {
       name: "Zolo Highstreet",
