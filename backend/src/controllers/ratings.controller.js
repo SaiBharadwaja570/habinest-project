@@ -5,7 +5,7 @@ const postReview = asyncHandler(async (req, res) => {
   try {
     const listingId = req.params.id;
     const { rating, comment } = req.body;
-    const user = req.user.email; // or req.user.id or req.user.name depending on auth
+    const user = req.user.email; 
     console.log("listingId ", listingId);
 
     const listing = await PG.findById(listingId);
@@ -31,12 +31,15 @@ const postReview = asyncHandler(async (req, res) => {
   }
 })
 
+
 const getReviews = asyncHandler(async (req, res) => {
   try {
     const listing = await PG.findById(req.params.id).select("ratings");
     if (!listing) return res.status(404).json({ message: "Listing not found" });
 
-    res.status(200).json(listing.ratings);
+    const sortedRatings = listing.ratings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    res.status(200).json(sortedRatings);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

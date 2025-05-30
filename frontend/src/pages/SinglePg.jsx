@@ -74,16 +74,18 @@ const SinglePg = () => {
     }, [id])
 
     const fetchReviews = async () => {
-        try {
-            setReviewsLoading(true)
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/${id}`)
-            setReviews(response.data)
-        } catch (err) {
-            console.error("Error fetching reviews:", err)
-        } finally {
-            setReviewsLoading(false)
-        }
+    try {
+        setReviewsLoading(true)
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_RATINGS}/${id}`)
+        console.log("Reviews fetched:", response.data) // Add this for debugging
+        setReviews(response.data)
+    } catch (err) {
+        console.error("Error fetching reviews:", err)
+        setReviews([]) // Set empty array on error
+    } finally {
+        setReviewsLoading(false)
     }
+}
 
     const fetchAverageRating = async () => {
         try {
